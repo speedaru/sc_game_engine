@@ -24,7 +24,23 @@ namespace sc::core {
 	Application::~Application() {
 		LOG_OBJ_I("shutting down engine application");
 
+		const size_t layerCount = m_layers.size();
+		for (size_t i = 0; i < layerCount; i++) {
+			PopLayer();
+		}
+
 		logging::LoggerShutdown();
+	}
+
+	void Application::PushLayer(std::shared_ptr<ILayer> layer) {
+		m_layers.push_back(layer);
+		layer->OnAttach();
+	}
+
+	void Application::PopLayer() {
+		auto layer = m_layers.back();
+		layer->OnDetach();
+		m_layers.pop_back();
 	}
 
 	void Application::Run() {
@@ -42,15 +58,26 @@ namespace sc::core {
 			// process OS window events
 			m_window->Update();
 
-			// fixed update
+			// fixed update logic
 			while (accumulator >= timeStep) {
-				// TODO: update control_module and ECS using timeStep
+				for (auto& layer : m_layers) {
+					layer->OnFixedUpdate(timeStep);
+				}
 				accumulator -= timeStep;
+			}
+
+			// variable update logic
+			for (auto& layer : m_layers) {
+				layer->OnUpdate(deltaTime);
 			}
 
 			// render
 			window.clear(sf::Color::Black);
-			// TODO: ecs render queue
+
+			for (auto& layer : m_layers) {
+				layer->OnRender(window);
+			}
+
 			window.display();
 		}
 	}

@@ -8,8 +8,18 @@
 # ignore build folders and whatnot
 *intermediate/
 *build/
+*cmake/
+
+# entt specific
+vendor/*/.github/
+vendor/*bazel*
+vendor/*conan*
+vendor/*/test/
+vendor/*/testbed/
 
 #vendor stuff
-vendor/*doc/
-vendor/*examples/
-vendor/*.zip/
+vendor/*/doc/
+vendor/*/docs/
+vendor/*/examples/
+vendor/*/scripts/
+vendor/*.zip

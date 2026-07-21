@@ -73,7 +73,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(ProjectDir)build\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)intermediate\$(Configuration)\</IntDir>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)include\;$(ProjectDir)src\;$(SolutionDir)vendor\SFML-3.1.0\include\;$(SolutionDir)vendor\imgui-1.92.8\</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)include\;$(ProjectDir)src\;$(SolutionDir)vendor\SFML-3.1.0\include\;$(SolutionDir)vendor\imgui-1.92.8\;$(SolutionDir)vendor\entt-3.16.0\src\</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(ProjectDir)lib\;</LibraryPath>
     <TargetName>sc_game_engine</TargetName>
   </PropertyGroup>
@@ -86,7 +86,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(ProjectDir)build\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)intermediate\$(Configuration)\</IntDir>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)include\;$(ProjectDir)src\;$(SolutionDir)vendor\SFML-3.1.0\include\;$(SolutionDir)vendor\imgui-1.92.8\</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)include\;$(ProjectDir)src\;$(SolutionDir)vendor\SFML-3.1.0\include\;$(SolutionDir)vendor\imgui-1.92.8\;$(SolutionDir)vendor\entt-3.16.0\src\</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(ProjectDir)lib\;</LibraryPath>
     <TargetName>sc_game_engine</TargetName>
   </PropertyGroup>
@@ -155,6 +155,7 @@
   <ItemGroup>
     <ClCompile Include="src\core\Application.cpp" />
     <ClCompile Include="src\core\Window.cpp" />
+    <ClCompile Include="src\ecs\Scene.cpp" />
     <ClCompile Include="src\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -164,7 +165,11 @@
   <ItemGroup>
     <ClInclude Include="include\engine\constants.h" />
     <ClInclude Include="include\engine\core\Application.h" />
+    <ClInclude Include="include\engine\core\ILayer.h" />
     <ClInclude Include="include\engine\core\Window.h" />
+    <ClInclude Include="include\engine\ecs\Components.h" />
+    <ClInclude Include="include\engine\ecs\Entity.h" />
+    <ClInclude Include="include\engine\ecs\Scene.h" />
     <ClInclude Include="include\engine\utils\logging.h" />
     <ClInclude Include="include\pch.h" />
     <ClInclude Include="src\pch.h" />
