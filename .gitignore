@@ -1,0 +1,10 @@
+# root folders
+.vs/
+.git/
+
+# file extensions
+*.vcxproj.user
+
+# ignore build folders and whatnot
+*intermediate/
+*build/
