@@ -8,3 +8,8 @@
 # ignore build folders and whatnot
 *intermediate/
 *build/
+
+#vendor stuff
+vendor/*doc/
+vendor/*examples/
+vendor/*.zip/
