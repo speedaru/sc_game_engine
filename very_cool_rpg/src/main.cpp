@@ -13,7 +13,7 @@ int main(int argc, char** argv) {
 	LogLevel logLevel = LogLevel::None
 		| LogLevel::Error;
 #endif
-	logging::LoggerInit("sc_engine_log.txt", logLevel);
+	logging::LoggerInit("rpg_game_log.txt", logLevel);
 
 	sc::core::Application app(sc::core::WindowData{ "very cool RPG", 1280, 720 });
 	app.Run();

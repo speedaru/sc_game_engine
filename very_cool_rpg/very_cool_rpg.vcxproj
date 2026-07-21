@@ -130,7 +130,7 @@
       <AdditionalDependencies>sc_game_engine.lib;sfml-system-d.lib;sfml-window-d.lib;sfml-graphics-d.lib;freetyped.lib;opengl32.lib;winmm.lib;gdi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
-      <Command>copy "$(SolutionDir)engine\build\$(Configuration)\*" "$(ProjectDir)lib\" /Y</Command>
+      <Command>copy "$(SolutionDir)engine\build\$(Configuration)\*.lib" "$(ProjectDir)lib\" /Y</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
