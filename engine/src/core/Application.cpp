@@ -15,7 +15,7 @@ namespace sc::core {
 		LogLevel logLevel = LogLevel::None
 			| LogLevel::Error;
 #endif
-		logging::LoggerInit("sc_engine_log.txt", logLevel);
+		logging::LoggerInit(LOG_FILE_NAME, logLevel);
 
 		LOG_OBJ_I("initializing engine application");
 		m_window = std::make_unique<Window>(std::move(windowData));
@@ -47,8 +47,6 @@ namespace sc::core {
 				// TODO: update control_module and ECS using timeStep
 				accumulator -= timeStep;
 			}
-
-			LOG_D("rendering window");
 
 			// render
 			window.clear(sf::Color::Black);
