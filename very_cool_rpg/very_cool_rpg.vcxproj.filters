@@ -21,12 +21,18 @@
     <ClCompile Include="src\layers\GameplayLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\utils\render_utils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\game\layers\GameplayLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\game\constants.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\game\utils\render_utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

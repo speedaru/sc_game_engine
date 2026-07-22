@@ -1,6 +1,7 @@
 #include <pch.h>
 #include <engine/constants.h>
 #include <engine/core/Application.h>
+#include <engine/graphics/render2d.h>
 
 namespace sc::core {
 	Application::Application(WindowData&& windowData) {
@@ -16,8 +17,10 @@ namespace sc::core {
 			| LogLevel::Error;
 #endif
 		logging::LoggerInit(LOG_FILE_NAME, logLevel);
-
 		LOG_OBJ_I("initializing engine application");
+
+		graphics::render2d::Initialize();
+
 		m_window = std::make_unique<Window>(std::move(windowData));
 	}
 
@@ -28,6 +31,8 @@ namespace sc::core {
 		for (size_t i = 0; i < layerCount; i++) {
 			PopLayer();
 		}
+
+		graphics::render2d::Shutdown();
 
 		logging::LoggerShutdown();
 	}
@@ -73,11 +78,9 @@ namespace sc::core {
 
 			// render
 			window.clear(sf::Color::Black);
-
 			for (auto& layer : m_layers) {
 				layer->OnRender(window);
 			}
-
 			window.display();
 		}
 	}

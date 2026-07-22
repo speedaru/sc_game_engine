@@ -1,7 +1,7 @@
 #pragma once
-#include <engine/utils/logging.h>
-
 #include <entt/entt.hpp>
+
+#include <engine/utils/logging.h>
 
 namespace sc::ecs {
 	class Entity;

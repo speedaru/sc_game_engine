@@ -1,10 +1,10 @@
 #pragma once
 #include <cassert>
 
+#include <entt/entt.hpp>
+
 #include <engine/ecs/Scene.h>
 #include <engine/utils/logging.h>
-
-#include <entt/entt.hpp>
 
 namespace sc::ecs {
 	class Entity {
@@ -15,24 +15,34 @@ namespace sc::ecs {
 		Entity(const entt::entity handle, Scene* scene)
 			: m_handle(handle), m_scene(scene) {}
 
-		operator bool() { return m_handle != entt::null; }
+		operator bool() const { return m_handle != entt::null; }
 
 		template <typename T, typename... Args>
-		T& AddComponent(Args&&... args) {
-			assert(*this);
-			assert(m_scene != nullptr);
+		T& AddComponent(Args&&... args) const {
+			assert((bool)*this && m_scene != nullptr);
 			return m_scene->GetRegistry().emplace<T>(m_handle, std::forward<Args>(args)...);
 		}
 
 		template <typename T>
-		T& GetComponent() {
-			assert(*this);
-			assert(m_scene != nullptr);
+		const T& GetComponent() const {
+			assert((bool)*this && m_scene != nullptr);
 			return m_scene->GetRegistry().get<T>(m_handle);
 		}
 
+		template <typename T>
+		T& GetComponent() {
+			assert((bool)*this && m_scene != nullptr);
+			return m_scene->GetRegistry().get<T>(m_handle);
+		}
+
+		template <typename T>
+		bool HasComponent() const {
+			assert((bool)*this && m_scene != nullptr);
+			return m_scene->GetRegistry().any_of<T>(m_handle);
+		}
+
 	private:
-		entt::entity m_handle;
+		entt::entity m_handle; // entity handle
 		Scene* m_scene;
 	};
 }

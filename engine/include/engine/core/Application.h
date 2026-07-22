@@ -4,7 +4,6 @@
 
 #include <engine/core/Window.h>
 #include <engine/core/ILayer.h>
-
 #include <engine/utils/logging.h>
 using logging::LogLevel;
 

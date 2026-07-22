@@ -157,10 +157,12 @@
   <ItemGroup>
     <ClCompile Include="src\layers\GameplayLayer.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\utils\render_utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\game\constants.h" />
     <ClInclude Include="include\game\layers\GameplayLayer.h" />
+    <ClInclude Include="include\game\utils\render_utils.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />

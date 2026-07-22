@@ -12,4 +12,5 @@ namespace sc {
 
 	// ints
 	CREATE_CONST(uint32_t, MAX_FPS, 165);
+	CREATE_CONST(size_t, PREALLOCATED_RENDER_QUEUE, 1'000); // number of preallocated space for render queue in render2d
 }

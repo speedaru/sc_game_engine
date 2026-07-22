@@ -153,9 +153,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\graphics\Texture2D.cpp" />
     <ClCompile Include="src\core\Application.cpp" />
     <ClCompile Include="src\core\Window.cpp" />
     <ClCompile Include="src\ecs\Scene.cpp" />
+    <ClCompile Include="src\graphics\render2d.cpp" />
     <ClCompile Include="src\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -170,6 +172,9 @@
     <ClInclude Include="include\engine\ecs\Components.h" />
     <ClInclude Include="include\engine\ecs\Entity.h" />
     <ClInclude Include="include\engine\ecs\Scene.h" />
+    <ClInclude Include="include\engine\graphics\render2d.h" />
+    <ClInclude Include="include\engine\graphics\SFMLTexture2D.h" />
+    <ClInclude Include="include\engine\graphics\Texture2D.h" />
     <ClInclude Include="include\engine\utils\logging.h" />
     <ClInclude Include="include\pch.h" />
     <ClInclude Include="src\pch.h" />
