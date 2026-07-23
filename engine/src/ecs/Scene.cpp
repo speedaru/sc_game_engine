@@ -22,7 +22,9 @@ namespace sc::ecs {
 		Entity ent(handle, this);
 
 		// automatically always add a tag component
-		ent.AddComponent<TagComponent>(name);
+		ent.AddComponent<TagComponent>(TagComponent{
+			.tag = name
+		});
 
 		return ent;
 	}

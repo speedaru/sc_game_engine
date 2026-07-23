@@ -11,6 +11,7 @@ namespace sc::graphics {
 	struct QuadProps {
 		sf::Vector2f position{ 0.f, 0.f };
 		std::shared_ptr<Texture2D> texture{ nullptr };
+		int16_t zIndex{ 0 };
 	};
 
 	namespace render2d {

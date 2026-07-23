@@ -2,7 +2,6 @@
 #include <engine/core/ILayer.h>
 #include <engine/ecs/Scene.h>
 #include <engine/ecs/Entity.h>
-namespace ecs = sc::ecs;
 
 namespace game {
 	class GameplayLayer : public sc::core::ILayer {
@@ -12,7 +11,7 @@ namespace game {
 		void OnRender(sf::RenderWindow& window) override;
 
 	private:
-		ecs::Scene m_scene = ecs::Scene("GameplayLayer Scene");
-		ecs::Entity m_player;
+		sc::ecs::Scene m_scene = sc::ecs::Scene("GameplayLayer Scene");
+		sc::ecs::Entity m_player;
 	};
 }

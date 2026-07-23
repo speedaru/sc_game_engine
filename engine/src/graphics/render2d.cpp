@@ -35,6 +35,14 @@ namespace sc::graphics::render2d {
 
 	void EndScene(sf::RenderWindow& window) {
 		assert(s_initialized);
+		std::sort(s_renderQueue.begin(), s_renderQueue.end(), [](const QuadProps& a, const QuadProps& b) {
+			if (a.zIndex == b.zIndex) {
+				// if on same layer sort by Y
+				return a.position.y < b.position.y;
+			}
+			// otherwise sort by z index
+			return a.zIndex < b.zIndex;
+		});
 
 		for (const auto& quad : s_renderQueue) {
 			if (!quad.texture) continue;

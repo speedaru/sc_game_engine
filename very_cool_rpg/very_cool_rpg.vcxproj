@@ -160,9 +160,11 @@
     <ClCompile Include="src\utils\render_utils.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\game\constants.h" />
-    <ClInclude Include="include\game\layers\GameplayLayer.h" />
-    <ClInclude Include="include\game\utils\render_utils.h" />
+    <ClInclude Include="src\components\SpriteComponent.h" />
+    <ClInclude Include="src\components\ZLayer.h" />
+    <ClInclude Include="src\constants.h" />
+    <ClInclude Include="src\layers\GameplayLayer.h" />
+    <ClInclude Include="src\utils\render_utils.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />

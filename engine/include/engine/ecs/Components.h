@@ -14,8 +14,4 @@ namespace sc::ecs {
 	struct TransformComponent {
 		sf::Vector2f pos;
 	};
-
-	struct SpriteComponent {
-		std::shared_ptr<graphics::Texture2D> texture;
-	};
 }
