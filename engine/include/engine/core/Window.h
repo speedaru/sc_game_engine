@@ -18,9 +18,7 @@ namespace sc::core {
 
 		void Update();
 
-		// getters
-
-		inline sf::RenderWindow& GetNativeWindow() { return m_window; }
+		sf::RenderWindow& GetNativeWindow() { return m_window; }
 
 	private:
 		sf::RenderWindow m_window;

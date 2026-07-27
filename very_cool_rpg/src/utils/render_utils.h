@@ -7,6 +7,6 @@ namespace game::render_utils {
 
 	// submit an entity to 2d render engine and create a quad easier
 	inline void SubmitEntity(const sc::ecs::Entity& entity) {
-		sc::graphics::render2d::Submit(CreateQuadProps(entity));
+		sc::graphics::render2d::SubmitQuad(CreateQuadProps(entity));
 	}
 }

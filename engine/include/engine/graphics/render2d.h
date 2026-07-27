@@ -5,14 +5,19 @@
 #include <SFML/Graphics.hpp>
 
 #include <engine/graphics/Texture2D.h>
+#include <engine/graphics/Camera2D.h>
+#include <engine/graphics/LevelGraphics.h>
 
 // render subsytem
 namespace sc::graphics {
 	struct QuadProps {
-		sf::Vector2f position{ 0.f, 0.f };
-		std::shared_ptr<Texture2D> texture{ nullptr };
-		int16_t zIndex{ 0 };
+		sf::Vector2f position{};
+		std::shared_ptr<Texture2D> texture{};
+		sf::IntRect textureRect{};
+		int16_t zIndex{};
 	};
+
+	class TileMap;
 
 	namespace render2d {
 		// lifecycle (called by Application)
@@ -21,9 +26,11 @@ namespace sc::graphics {
 
 		// scene lifecycle (called by game)
 		void BeginScene();
-		void EndScene(sf::RenderWindow& window);
+		void EndScene(sf::RenderWindow& window, const Camera2D& camera);
 
 		// submission api
-		void Submit(const QuadProps& quad);
+		void SubmitQuad(const QuadProps& quad);
+		void SubmitMap(const TileMap& map);
+		void SubmitLevel(const LevelGraphics& level);
 	}
 }

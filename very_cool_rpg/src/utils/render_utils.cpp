@@ -20,6 +20,7 @@ namespace game::render_utils {
 		// game components
 		auto& sprite = entity.GetComponent<gcomp::SpriteComponent>();
 		props.texture = sprite.texture;
+		props.textureRect = sprite.rect;
 		props.zIndex = static_cast<int16_t>(sprite.zlayer);
 
 		return props;

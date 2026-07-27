@@ -12,6 +12,7 @@ namespace fs = std::filesystem;
 #include <chrono>
 #include <cassert>
 #include <memory>
+#include <functional>
 namespace chrono = std::chrono;
 
 // containers
@@ -21,3 +22,4 @@ namespace chrono = std::chrono;
 
 // thirdpart libraries
 #include <entt/entt.hpp>
+#include <nlohmann/json.hpp>

@@ -1,6 +1,7 @@
 # root folders
-.vs/
-.git/
+*.vs/
+*.git/
+*.env/
 
 # file extensions
 *.vcxproj.user
