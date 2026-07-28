@@ -48,12 +48,6 @@
     <ClCompile Include="src\graphics\Level.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ecs\EntityFactory.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ecs\ComponentAssemblers.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\core\InputContext.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -114,18 +108,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\engine\graphics\Level.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\engine\ecs\EntityFactory.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\engine\loader\types.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\engine\ecs\IBlueprint.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\engine\ecs\ComponentAssemblers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\engine\core\InputContext.h">

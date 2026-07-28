@@ -14,15 +14,16 @@ namespace game::systems {
 		for (auto [entity, controller, vel] : view.each()) {
 			// normalize direction to prevent diagonal speed boost
 			float length = std::sqrt(controller.direction.x * controller.direction.x + controller.direction.y * controller.direction.y);
+			sf::Vector2f normalDirection = controller.direction;
 			if (length > 0.0f) {
-				controller.direction.x /= length;
-				controller.direction.y /= length;
+				normalDirection.x /= length;
+				normalDirection.y /= length;
 			}
 
 			// apply acceleration and friction
 			if (length > 0.0f) {
-				vel.velocity.x += controller.direction.x * controller.acceleration * timeStep;
-				vel.velocity.y += controller.direction.y * controller.acceleration * timeStep;
+				vel.velocity.x += normalDirection.x * controller.acceleration * timeStep;
+				vel.velocity.y += normalDirection.y * controller.acceleration * timeStep;
 
 				// clamp max speed
 				float currentSpeed = std::sqrt(vel.velocity.x * vel.velocity.x + vel.velocity.y * vel.velocity.y);

@@ -1,14 +1,12 @@
 #include <pch.h>
-#include <engine/ecs/EntityFactory.h>
+#include <blueprints/BlueprintRegistry.h>
 
 #include <blueprints/PlayerBlueprint.h>
 #include <blueprints/DragonBlueprint.h>
 
-namespace ecs = sc::ecs;
-
 namespace game::blueprints {
-	void RegisterAll(ecs::EntityFactory& factory) {
-		factory.Register("Player", std::make_unique<PlayerBlueprint>());
-		factory.Register("Dragon", std::make_unique<DragonBlueprint>());
+	void RegisterAll(factories::EntityFactory& factory, const fs::path& projDir) {
+		factory.Register("Player", std::make_unique<PlayerBlueprint>(projDir, factory.GetTextureCache()));
+		factory.Register("Dragon", std::make_unique<DragonBlueprint>(projDir, factory.GetTextureCache()));
 	}
 }

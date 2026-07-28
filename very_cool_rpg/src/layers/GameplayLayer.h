@@ -3,9 +3,11 @@
 #include <engine/core/Input.h>
 #include <engine/ecs/Scene.h>
 #include <engine/ecs/Entity.h>
-#include <engine/ecs/EntityFactory.h>
 #include <engine/graphics/Camera2D.h>
 #include <engine/graphics/Level.h>
+
+#include <factories/EntityFactory.h>
+#include <constants.h>
 
 namespace game {
 	class GameplayLayer : public sc::core::ILayer {
@@ -17,11 +19,11 @@ namespace game {
 	private:
 		// core engine stuff
 		sc::ecs::Scene m_scene = sc::ecs::Scene("GameplayLayer Scene");
-		sc::graphics::Camera2D m_camera{ 640.f, 360.f };
+		sc::graphics::Camera2D m_camera{ NATIVE_WIDTH, NATIVE_HEIGHT };
 
 		// entities
 		sc::ecs::Entity m_player;
-		sc::ecs::EntityFactory m_entityFactory;
+		factories::EntityFactory m_entityFactory;
 
 		// world
 		std::shared_ptr<sc::graphics::Level> m_level;

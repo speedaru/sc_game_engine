@@ -10,7 +10,9 @@ namespace sc::core {
 	}
 
 	void input::PopContext() {
-		s_contexts.pop_back();
+		if (!s_contexts.empty()) {
+			s_contexts.pop_back();
+		}
 	}
 
 	void input::ClearContexts() {

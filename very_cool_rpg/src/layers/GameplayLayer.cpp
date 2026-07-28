@@ -19,24 +19,22 @@
 using Key = sf::Keyboard::Key;
 namespace core = sc::core;
 namespace ecs = sc::ecs;
-namespace ldr = sc::loader;
 namespace gfx = sc::graphics;
 
 namespace game {
-	static sc::loader::LayerData ExtractLayerData(const ldtk::Layer& layer) {
-		ldr::LayerData out;
-		out.gridWidth = layer.getGridSize().x;
-		out.gridHeight = layer.getGridSize().y;
-		out.tileSize = layer.getCellSize();
+	static gfx::MapData ExtractMapData(const ldtk::Layer& layer) {
+		gfx::MapData out;
+		out.width = layer.getGridSize().x;
+		out.height = layer.getGridSize().y;
 
 		// fill with null tiles
-		out.tiles.assign(out.gridWidth * out.gridHeight, 0);
+		out.tiles.assign(out.width * out.height, 0);
 
 		// map to our array
 		for (const auto& tile : layer.allTiles()) {
 			int gridX = tile.getGridPosition().x;
 			int gridY = tile.getGridPosition().y;
-			int index = (gridY * out.gridWidth) + gridX;
+			int index = (gridY * out.width) + gridX;
 
 			out.tiles[index] = tile.tileId;
 		}
@@ -74,16 +72,16 @@ namespace game {
 			auto tileSet = std::make_shared<gfx::TileSet>(projectDir / ldtkTileSet.path, ldtkTileSet.tile_size);
 			auto tileMap = std::make_shared<gfx::TileMap>(tileSet);
 
-			auto layerData = ExtractLayerData(layer);
-			tileMap->Load(layerData.tiles, layerData.gridWidth, layerData.gridHeight);
+			auto mapData = ExtractMapData(layer);
+			tileMap->Load(mapData);
 			m_level->AddLayer(tileMap);
 		}
 
 		// load entities into ecs
-		blueprints::RegisterAll(m_entityFactory);
+		blueprints::RegisterAll(m_entityFactory, projectDir);
 		for (const auto& ldtkEntity : level.getLayer("Entities").allEntities()) {
 			LOG_D("entity name: %s", ldtkEntity.getName().c_str());
-			m_entityFactory.Spawn(m_scene, ldtkEntity, projectDir);
+			m_entityFactory.Spawn(m_scene, ldtkEntity);
 		}
 
 		// get player reference

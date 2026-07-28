@@ -22,3 +22,4 @@ namespace chrono = std::chrono;
 
 // thirdpart libraries
 #include <entt/entt.hpp>
+#include <LDtkLoader/Project.hpp>

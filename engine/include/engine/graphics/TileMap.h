@@ -7,6 +7,12 @@
 #include <engine/graphics/TileSet.h>
 
 namespace sc::graphics {
+	struct MapData {
+		std::vector<int32_t> tiles;
+		uint32_t width;
+		uint32_t height;
+	};
+
 	class TileMap {
 	public:
 		constexpr static const uint32_t TILE_VERTICES_COUNT = 6;
@@ -14,7 +20,7 @@ namespace sc::graphics {
 		TileMap() = default;
 		TileMap(const std::shared_ptr<TileSet>& tileSet);
 		
-		bool Load(const std::vector<int32_t>& tiles, uint32_t mapWidth, uint32_t mapHeight);
+		bool Load(const MapData& map);
 
 		const sf::VertexArray& GetVertices() const { return m_vertices; }
 		const std::shared_ptr<TileSet>& GetTileSet() const { return m_tileSet; }

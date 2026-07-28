@@ -1,9 +1,7 @@
 #pragma once
-
-namespace sc::ecs {
-	class EntityFactory;
-}
+#include <factories/EntityFactory.h>
+#include <utils/assemblers/LdtkAssemblers.h>
 
 namespace game::blueprints {
-	void RegisterAll(sc::ecs::EntityFactory& factory);
+	void RegisterAll(factories::EntityFactory& factory, const fs::path& projDir);
 }

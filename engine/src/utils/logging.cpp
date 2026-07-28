@@ -56,7 +56,7 @@ void logging::LogOutputRawV(const char* fmt, va_list args) {
         vsnprintf(buff, (size_t)size + 1, fmt, args);
 
         if constexpr (LOG_TO_CONSOLE)
-            printf(buff);
+            printf("%s", buff);
         if constexpr (LOG_TO_FILE)
             logFile.write(buff, size);
 

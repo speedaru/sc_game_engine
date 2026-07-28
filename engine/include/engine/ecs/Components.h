@@ -26,14 +26,12 @@ namespace sc::ecs {
 		sf::IntRect rect;
 
 		// specify rect
-		template <typename T>
-		SpriteComponent(const std::shared_ptr<sc::graphics::Texture2D>& texture, T zlayer, const sf::IntRect& rect)
-			: texture(texture), zlayer((int16_t)zlayer), rect(rect) {}
+		SpriteComponent(const std::shared_ptr<sc::graphics::Texture2D>& texture, int16_t zlayer, const sf::IntRect& rect)
+			: texture(texture), zlayer(zlayer), rect(rect) {}
 
 		// use full texture rect
-		template <typename T>
-		SpriteComponent(const std::shared_ptr<sc::graphics::Texture2D>& texture, T  zlayer)
-			: texture(texture), zlayer((int16_t)zlayer),
+		SpriteComponent(const std::shared_ptr<sc::graphics::Texture2D>& texture, int16_t zlayer)
+			: texture(texture), zlayer(zlayer),
 			rect({ 0, 0 }, { (int32_t)texture->GetWidth(), (int32_t)texture->GetHeight() }) {}
 	};
 }

@@ -9,14 +9,14 @@ namespace sc::graphics {
         m_vertices.setPrimitiveType(sf::PrimitiveType::Triangles);
 	}
 
-	bool TileMap::Load(const std::vector<int32_t>& tiles, uint32_t mapWidth, uint32_t mapHeight) {
+	bool TileMap::Load(const MapData& map) {
 		if (!m_tileSet) {
 			LOG_E("TileMap failed to load because TileSet is not set");
 			return false;
 		}
 		
-		uint32_t mapArea = mapWidth * mapHeight;
-		if (tiles.size() != mapArea) {
+		uint32_t mapArea = map.width * map.height;
+		if (map.tiles.size() != mapArea) {
 			LOG_E("TileMap data size doesn't match map dimensions");
 			return false;
 		}
@@ -25,9 +25,9 @@ namespace sc::graphics {
 		uint32_t tilesetColumns = m_tileSet->GetGridWidth();
 
 		m_vertices.resize(mapArea * TILE_VERTICES_COUNT );
-		for (uint32_t y = 0; y < mapHeight; ++y) {
-			for (uint32_t x = 0; x < mapWidth; ++x) {
-				int32_t tileID = tiles[static_cast<size_t>(y) * mapWidth + x];
+		for (uint32_t y = 0; y < map.height; ++y) {
+			for (uint32_t x = 0; x < map.width; ++x) {
+				int32_t tileID = map.tiles[static_cast<size_t>(y) * map.width + x];
 				if (tileID == -1) continue;
 
 				uint32_t tsRow = tileID / tilesetColumns;
@@ -36,7 +36,7 @@ namespace sc::graphics {
 				sf::IntRect texRect = m_tileSet->GetTileRect(tsRow, tsCol);
 
 				// pointer to vertices where we have to write the triangles
-				sf::Vertex* triangles = &m_vertices[(static_cast<size_t>(y) * mapWidth + x) * TILE_VERTICES_COUNT];
+				sf::Vertex* triangles = &m_vertices[(static_cast<size_t>(y) * map.width + x) * TILE_VERTICES_COUNT];
 
 				float fx = static_cast<float>(x * tileSize);
 				float fy = static_cast<float>(y * tileSize);

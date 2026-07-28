@@ -3,9 +3,12 @@
 #include <engine/utils/logging.h>
 
 #include <layers/GameplayLayer.h>
+#include <constants.h>
+
+using namespace game;
 
 int main(int argc, char** argv) {
-	sc::core::Application app(sc::core::WindowData{ "very cool RPG", 1280, 768 });
-	app.PushLayer(std::make_shared<game::GameplayLayer>());
+	sc::core::Application app(sc::core::WindowData{ "very cool RPG", WINDOW_WIDTH, WINDOW_HEIGHT });
+	app.PushLayer(std::make_shared<GameplayLayer>());
 	app.Run();
 }

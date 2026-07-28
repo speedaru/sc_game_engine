@@ -1,14 +1,19 @@
 #pragma once
 #include <filesystem>
-
-#include <engine/ecs/Entity.h>
-#include <engine/ecs/IBlueprint.h>
+#include "includes.h"
 
 namespace fs = std::filesystem;
 
 namespace game::blueprints {
-	class PlayerBlueprint : public sc::ecs::IBlueprint {
+	class PlayerBlueprint : public IBlueprint {
 	public:
-		void Build(sc::ecs::Entity& entity, const ldtk::Entity& ldtkData, const fs::path& projectDir) const override;
+		PlayerBlueprint(const fs::path& projectDir, TextureCache& textureCache)
+			: m_projectDir(projectDir), m_textureCache(textureCache) {}
+
+		void Build(sc::ecs::Entity& entity, const ldtk::Entity& ldtkData) const override;
+
+	private:
+		fs::path m_projectDir;
+		TextureCache& m_textureCache;
 	};
 }
