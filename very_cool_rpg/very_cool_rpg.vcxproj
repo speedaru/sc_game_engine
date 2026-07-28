@@ -155,7 +155,7 @@
       <AdditionalDependencies>sc_game_engine.lib;sfml-system.lib;sfml-window.lib;sfml-graphics.lib;freetyped.lib;opengl32.lib;winmm.lib;gdi32.lib;LDtkLoader.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
-      <Command>copy "$(SolutionDir)engine\build\$(Configuration)\*" "$(ProjectDir)lib\" /Y</Command>
+      <Command>copy "$(SolutionDir)engine\build\$(Configuration)\*.lib" "$(ProjectDir)lib\" /Y</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -168,17 +168,22 @@
     </ClCompile>
     <ClCompile Include="src\layers\GameplayLayer.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\systems\character_movement.cpp" />
+    <ClCompile Include="src\systems\player_input.cpp" />
     <ClCompile Include="src\utils\render_utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\blueprints\BlueprintRegistry.h" />
     <ClInclude Include="src\blueprints\DragonBlueprint.h" />
     <ClInclude Include="src\blueprints\PlayerBlueprint.h" />
-    <ClInclude Include="src\components\PlayerComponents.h" />
+    <ClInclude Include="src\components\GameComponents.h" />
+    <ClInclude Include="src\enums\InputActions.h" />
     <ClInclude Include="src\pch.h" />
-    <ClInclude Include="src\components\ZLayer.h" />
+    <ClInclude Include="src\enums\ZLayer.h" />
     <ClInclude Include="src\constants.h" />
     <ClInclude Include="src\layers\GameplayLayer.h" />
+    <ClInclude Include="src\systems\character_movement.h" />
+    <ClInclude Include="src\systems\player_input.h" />
     <ClInclude Include="src\utils\render_utils.h" />
   </ItemGroup>
   <ItemGroup>

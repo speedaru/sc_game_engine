@@ -36,6 +36,12 @@
     <ClCompile Include="src\blueprints\DragonBlueprint.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\systems\player_input.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\systems\character_movement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\layers\GameplayLayer.h">
@@ -47,7 +53,7 @@
     <ClInclude Include="src\utils\render_utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\components\ZLayer.h">
+    <ClInclude Include="src\enums\ZLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\pch.h">
@@ -62,7 +68,16 @@
     <ClInclude Include="src\blueprints\DragonBlueprint.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\components\PlayerComponents.h">
+    <ClInclude Include="src\components\GameComponents.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\enums\InputActions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\systems\player_input.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\systems\character_movement.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

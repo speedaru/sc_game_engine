@@ -153,6 +153,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\ecs\systems\PhysicsSystem.cpp" />
+    <ClCompile Include="src\core\Input.cpp" />
+    <ClCompile Include="src\core\InputContext.cpp" />
     <ClCompile Include="src\ecs\ComponentAssemblers.cpp" />
     <ClCompile Include="src\ecs\EntityFactory.cpp" />
     <ClCompile Include="src\graphics\Camera2D.cpp" />
@@ -174,6 +177,8 @@
     <ClInclude Include="include\engine\constants.h" />
     <ClInclude Include="include\engine\core\Application.h" />
     <ClInclude Include="include\engine\core\ILayer.h" />
+    <ClInclude Include="include\engine\core\Input.h" />
+    <ClInclude Include="include\engine\core\InputContext.h" />
     <ClInclude Include="include\engine\core\Window.h" />
     <ClInclude Include="include\engine\ecs\Components.h" />
     <ClInclude Include="include\engine\ecs\ComponentAssemblers.h" />
@@ -189,6 +194,7 @@
     <ClInclude Include="include\engine\graphics\TileMap.h" />
     <ClInclude Include="include\engine\graphics\TileSet.h" />
     <ClInclude Include="include\engine\loader\types.h" />
+    <ClInclude Include="include\engine\ecs\systems\PhysicsSystem.h" />
     <ClInclude Include="include\engine\utils\logging.h" />
     <ClInclude Include="include\pch.h" />
     <ClInclude Include="src\pch.h" />

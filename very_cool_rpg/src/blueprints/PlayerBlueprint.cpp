@@ -1,9 +1,10 @@
 #include <pch.h>
 
 #include <engine/ecs/ComponentAssemblers.h>
+#include <engine/ecs/Components.h>
 
-#include <components/ZLayer.h>
-#include <components/PlayerComponents.h>
+#include <enums/ZLayer.h>
+#include <components/GameComponents.h>
 #include <blueprints/PlayerBlueprint.h>
 #include <blueprints/BlueprintRegistry.h>
 
@@ -13,6 +14,12 @@ namespace game::blueprints {
 	void PlayerBlueprint::Build(sc::ecs::Entity& entity, const ldtk::Entity& ldtkData, const fs::path& projectDir) const {
 		ecs::assemblers::AttachTransform(entity, ldtkData);
 		ecs::assemblers::AttachSprite(entity, ldtkData, projectDir, static_cast<int16_t>(ZLayer::Gameplay));
+
+		// engine components
+		entity.AddComponent<ecs::VelocityComponent>();
+		
+		// game componenets
 		entity.AddComponent<components::PlayerTag>();
+		entity.AddComponent<components::CharacterController>();
 	}
 }

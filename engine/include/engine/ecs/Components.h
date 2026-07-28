@@ -16,6 +16,10 @@ namespace sc::ecs {
 		sf::Vector2f pivot{}; // 0 - 1 range
 	};
 
+	struct VelocityComponent {
+		sf::Vector2f velocity{}; // movement speed
+	};
+
 	struct SpriteComponent {
 		std::shared_ptr<sc::graphics::Texture2D> texture;
 		int16_t zlayer;

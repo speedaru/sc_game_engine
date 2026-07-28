@@ -1,5 +1,6 @@
 #pragma once
 #include <engine/core/ILayer.h>
+#include <engine/core/Input.h>
 #include <engine/ecs/Scene.h>
 #include <engine/ecs/Entity.h>
 #include <engine/ecs/EntityFactory.h>
@@ -14,7 +15,7 @@ namespace game {
 		void OnRender(sf::RenderWindow& window) override;
 
 	private:
-		// 2d engine stuff
+		// core engine stuff
 		sc::ecs::Scene m_scene = sc::ecs::Scene("GameplayLayer Scene");
 		sc::graphics::Camera2D m_camera{ 640.f, 360.f };
 
