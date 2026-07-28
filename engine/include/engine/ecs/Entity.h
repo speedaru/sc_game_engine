@@ -18,9 +18,9 @@ namespace sc::ecs {
 		operator bool() const { return m_handle != entt::null; }
 
 		template <typename T, typename... Args>
-		T& AddComponent(Args&&... args) const {
+		void AddComponent(Args&&... args) const {
 			assert((bool)*this && m_scene != nullptr);
-			return m_scene->GetRegistry().emplace<T>(m_handle, std::forward<Args>(args)...);
+			m_scene->GetRegistry().emplace<T>(m_handle, std::forward<Args>(args)...);
 		}
 
 		template <typename T>

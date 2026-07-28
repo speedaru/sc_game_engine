@@ -66,9 +66,15 @@ namespace sc::graphics::render2d {
 			if (!quad.texture) continue;
 
 			auto sfmlTexture = std::static_pointer_cast<SFMLTexture2D>(quad.texture);
+
+			// texture
 			s_sceneSprite.setTexture(sfmlTexture->GetNativeTexture(), true);
 			s_sceneSprite.setTextureRect(quad.textureRect);
+
+			// position and pivot
+			sf::Vector2f spriteSize = s_sceneSprite.getLocalBounds().size;
 			s_sceneSprite.setPosition(quad.position);
+			s_sceneSprite.setOrigin({ quad.pivot.x * spriteSize.x, quad.pivot.y * spriteSize.y });
 
 			window.draw(s_sceneSprite);
 		}
@@ -86,7 +92,7 @@ namespace sc::graphics::render2d {
 		s_mapQueue.push_back(&map);
 	}
 
-	void SubmitLevel(const LevelGraphics& level) {
+	void SubmitLevel(const Level& level) {
 		for (const auto layer : level.GetLayers()) {
 			SubmitMap(*layer);
 		}

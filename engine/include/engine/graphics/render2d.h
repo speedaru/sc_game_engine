@@ -6,12 +6,13 @@
 
 #include <engine/graphics/Texture2D.h>
 #include <engine/graphics/Camera2D.h>
-#include <engine/graphics/LevelGraphics.h>
+#include <engine/graphics/Level.h>
 
 // render subsytem
 namespace sc::graphics {
 	struct QuadProps {
 		sf::Vector2f position{};
+		sf::Vector2f pivot{}; // 0 - 1 range
 		std::shared_ptr<Texture2D> texture{};
 		sf::IntRect textureRect{};
 		int16_t zIndex{};
@@ -31,6 +32,6 @@ namespace sc::graphics {
 		// submission api
 		void SubmitQuad(const QuadProps& quad);
 		void SubmitMap(const TileMap& map);
-		void SubmitLevel(const LevelGraphics& level);
+		void SubmitLevel(const Level& level);
 	}
 }

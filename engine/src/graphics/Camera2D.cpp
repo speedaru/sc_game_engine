@@ -11,7 +11,7 @@ namespace sc::graphics {
 		m_view.setCenter(position);
 	}
 
-	void Camera2D::setZoom(float zoomFactor) {
+	void Camera2D::SetZoom(float zoomFactor) {
 		m_view.zoom(zoomFactor);
 	}
 }

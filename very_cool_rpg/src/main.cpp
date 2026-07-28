@@ -1,3 +1,4 @@
+#include <pch.h>
 #include <engine/core/Application.h>
 #include <engine/utils/logging.h>
 

@@ -4,7 +4,7 @@
 #include <engine/ecs/Entity.h>
 #include <engine/ecs/EntityFactory.h>
 #include <engine/graphics/Camera2D.h>
-#include <engine/graphics/LevelGraphics.h>
+#include <engine/graphics/Level.h>
 
 namespace game {
 	class GameplayLayer : public sc::core::ILayer {
@@ -12,9 +12,6 @@ namespace game {
 		void OnAttach() override;
 		void OnFixedUpdate(float timeStep) override;
 		void OnRender(sf::RenderWindow& window) override;
-
-	private:
-		void RegisterEntityBlueprints();
 
 	private:
 		// 2d engine stuff
@@ -26,6 +23,6 @@ namespace game {
 		sc::ecs::EntityFactory m_entityFactory;
 
 		// world
-		std::shared_ptr<sc::graphics::LevelGraphics> m_level;
+		std::shared_ptr<sc::graphics::Level> m_level;
 	};
 }

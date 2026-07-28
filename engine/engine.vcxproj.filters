@@ -45,13 +45,13 @@
     <ClCompile Include="src\graphics\TileMap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\assets\LDtkLoader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\graphics\LevelGraphics.cpp">
+    <ClCompile Include="src\graphics\Level.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\ecs\EntityFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ecs\ComponentAssemblers.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -104,13 +104,19 @@
     <ClInclude Include="include\engine\graphics\TileMap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\engine\assets\LDtkLoader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\engine\graphics\LevelGraphics.h">
+    <ClInclude Include="include\engine\graphics\Level.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\engine\ecs\EntityFactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\engine\loader\types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\engine\ecs\IBlueprint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\engine\ecs\ComponentAssemblers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

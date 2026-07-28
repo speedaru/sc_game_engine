@@ -342,20 +342,6 @@
 							"defUid": 123,
 							"px": [316,60],
 							"fieldInstances": []
-						},
-						{
-							"__identifier": "Dragon",
-							"__grid": [7,23],
-							"__pivot": [0.5,0.5],
-							"__tags": [],
-							"__tile": { "tilesetUid": 116, "x": 64, "y": 0, "w": 64, "h": 64 },
-							"__smartColor": "#D77643",
-							"iid": "f82e8770-6fc0-11f1-98ba-85d998e99ae1",
-							"width": 64,
-							"height": 64,
-							"defUid": 123,
-							"px": [60,188],
-							"fieldInstances": []
 						}
 					]
 				},

@@ -73,7 +73,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(ProjectDir)build\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)intermediate\$(Configuration)\</IntDir>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)include\;$(ProjectDir)src\;$(SolutionDir)vendor\SFML-3.1.0\include\;$(SolutionDir)vendor\imgui-1.92.8\;$(SolutionDir)vendor\entt-3.16.0\src\;$(SolutionDir)vendor\nlohmann\</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)include\;$(ProjectDir)src\;$(SolutionDir)vendor\SFML-3.1.0\include\;$(SolutionDir)vendor\imgui-1.92.8\;$(SolutionDir)vendor\entt-3.16.0\src\;$(SolutionDir)vendor\nlohmann\;$(SolutionDir)vendor\LDtkLoader\</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(ProjectDir)lib\;</LibraryPath>
     <TargetName>sc_game_engine</TargetName>
   </PropertyGroup>
@@ -86,7 +86,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(ProjectDir)build\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)intermediate\$(Configuration)\</IntDir>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)include\;$(ProjectDir)src\;$(SolutionDir)vendor\SFML-3.1.0\include\;$(SolutionDir)vendor\imgui-1.92.8\;$(SolutionDir)vendor\entt-3.16.0\src\;$(SolutionDir)vendor\nlohmann\</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)include\;$(ProjectDir)src\;$(SolutionDir)vendor\SFML-3.1.0\include\;$(SolutionDir)vendor\imgui-1.92.8\;$(SolutionDir)vendor\entt-3.16.0\src\;$(SolutionDir)vendor\nlohmann\;$(SolutionDir)vendor\LDtkLoader\</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(ProjectDir)lib\;</LibraryPath>
     <TargetName>sc_game_engine</TargetName>
   </PropertyGroup>
@@ -153,10 +153,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\assets\LDtkLoader.cpp" />
+    <ClCompile Include="src\ecs\ComponentAssemblers.cpp" />
     <ClCompile Include="src\ecs\EntityFactory.cpp" />
     <ClCompile Include="src\graphics\Camera2D.cpp" />
-    <ClCompile Include="src\graphics\LevelGraphics.cpp" />
+    <ClCompile Include="src\graphics\Level.cpp" />
     <ClCompile Include="src\graphics\Texture2D.cpp" />
     <ClCompile Include="src\core\Application.cpp" />
     <ClCompile Include="src\core\Window.cpp" />
@@ -171,22 +171,24 @@
     <ClCompile Include="src\utils\logging.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\engine\assets\LDtkLoader.h" />
     <ClInclude Include="include\engine\constants.h" />
     <ClInclude Include="include\engine\core\Application.h" />
     <ClInclude Include="include\engine\core\ILayer.h" />
     <ClInclude Include="include\engine\core\Window.h" />
     <ClInclude Include="include\engine\ecs\Components.h" />
+    <ClInclude Include="include\engine\ecs\ComponentAssemblers.h" />
     <ClInclude Include="include\engine\ecs\Entity.h" />
     <ClInclude Include="include\engine\ecs\EntityFactory.h" />
+    <ClInclude Include="include\engine\ecs\IBlueprint.h" />
     <ClInclude Include="include\engine\ecs\Scene.h" />
     <ClInclude Include="include\engine\graphics\Camera2D.h" />
-    <ClInclude Include="include\engine\graphics\LevelGraphics.h" />
+    <ClInclude Include="include\engine\graphics\Level.h" />
     <ClInclude Include="include\engine\graphics\render2d.h" />
     <ClInclude Include="include\engine\graphics\SFMLTexture2D.h" />
     <ClInclude Include="include\engine\graphics\Texture2D.h" />
     <ClInclude Include="include\engine\graphics\TileMap.h" />
     <ClInclude Include="include\engine\graphics\TileSet.h" />
+    <ClInclude Include="include\engine\loader\types.h" />
     <ClInclude Include="include\engine\utils\logging.h" />
     <ClInclude Include="include\pch.h" />
     <ClInclude Include="src\pch.h" />
