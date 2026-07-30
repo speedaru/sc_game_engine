@@ -28,7 +28,7 @@ namespace game {
 		out.height = layer.getGridSize().y;
 
 		// fill with null tiles
-		out.tiles.assign(out.width * out.height, 0);
+		out.tiles.assign(out.width * out.height, -1);
 
 		// map to our array
 		for (const auto& tile : layer.allTiles()) {
@@ -62,14 +62,22 @@ namespace game {
 
 		LOG_D("level size: %d %d", level.size.x, level.size.y);
 		m_level = std::make_shared<gfx::Level>(sf::Vector2i(level.size.x, level.size.y));
-		for (const auto& layer : level.allLayers()) {
+		for (auto it = level.allLayers().rbegin(); it != level.allLayers().rend(); it++) {
+		//for (const auto& layer : level.allLayers()) {
+			auto& layer = *it;
 			LOG_D("current layer: %s", layer.getName().c_str());
 			if (!layer.hasTileset()) {
 				continue;
 			}
 
 			auto& ldtkTileSet = layer.getTileset();
-			auto tileSet = std::make_shared<gfx::TileSet>(projectDir / ldtkTileSet.path, ldtkTileSet.tile_size);
+			fs::path tileSetPath = projectDir / ldtkTileSet.path;
+			if (!fs::exists(tileSetPath) || !fs::is_regular_file(tileSetPath)) {
+				LOG_W("skipping tileset: %s, bcs invalid path: %s", ldtkTileSet.name.c_str(), ldtkTileSet.path.c_str());
+				continue;
+			}
+
+			auto tileSet = std::make_shared<gfx::TileSet>(tileSetPath, ldtkTileSet.tile_size);
 			auto tileMap = std::make_shared<gfx::TileMap>(tileSet);
 
 			auto mapData = ExtractMapData(layer);
@@ -110,18 +118,16 @@ namespace game {
 			sf::Vector2f cameraPos = trans.pos;
 
 			// limit camera in map edges
-			cameraPos.x = std::max(cameraPos.x, m_camera.GetHalfSize().x);
-			cameraPos.x = std::min(cameraPos.x, m_level->GetSize().x - m_camera.GetHalfSize().x);
-			cameraPos.y = std::max(cameraPos.y, m_camera.GetHalfSize().y);
-			cameraPos.y = std::min(cameraPos.y, m_level->GetSize().y - m_camera.GetHalfSize().y);
+			//cameraPos.x = std::max(cameraPos.x, m_camera.GetHalfSize().x);
+			//cameraPos.x = std::min(cameraPos.x, m_level->GetSize().x - m_camera.GetHalfSize().x);
+			//cameraPos.y = std::max(cameraPos.y, m_camera.GetHalfSize().y);
+			//cameraPos.y = std::min(cameraPos.y, m_level->GetSize().y - m_camera.GetHalfSize().y);
 
 			m_camera.SetPosition(cameraPos);
 		}
     }
 
     void GameplayLayer::OnRender(sf::RenderWindow& window) {
-        auto view = m_scene.GetRegistry().view<const ecs::TransformComponent, ecs::SpriteComponent>();
-
         sc::graphics::render2d::BeginScene();
 
 		// render world
@@ -130,6 +136,7 @@ namespace game {
 		}
 
 		// render entities
+        auto view = m_scene.GetRegistry().view<const ecs::TransformComponent, ecs::SpriteComponent>();
         for (auto [entityHandle, trans, spr] : view.each()) {
             sc::ecs::Entity entity(entityHandle, &m_scene);
             render_utils::SubmitEntity(entity);
