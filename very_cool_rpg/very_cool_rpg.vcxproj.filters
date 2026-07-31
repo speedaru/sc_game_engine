@@ -21,9 +21,6 @@
     <ClCompile Include="src\layers\GameplayLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\utils\render_utils.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -48,18 +45,15 @@
     <ClCompile Include="src\factories\EntityFactory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\loaders\world_loader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\layers\GameplayLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\constants.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\utils\render_utils.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\enums\ZLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\pch.h">
@@ -96,6 +90,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\blueprints\includes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\loaders\world_loader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

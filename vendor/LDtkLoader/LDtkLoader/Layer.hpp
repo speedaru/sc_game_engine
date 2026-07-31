@@ -45,6 +45,8 @@ namespace ldtk {
 
         auto getIntGridVal(int grid_x, int grid_y) const -> const IntGridValue&;
 
+		auto getDefUid() const -> int { return m_definition->uid; }
+
         auto hasEntity(const std::string& entity_name) const -> bool;
         auto allEntities() const -> const std::vector<Entity>&;
         auto getEntitiesByName(const std::string& entity_name) const -> const std::vector<std::reference_wrapper<Entity>>&;

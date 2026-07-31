@@ -1,22 +1,18 @@
 #include <pch.h>
-#include <engine/ecs/Scene.h>
+#include <engine/ecs/Registry.h>
 #include <engine/ecs/Components.h>
 #include <engine/ecs/Entity.h>
 
 namespace sc::ecs {
-	Scene::Scene() : m_tag(DEFAULT_TAG) {
-		LOG_OBJ_I("initializing scene '%s'", m_tag);
+	Registry::Registry(const char* tag) : m_tag(tag) {
+		LOG_OBJ_I("initializing entity registry '%s'", m_tag);
 	}
 
-	Scene::Scene(const char* tag) : m_tag(tag) {
-		LOG_OBJ_I("initializing scene '%s'", m_tag);
+	Registry::~Registry() {
+		LOG_OBJ_I("destroying entity registry '%s'", m_tag);
 	}
 
-	Scene::~Scene() {
-		LOG_OBJ_I("destroying scene '%s'", m_tag);
-	}
-
-	Entity Scene::CreateEntity(const std::string& name) {
+	Entity Registry::CreateEntity(const std::string& name) {
 		// create entity
 		entt::entity handle = m_registry.create();
 		Entity ent(handle, this);

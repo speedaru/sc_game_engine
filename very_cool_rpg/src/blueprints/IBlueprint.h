@@ -1,7 +1,7 @@
 #pragma once
 #include <LDtkLoader/Entity.hpp>
 
-#include <engine/ecs/Scene.h>
+#include <engine/ecs/Registry.h>
 
 namespace game::blueprints {
 	class IBlueprint {

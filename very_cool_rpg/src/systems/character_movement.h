@@ -1,9 +1,9 @@
 #pragma once
 
 namespace sc::ecs {
-	class Scene;
+	class Registry;
 }
 
 namespace game::systems {
-	void UpdateCharacterMovement(sc::ecs::Scene& scene, float timeStep);
+	void UpdateCharacterMovement(sc::ecs::Registry& registry, float timeStep);
 }

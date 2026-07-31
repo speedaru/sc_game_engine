@@ -1,7 +1,7 @@
 #include <pch.h>
 
-#include <engine/core/Input.h>
-#include <engine/ecs/Scene.h>
+#include <engine/input/Input.h>
+#include <engine/ecs/Registry.h>
 #include <engine/ecs/Components.h>
 
 #include <components/GameComponents.h>
@@ -9,11 +9,11 @@
 #include <systems/player_input.h>
 
 namespace ecs = sc::ecs;
-namespace input = sc::core::input;
+namespace input = sc::input;
 
 namespace game::systems  {
-	void UpdatePlayerInput(sc::ecs::Scene& scene) {
-		auto view = scene.GetRegistry().view<components::PlayerTag, components::CharacterController>();
+	void UpdatePlayerInput(sc::ecs::Registry& registry) {
+		auto view = registry.GetRegistry().view<components::PlayerTag, components::CharacterController>();
 
 		for (auto [entity, controller] : view.each()) {
 			//LOG_D("found entity with player tag and character controller: %s", tag.tag.c_str());

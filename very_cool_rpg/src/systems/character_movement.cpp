@@ -1,6 +1,6 @@
 #include <pch.h>
 
-#include <engine/ecs/Scene.h>
+#include <engine/ecs/Registry.h>
 #include <engine/ecs/Components.h>
 
 #include <components/GameComponents.h>
@@ -8,8 +8,8 @@
 namespace ecs = sc::ecs;
 
 namespace game::systems {
-	void UpdateCharacterMovement(sc::ecs::Scene& scene, float timeStep) {
-		auto view = scene.GetRegistry().view<components::CharacterController, ecs::VelocityComponent>();
+	void UpdateCharacterMovement(sc::ecs::Registry& registry, float timeStep) {
+		auto view = registry.GetRegistry().view<components::CharacterController, ecs::VelocityComponent>();
 
 		for (auto [entity, controller, vel] : view.each()) {
 			// normalize direction to prevent diagonal speed boost

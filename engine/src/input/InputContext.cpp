@@ -1,7 +1,7 @@
 #include <pch.h>
-#include <engine/core/InputContext.h>
+#include <engine/input/InputContext.h>
 
-namespace sc::core {
+namespace sc::input {
 	void InputContext::Bind(sf::Keyboard::Key key, ActionId action) {
 		m_keyBindings[key] = action;
 	}

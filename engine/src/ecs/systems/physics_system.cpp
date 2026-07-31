@@ -1,10 +1,9 @@
 #include <pch.h>
-#include <engine/ecs/systems/PhysicsSystem.h>
-#include <engine/ecs/Scene.h>
+#include <engine/ecs/systems/physics_system.h>
 #include <engine/ecs/Components.h>
 
-namespace sc::ecs::systems {
-	void UpdateKinematics(Scene& scene, float timeStep) {
+namespace sc::ecs::physics_system {
+	void UpdateKinematics(Registry& scene, float timeStep) {
 		auto view = scene.GetRegistry().view<TransformComponent, const VelocityComponent>();
 
 		for (auto [entity, trans, vel] : view.each()) {

@@ -15,7 +15,7 @@ namespace game::utils::assemblers {
 		entity.AddComponent<ecs::TransformComponent>(sf::Vector2f((float)pos.x, (float)pos.y), sf::Vector2f(pivot.x, pivot.y));
 	}
 
-    void AttachSprite(ecs::Entity& entity, const ldtk::Entity& ldtkData, const fs::path& projectDir, TextureCache& cache, int16_t zIndex) {
+    void AttachSprite(ecs::Entity& entity, const ldtk::Entity& ldtkData, const fs::path& projectDir, TextureCache& cache) {
         if (ldtkData.getTexturePath().empty()) return;
 
         std::string fullPath = (projectDir / ldtkData.getTexturePath()).string();
@@ -29,7 +29,7 @@ namespace game::utils::assemblers {
         ldtk::IntRect rect = ldtkData.getTextureRect();
         entity.AddComponent<ecs::SpriteComponent>(
             cache[fullPath],
-            zIndex,
+            ldtkData.layer->getDefUid(),
             sf::IntRect{ { rect.x, rect.y }, { rect.width, rect.height } }
         );
 	}

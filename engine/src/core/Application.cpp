@@ -1,7 +1,9 @@
 #include <pch.h>
-#include <engine/constants.h>
 #include <engine/core/Application.h>
-#include <engine/graphics/render2d.h>
+#include <engine/renderer/render2d.h>
+#include <engine/constants.h>
+
+using namespace sc::renderer;
 
 namespace sc::core {
 	Application::Application(WindowData&& windowData) {
@@ -19,7 +21,7 @@ namespace sc::core {
 		logging::LoggerInit(LOG_FILE_NAME, logLevel);
 		LOG_OBJ_I("initializing engine application");
 
-		graphics::render2d::Initialize();
+		render2d::Initialize();
 
 		m_window = std::make_unique<Window>(std::move(windowData));
 	}
@@ -32,7 +34,7 @@ namespace sc::core {
 			PopLayer();
 		}
 
-		graphics::render2d::Shutdown();
+		render2d::Shutdown();
 
 		logging::LoggerShutdown();
 	}

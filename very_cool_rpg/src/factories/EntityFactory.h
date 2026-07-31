@@ -9,7 +9,7 @@
 
 namespace sc::ecs {
 	class Entity;
-	class Scene;
+	class Registry;
 }
 
 namespace game::factories {
@@ -19,7 +19,7 @@ namespace game::factories {
 
 		void Register(const std::string& identifier, std::unique_ptr<blueprints::IBlueprint> blueprint);
 
-		sc::ecs::Entity Spawn(sc::ecs::Scene& scene, const ldtk::Entity& ldtkData);
+		sc::ecs::Entity Spawn(sc::ecs::Registry& registry, const ldtk::Entity& ldtkData);
 		
 		TextureCache& GetTextureCache() { return m_textureCache; }
 

@@ -4,7 +4,7 @@
 
 #include <SFML/Window/Keyboard.hpp>
 
-namespace sc::core {
+namespace sc::input {
     using ActionId = int32_t;
 
     class InputContext {
@@ -17,5 +17,4 @@ namespace sc::core {
     private:
         std::unordered_map<sf::Keyboard::Key, ActionId> m_keyBindings;
     };
-
 }

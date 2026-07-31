@@ -1,9 +1,9 @@
 #pragma once
 
 namespace sc::ecs {
-	class Scene;
+	class Registry;
 }
 
 namespace game::systems {
-	void UpdatePlayerInput(sc::ecs::Scene& scene);
+	void UpdatePlayerInput(sc::ecs::Registry& registry);
 }

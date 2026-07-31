@@ -22,16 +22,15 @@ namespace sc::ecs {
 
 	struct SpriteComponent {
 		std::shared_ptr<sc::graphics::Texture2D> texture;
-		int16_t zlayer;
+		int32_t layerUid;
 		sf::IntRect rect;
 
 		// specify rect
-		SpriteComponent(const std::shared_ptr<sc::graphics::Texture2D>& texture, int16_t zlayer, const sf::IntRect& rect)
-			: texture(texture), zlayer(zlayer), rect(rect) {}
+		SpriteComponent(const std::shared_ptr<sc::graphics::Texture2D>& texture, int32_t layerUid, const sf::IntRect& rect)
+			: texture(texture), layerUid(layerUid), rect(rect) {}
 
 		// use full texture rect
-		SpriteComponent(const std::shared_ptr<sc::graphics::Texture2D>& texture, int16_t zlayer)
-			: texture(texture), zlayer(zlayer),
-			rect({ 0, 0 }, { (int32_t)texture->GetWidth(), (int32_t)texture->GetHeight() }) {}
+		SpriteComponent(const std::shared_ptr<sc::graphics::Texture2D>& texture, int32_t layerUid)
+			: SpriteComponent(texture, layerUid, sf::IntRect({ 0, 0 }, { (int32_t)texture->GetWidth(), (int32_t)texture->GetHeight() })) {}
 	};
 }

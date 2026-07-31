@@ -162,6 +162,7 @@
     <ClCompile Include="src\blueprints\BlueprintRegistry.cpp" />
     <ClCompile Include="src\blueprints\DragonBlueprint.cpp" />
     <ClCompile Include="src\blueprints\PlayerBlueprint.cpp" />
+    <ClCompile Include="src\loaders\world_loader.cpp" />
     <ClCompile Include="src\utils\assemblers\LdtkAssemblers.cpp" />
     <ClCompile Include="src\factories\EntityFactory.cpp" />
     <ClCompile Include="src\pch.cpp">
@@ -172,7 +173,6 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\systems\character_movement.cpp" />
     <ClCompile Include="src\systems\player_input.cpp" />
-    <ClCompile Include="src\utils\render_utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\blueprints\BlueprintRegistry.h" />
@@ -180,17 +180,16 @@
     <ClInclude Include="src\blueprints\IBlueprint.h" />
     <ClInclude Include="src\blueprints\includes.h" />
     <ClInclude Include="src\blueprints\PlayerBlueprint.h" />
+    <ClInclude Include="src\loaders\world_loader.h" />
     <ClInclude Include="src\utils\assemblers\LdtkAssemblers.h" />
     <ClInclude Include="src\components\GameComponents.h" />
     <ClInclude Include="src\factories\EntityFactory.h" />
     <ClInclude Include="src\enums\InputActions.h" />
     <ClInclude Include="src\pch.h" />
-    <ClInclude Include="src\enums\ZLayer.h" />
     <ClInclude Include="src\constants.h" />
     <ClInclude Include="src\layers\GameplayLayer.h" />
     <ClInclude Include="src\systems\character_movement.h" />
     <ClInclude Include="src\systems\player_input.h" />
-    <ClInclude Include="src\utils\render_utils.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />

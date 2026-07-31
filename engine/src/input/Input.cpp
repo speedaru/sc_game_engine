@@ -1,8 +1,8 @@
 #include <pch.h>
-#include <engine/core/Input.h>
+#include <engine/input/Input.h>
 #include <engine/utils/logging.h>
 
-namespace sc::core {
+namespace sc::input {
 	std::vector<std::shared_ptr<InputContext>> s_contexts;
 
 	void input::PushContext(const std::shared_ptr<InputContext>& ctx) {

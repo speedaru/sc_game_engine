@@ -27,13 +27,13 @@
     <ClCompile Include="src\core\Application.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ecs\Scene.cpp">
+    <ClCompile Include="src\ecs\Registry.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\graphics\Texture2D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\graphics\render2d.cpp">
+    <ClCompile Include="src\renderer\render2d.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\graphics\Camera2D.cpp">
@@ -42,19 +42,25 @@
     <ClCompile Include="src\graphics\TileSet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\graphics\TileMap.cpp">
+    <ClCompile Include="src\input\InputContext.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\graphics\Level.cpp">
+    <ClCompile Include="src\input\Input.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\core\InputContext.cpp">
+    <ClCompile Include="src\ecs\systems\physics_system.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\core\Input.cpp">
+    <ClCompile Include="src\world\World.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ecs\systems\PhysicsSystem.cpp">
+    <ClCompile Include="src\world\Level.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\world\TileLayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ecs\systems\render_system.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -77,7 +83,7 @@
     <ClInclude Include="src\pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\engine\ecs\Scene.h">
+    <ClInclude Include="include\engine\ecs\Registry.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\engine\core\ILayer.h">
@@ -86,7 +92,7 @@
     <ClInclude Include="include\engine\ecs\Entity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\engine\graphics\render2d.h">
+    <ClInclude Include="include\engine\renderer\render2d.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\engine\graphics\Texture2D.h">
@@ -104,19 +110,37 @@
     <ClInclude Include="include\engine\graphics\TileSet.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\engine\graphics\TileMap.h">
+    <ClInclude Include="include\engine\input\InputContext.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\engine\graphics\Level.h">
+    <ClInclude Include="include\engine\input\Input.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\engine\core\InputContext.h">
+    <ClInclude Include="include\engine\ecs\systems\physics_system.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\engine\core\Input.h">
+    <ClInclude Include="include\engine\world\World.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\engine\ecs\systems\PhysicsSystem.h">
+    <ClInclude Include="include\engine\world\Level.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\engine\world\ILevelLayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\engine\world\TileLayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\engine\world\EntityLayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\engine\world\CollisionLayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\engine\ecs\systems\render_system.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\engine\world\YSortedTileLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

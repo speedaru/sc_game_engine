@@ -5,7 +5,7 @@
 
 #include <LDtkLoader/Entity.hpp>
 
-#include <engine/ecs/Scene.h>
+#include <engine/ecs/Registry.h>
 #include <engine/ecs/Components.h>
 #include <engine/graphics/Texture2D.h>
 
@@ -14,5 +14,5 @@ namespace game::utils::assemblers {
 
     void AttachTransform(sc::ecs::Entity& entity, const ldtk::Entity& ldtkData);
 
-    void AttachSprite(sc::ecs::Entity& entity, const ldtk::Entity& ldtkData, const fs::path& projectDir, TextureCache& cache, int16_t zIndex);
+    void AttachSprite(sc::ecs::Entity& entity, const ldtk::Entity& ldtkData, const fs::path& projectDir, TextureCache& cache);
 }

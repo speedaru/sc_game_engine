@@ -1,12 +1,12 @@
 #pragma once
 #include <engine/core/ILayer.h>
-#include <engine/core/Input.h>
-#include <engine/ecs/Scene.h>
+#include <engine/ecs/Registry.h>
 #include <engine/ecs/Entity.h>
 #include <engine/graphics/Camera2D.h>
-#include <engine/graphics/Level.h>
+#include <engine/world/World.h>
 
 #include <factories/EntityFactory.h>
+#include <loaders/world_loader.h>
 #include <constants.h>
 
 namespace game {
@@ -18,7 +18,7 @@ namespace game {
 
 	private:
 		// core engine stuff
-		sc::ecs::Scene m_scene = sc::ecs::Scene("GameplayLayer Scene");
+		sc::ecs::Registry m_registry = sc::ecs::Registry ("GameplayLayer registry");
 		sc::graphics::Camera2D m_camera{ NATIVE_WIDTH, NATIVE_HEIGHT };
 
 		// entities
@@ -26,6 +26,6 @@ namespace game {
 		factories::EntityFactory m_entityFactory;
 
 		// world
-		std::shared_ptr<sc::graphics::Level> m_level;
+		std::shared_ptr<sc::world::World> m_world;
 	};
 }

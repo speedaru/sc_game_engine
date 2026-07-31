@@ -1,7 +1,7 @@
 #include <pch.h>
 
 #include <engine/ecs/Entity.h>
-#include <engine/ecs/Scene.h>
+#include <engine/ecs/Registry.h>
 
 #include <factories/EntityFactory.h>
 
@@ -12,8 +12,8 @@ namespace game::factories {
 		m_blueprints[identifier] = std::move(blueprint);
 	}
 
-	ecs::Entity EntityFactory::Spawn(ecs::Scene& scene, const ldtk::Entity& ldtkData) {
-		ecs::Entity entity = scene.CreateEntity(ldtkData.getName());
+	ecs::Entity EntityFactory::Spawn(ecs::Registry& registry, const ldtk::Entity& ldtkData) {
+		ecs::Entity entity = registry.CreateEntity(ldtkData.getName());
 
 		auto it = m_blueprints.find(ldtkData.getName());
 		if (it != m_blueprints.end()) {
