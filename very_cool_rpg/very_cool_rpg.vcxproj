@@ -73,7 +73,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(ProjectDir)build\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)intermediate\$(Configuration)\</IntDir>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)include\;$(ProjectDir)src\;$(SolutionDir)engine\include\;$(SolutionDir)vendor\SFML-3.1.0\include\;$(SolutionDir)vendor\imgui-1.92.8\;$(SolutionDir)vendor\entt-3.16.0\src\;$(SolutionDir)vendor\LDtkLoader\</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)include\;$(ProjectDir)src\;$(SolutionDir)engine\include\;$(SolutionDir)vendor\SFML-3.1.0\include\;$(SolutionDir)vendor\imgui-1.92.8\;$(SolutionDir)vendor\entt-3.16.0\src\;$(SolutionDir)vendor\LDtkLoader\;$(SolutionDir)vendor\nlohmann\</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(ProjectDir)lib\;$(SolutionDir)vendor\SFML-3.1.0\lib\</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -85,7 +85,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(ProjectDir)build\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)intermediate\$(Configuration)\</IntDir>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)include\;$(ProjectDir)src\;$(SolutionDir)engine\include\;$(SolutionDir)vendor\SFML-3.1.0\include\;$(SolutionDir)vendor\imgui-1.92.8\;$(SolutionDir)vendor\entt-3.16.0\src\;$(SolutionDir)vendor\LDtkLoader\</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)include\;$(ProjectDir)src\;$(SolutionDir)engine\include\;$(SolutionDir)vendor\SFML-3.1.0\include\;$(SolutionDir)vendor\imgui-1.92.8\;$(SolutionDir)vendor\entt-3.16.0\src\;$(SolutionDir)vendor\LDtkLoader\;$(SolutionDir)vendor\nlohmann\</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(ProjectDir)lib\;$(SolutionDir)vendor\SFML-3.1.0\lib\</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

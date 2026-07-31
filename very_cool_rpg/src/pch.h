@@ -22,4 +22,5 @@ namespace chrono = std::chrono;
 
 // thirdpart libraries
 #include <entt/entt.hpp>
+#include <nlohmann/json.hpp>
 #include <LDtkLoader/Project.hpp>

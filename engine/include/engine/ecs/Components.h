@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <vector>
 
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Graphics.hpp>
@@ -32,5 +33,19 @@ namespace sc::ecs {
 		// use full texture rect
 		SpriteComponent(const std::shared_ptr<sc::graphics::Texture2D>& texture, int32_t layerUid)
 			: SpriteComponent(texture, layerUid, sf::IntRect({ 0, 0 }, { (int32_t)texture->GetWidth(), (int32_t)texture->GetHeight() })) {}
+	};
+
+	struct Hitbox {
+		sf::Vector2f offset;
+		sf::Vector2f size;
+
+		Hitbox(float offsetX, float offsetY, float w, float h)
+			: offset(offsetX, offsetY), size(w, h) {}
+	};
+
+	struct BoxColliderComponent {
+		std::vector<Hitbox> hitboxes;
+
+		BoxColliderComponent() = default;
 	};
 }

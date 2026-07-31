@@ -6,9 +6,9 @@ namespace game::components {
 	struct PlayerTag {};
 
 	struct CharacterController {
-		float maxSpeed = 250.f;
+		float maxSpeed = 200.f;
 		float acceleration = 2000.f;
-		float friction = 5000.f;
+		float friction = 6000.f;
 		sf::Vector2f direction{}; // -1 to 1 on X and Y
 	};
 }

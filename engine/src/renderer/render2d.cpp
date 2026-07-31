@@ -70,14 +70,9 @@ namespace sc::renderer::render2d {
 
         const auto& tileSetTexture = layer.GetTileSet()->GetTexture();
         for (const auto& tile : layer.GetTiles()) {
-
-            // calculate position of bottom left corner of the tile in level space
-            float tileHeight = static_cast<float>(tile.textureRect.size.y);
-            sf::Vector2f feetPosition = { tile.pixelPos.x, tile.pixelPos.y + tileHeight };
-
             SubmitQuad(QuadProps{
                 .position = tile.pixelPos,
-                .pivot = { 0.f, 1.f }, // pivot is at the feet
+                .pivot = { 0.f, 0.f }, // pivot is at the feet
                 .texture = tileSetTexture,
                 .textureRect = tile.textureRect,
             });

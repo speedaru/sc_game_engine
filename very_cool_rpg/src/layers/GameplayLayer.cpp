@@ -47,10 +47,14 @@ namespace game {
 		}
 
 		// get player reference
-		auto view = m_registry.GetRegistry().view<components::PlayerTag>();
+		const auto view = m_registry.GetRegistry().view<const components::PlayerTag>();
 		for (auto entityHandle : view) {
 			m_player = sc::ecs::Entity(entityHandle, &m_registry);
 			break; // only 1 player
+		}
+
+		if (!m_player) {
+			LOG_W("no player found !");
 		}
     }
 
@@ -67,15 +71,9 @@ namespace game {
 		// center camera on player
 		if (m_player && m_player.HasComponent<ecs::TransformComponent>()) {
 			const auto& trans = m_player.GetComponent<ecs::TransformComponent>();
-			//trans.pos.x += 1.f;
-			//trans.pos.y += 1.f;
 			sf::Vector2f cameraPos = trans.pos;
 
-			// limit camera in map edges
-			//cameraPos.x = std::max(cameraPos.x, m_camera.GetHalfSize().x);
-			//cameraPos.x = std::min(cameraPos.x, m_level->GetSize().x - m_camera.GetHalfSize().x);
-			//cameraPos.y = std::max(cameraPos.y, m_camera.GetHalfSize().y);
-			//cameraPos.y = std::min(cameraPos.y, m_level->GetSize().y - m_camera.GetHalfSize().y);
+			// TODO: limit camera in map edges
 
 			m_camera.SetPosition(cameraPos);
 		}
@@ -90,5 +88,21 @@ namespace game {
 		}
 
 		ecs::render_system::RenderWorld(m_registry, *level, window, m_camera);
+
+		window.setView(m_camera.GetView());
+
+		//const auto& view = m_registry.GetRegistry().view<const ecs::TransformComponent, const ecs::BoxColliderComponent>();
+		const auto& view = m_registry.GetRegistry().view<const components::PlayerTag, const ecs::TransformComponent, const ecs::BoxColliderComponent>();
+		for (const auto& [entity, trans, collision] : view.each()) {
+			for (const ecs::Hitbox& hitbox : collision.hitboxes) {
+				sf::RectangleShape rect(hitbox.size);
+				rect.setPosition(trans.pos + hitbox.offset);
+				rect.setFillColor(sf::Color(255, 0, 0, 100));
+
+				window.draw(rect);
+			}
+		}
+
+		window.setView(window.getDefaultView());
     }
 }

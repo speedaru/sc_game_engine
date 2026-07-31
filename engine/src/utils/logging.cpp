@@ -115,7 +115,7 @@ void logging::LogOutput(LogLevel level, const char* file, int line, const char* 
         *it++ = ' ';
     }
 
-    LogOutputRaw(spacesBuff);
+    LogOutputRaw("%s", spacesBuff);
 
     // actual message
     va_list args;
