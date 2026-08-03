@@ -29,5 +29,6 @@ namespace game {
 
 		// world
 		std::shared_ptr<sc::world::World> m_world;
+		sc::world::Level* m_currentLevel;
 	};
 }

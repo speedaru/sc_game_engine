@@ -45,6 +45,16 @@ namespace game {
 			return;
 		}
 
+		// get level
+		m_currentLevel = m_world->GetLevel("World_Level_0").get();
+		if (!m_currentLevel) {
+			LOG_W("failed to get level 0");
+			return;
+		}
+
+		// apply bounds to camera
+		m_camera.SetBounds({ 0.f, 0.f }, static_cast<sf::Vector2f>(m_currentLevel->GetSize()));
+
 		// get player reference
 		const auto view = m_registry.GetRegistry().view<const components::PlayerTag>();
 		for (auto entityHandle : view) {
@@ -72,36 +82,27 @@ namespace game {
 			const auto& trans = m_player.GetComponent<ecs::TransformComponent>();
 			sf::Vector2f cameraPos = trans.pos;
 
-			// TODO: limit camera in map edges
-
 			m_camera.SetPosition(cameraPos);
 		}
     }
 
     void GameplayLayer::OnRender(sf::RenderWindow& window) {
-		const std::string currentLevel = "World_Level_0";
-		auto level = m_world->GetLevel(currentLevel);
-		if (!level) {
-			LOG_W("failed to get level %s", currentLevel.c_str());
-			return;
-		}
+		ecs::render_system::RenderWorld(m_registry, *m_currentLevel, window, m_camera);
 
-		ecs::render_system::RenderWorld(m_registry, *level, window, m_camera);
+		//window.setView(m_camera.GetView());
 
-		window.setView(m_camera.GetView());
+		////const auto& view = m_registry.GetRegistry().view<const ecs::TransformComponent, const ecs::BoxColliderComponent>();
+		//const auto& view = m_registry.GetRegistry().view<ecs::SpriteComponent, ecs::TransformComponent, ecs::BoxColliderComponent>();
+		//for (const auto& [entity, spr, trans, collision] : view.each()) {
+		//	for (const ecs::Hitbox& hitbox : collision.hitboxes) {
+		//		sf::RectangleShape rect(hitbox.size);
+		//		rect.setPosition(trans.pos + hitbox.offset);
+		//		rect.setFillColor(sf::Color(255, 0, 0, 100));
 
-		//const auto& view = m_registry.GetRegistry().view<const ecs::TransformComponent, const ecs::BoxColliderComponent>();
-		const auto& view = m_registry.GetRegistry().view<ecs::SpriteComponent, ecs::TransformComponent, ecs::BoxColliderComponent>();
-		for (const auto& [entity, spr, trans, collision] : view.each()) {
-			for (const ecs::Hitbox& hitbox : collision.hitboxes) {
-				sf::RectangleShape rect(hitbox.size);
-				rect.setPosition(trans.pos + hitbox.offset);
-				rect.setFillColor(sf::Color(255, 0, 0, 100));
+		//		window.draw(rect);
+		//	}
+		//}
 
-				window.draw(rect);
-			}
-		}
-
-		window.setView(window.getDefaultView());
+		//window.setView(window.getDefaultView());
     }
 }
