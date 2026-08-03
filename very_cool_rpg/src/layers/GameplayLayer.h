@@ -3,6 +3,7 @@
 #include <engine/ecs/Registry.h>
 #include <engine/ecs/Entity.h>
 #include <engine/graphics/Camera2D.h>
+#include <engine/graphics/TileSetManager.h>
 #include <engine/world/World.h>
 
 #include <factories/EntityFactory.h>
@@ -20,6 +21,7 @@ namespace game {
 		// core engine stuff
 		sc::ecs::Registry m_registry = sc::ecs::Registry ("GameplayLayer registry");
 		sc::graphics::Camera2D m_camera{ NATIVE_WIDTH, NATIVE_HEIGHT };
+		sc::graphics::TileSetManager m_tileSetManager;
 
 		// entities
 		sc::ecs::Entity m_player;

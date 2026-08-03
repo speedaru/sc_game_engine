@@ -42,6 +42,9 @@
     <ClCompile Include="src\graphics\TileSet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\graphics\TileSetManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="src\input\InputContext.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -111,6 +114,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\engine\graphics\TileSet.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\engine\graphics\TileSetManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\engine\input\InputContext.h">

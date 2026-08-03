@@ -40,7 +40,7 @@ namespace game {
 		blueprints::RegisterAll(m_entityFactory, projectDir);
 
 		// load world
-		m_world = world_loader::Load(project, m_registry, m_entityFactory);
+		m_world = world_loader::Load(project, m_registry, m_entityFactory, m_tileSetManager);
 		if (!m_world) {
 			return;
 		}
