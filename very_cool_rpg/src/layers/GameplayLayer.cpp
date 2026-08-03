@@ -89,20 +89,20 @@ namespace game {
 
 		ecs::render_system::RenderWorld(m_registry, *level, window, m_camera);
 
-		window.setView(m_camera.GetView());
+		//window.setView(m_camera.GetView());
 
-		//const auto& view = m_registry.GetRegistry().view<const ecs::TransformComponent, const ecs::BoxColliderComponent>();
-		const auto& view = m_registry.GetRegistry().view<const components::PlayerTag, const ecs::TransformComponent, const ecs::BoxColliderComponent>();
-		for (const auto& [entity, trans, collision] : view.each()) {
-			for (const ecs::Hitbox& hitbox : collision.hitboxes) {
-				sf::RectangleShape rect(hitbox.size);
-				rect.setPosition(trans.pos + hitbox.offset);
-				rect.setFillColor(sf::Color(255, 0, 0, 100));
+		////const auto& view = m_registry.GetRegistry().view<const ecs::TransformComponent, const ecs::BoxColliderComponent>();
+		//const auto& view = m_registry.GetRegistry().view<const components::PlayerTag, const ecs::TransformComponent, const ecs::BoxColliderComponent>();
+		//for (const auto& [entity, trans, collision] : view.each()) {
+		//	for (const ecs::Hitbox& hitbox : collision.hitboxes) {
+		//		sf::RectangleShape rect(hitbox.size);
+		//		rect.setPosition(trans.pos + hitbox.offset);
+		//		rect.setFillColor(sf::Color(255, 0, 0, 100));
 
-				window.draw(rect);
-			}
-		}
+		//		window.draw(rect);
+		//	}
+		//}
 
-		window.setView(window.getDefaultView());
+		//window.setView(window.getDefaultView());
     }
 }

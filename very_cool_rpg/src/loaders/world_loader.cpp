@@ -134,6 +134,9 @@ namespace {
 		for (auto it = ldtkLevel.allLayers().rbegin(); it != ldtkLevel.allLayers().rend(); ++it) {
 			const auto& ldtkLayer = *it;
 
+			// skip invisible layers
+			if (!ldtkLayer.isVisible()) continue;
+
 			using ldtk::LayerType;
 			const LayerType layerType = ldtkLayer.getType();
 			const std::string layerName = ldtkLayer.getName();
