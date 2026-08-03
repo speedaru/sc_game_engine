@@ -20,7 +20,37 @@ namespace gfx = sc::graphics;
 
 // private functions
 namespace {
-	void SpawnTileColliders(ecs::Registry& registry, const std::string& customData, const sf::Vector2f& tilePos, int tileId) {
+	int GetTileIdFromEntity(const ldtk::Entity& entity, const ldtk::Tileset& tileset) {
+		const auto rect = entity.getTextureRect();
+
+		const int stride = tileset.tile_size + tileset.spacing;
+		const int columns = tileset.texture_size.x / tileset.tile_size;
+
+		return ((rect.y - tileset.padding) / stride) * columns +
+			((rect.x - tileset.padding) / stride);
+	}
+
+	inline sf::Vector2f CalcPivotOffset(const ldtk::Entity& ent) {
+		auto rect = ent.getTextureRect();
+		auto pivot = ent.getPivot();
+		return { pivot.x * rect.width, pivot.y * rect.height };
+	}
+
+	void AddBoxCollider(const ecs::Entity& entity, const json& j, sf::Vector2f origin = { 0.f, 0.f }) {
+		auto& collider = entity.AddComponent<ecs::BoxColliderComponent>();
+
+		// parse hitboxes and add them to the component
+		for (const auto& box : j) {
+			collider.hitboxes.emplace_back(
+				box.value("x", 0.f) - origin.x,
+				box.value("y", 0.f) - origin.y,
+				box.value("w", 16.f),
+				box.value("h", 16.f)
+			);
+		}
+	}
+
+	void ProcessCustomData(ecs::Registry& registry, const std::string& customData, const sf::Vector2f& tilePos, int tileId) {
 		try {
 			auto j = json::parse(customData);
 
@@ -28,19 +58,9 @@ namespace {
 			if (j.is_array() && !j.empty()) {
 				// create physics entity
 				auto entity = registry.CreateEntity("Tile_Collider_" + std::to_string(tileId));
-
 				entity.AddComponent<ecs::TransformComponent>(tilePos);
-				auto& collider = entity.AddComponent<ecs::BoxColliderComponent>();
 
-				// parse hitboxes and add them to the component
-				for (const auto& box : j) {
-					collider.hitboxes.emplace_back(
-						box.value("x", 0.f),
-						box.value("y", 0.f),
-						box.value("w", 16.f),
-						box.value("h", 16.f)
-					);
-				}
+				AddBoxCollider(entity, j);
 
 				LOG_D("added colider for tileid: %d, tile pos: %.2f %.2f", tileId, tilePos.x, tilePos.y);
 			}
@@ -80,7 +100,7 @@ namespace {
 
 			const std::string& tileData = ldtkTileSet.getTileCustomData(tile.tileId);
 			if (!tileData.empty()) {
-				SpawnTileColliders(registry, tileData, instance.pixelPos, tile.tileId);
+				ProcessCustomData(registry, tileData, instance.pixelPos, tile.tileId);
 			}
 
 			auto rect = tile.getTextureRect();
@@ -100,30 +120,27 @@ namespace {
 		world::LayerId layerId{ ldtkLayer.getName(), ldtkLayer.getDefUid() };
 		auto entityLayer = std::make_unique<world::EntityLayer>(layerId);
 
+		// process collisions
+
 		for (const auto& ldtkEntity : ldtkLayer.allEntities()) {
-			entityFactory.Spawn(registry, ldtkEntity);
+			// get entity texture tile id
+			const auto& tileset = *ldtkEntity.getEntityDef()->tileset;
+			int tileId = GetTileIdFromEntity(ldtkEntity, tileset);
+
+			const std::string& customData = tileset.getTileCustomData(tileId);
+			ecs::Entity entity = entityFactory.Spawn(registry, ldtkEntity);
+
+			// parse custom data
+			if (!customData.empty()) {
+				sf::Vector2f tilePos((float)ldtkEntity.getPosition().x, (float)ldtkEntity.getPosition().y);
+				AddBoxCollider(entity, json::parse(customData), CalcPivotOffset(ldtkEntity));
+
+				const auto& box = entity.GetComponent<ecs::BoxColliderComponent>();
+				LOG_D("added box colider for entity: %s (%llu hitboxes)", ldtkEntity.getName().c_str(), box.hitboxes.size());
+			}
 		}
 
 		return entityLayer;
-	}
-
-	std::unique_ptr<world::CollisionLayer> ProcessCollisionLayer(const ldtk::Layer& ldtkLayer) {
-		world::LayerId layerId{ ldtkLayer.getName(), ldtkLayer.getDefUid() };
-
-		int gridWidth = ldtkLayer.getGridSize().x;
-		int gridHeight = ldtkLayer.getGridSize().y;
-		int gridSize = ldtkLayer.getCellSize();
-
-		auto collisionLayer = std::make_unique<world::CollisionLayer>(layerId, gridWidth, gridHeight, gridSize);
-
-		std::vector<int32_t> gridData(gridWidth * gridHeight, 0);
-		for (const auto& tile : ldtkLayer.allTiles()) {
-			int index = (tile.getGridPosition().y * gridWidth) + tile.getGridPosition().x;
-			gridData[index] = tile.tileId;
-		}
-
-		collisionLayer->SetData(gridData);
-		return collisionLayer;
 	}
 
 	std::shared_ptr<world::Level> LoadLevel(const ldtk::Level& ldtkLevel, const fs::path& projectDir, ecs::Registry& registry, factories::EntityFactory& entityFactory) {

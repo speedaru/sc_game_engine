@@ -48,6 +48,8 @@ namespace ldtk {
         auto hasTag(const std::string& tag) const -> bool;
         auto getTags() const -> const std::vector<std::string>&;
 
+        auto getEntityDef() const -> const EntityDef* { return m_definition; }
+
         auto allFields() const -> const std::vector<FieldDef>&;
 
         explicit Entity(const nlohmann::json& j, const World* w, const Layer* l);

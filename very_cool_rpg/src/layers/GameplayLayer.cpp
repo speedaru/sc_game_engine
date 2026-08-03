@@ -25,7 +25,6 @@ namespace gfx = sc::graphics;
 
 namespace game {
     void GameplayLayer::OnAttach() {
-
 		// load keybinds
 		auto gameplayInput = std::make_shared<input::InputContext>();
 		gameplayInput->Bind(Key::W, static_cast<int32_t>(InputAction::MoveUp));
@@ -89,20 +88,20 @@ namespace game {
 
 		ecs::render_system::RenderWorld(m_registry, *level, window, m_camera);
 
-		//window.setView(m_camera.GetView());
+		window.setView(m_camera.GetView());
 
-		////const auto& view = m_registry.GetRegistry().view<const ecs::TransformComponent, const ecs::BoxColliderComponent>();
-		//const auto& view = m_registry.GetRegistry().view<const components::PlayerTag, const ecs::TransformComponent, const ecs::BoxColliderComponent>();
-		//for (const auto& [entity, trans, collision] : view.each()) {
-		//	for (const ecs::Hitbox& hitbox : collision.hitboxes) {
-		//		sf::RectangleShape rect(hitbox.size);
-		//		rect.setPosition(trans.pos + hitbox.offset);
-		//		rect.setFillColor(sf::Color(255, 0, 0, 100));
+		//const auto& view = m_registry.GetRegistry().view<const ecs::TransformComponent, const ecs::BoxColliderComponent>();
+		const auto& view = m_registry.GetRegistry().view<ecs::SpriteComponent, ecs::TransformComponent, ecs::BoxColliderComponent>();
+		for (const auto& [entity, spr, trans, collision] : view.each()) {
+			for (const ecs::Hitbox& hitbox : collision.hitboxes) {
+				sf::RectangleShape rect(hitbox.size);
+				rect.setPosition(trans.pos + hitbox.offset);
+				rect.setFillColor(sf::Color(255, 0, 0, 100));
 
-		//		window.draw(rect);
-		//	}
-		//}
+				window.draw(rect);
+			}
+		}
 
-		//window.setView(window.getDefaultView());
+		window.setView(window.getDefaultView());
     }
 }
