@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "engine", "engine\engine.vcx
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "very_cool_rpg", "very_cool_rpg\very_cool_rpg.vcxproj", "{7FE6A46C-5F06-44CF-A9B9-132B3CA1EE03}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sc_editor", "sc_editor\sc_editor.vcxproj", "{67A2DC72-6331-4BDB-BC6F-CC3EDE603050}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -31,6 +33,14 @@ Global
 		{7FE6A46C-5F06-44CF-A9B9-132B3CA1EE03}.Release|x64.Build.0 = Release|x64
 		{7FE6A46C-5F06-44CF-A9B9-132B3CA1EE03}.Release|x86.ActiveCfg = Release|Win32
 		{7FE6A46C-5F06-44CF-A9B9-132B3CA1EE03}.Release|x86.Build.0 = Release|Win32
+		{67A2DC72-6331-4BDB-BC6F-CC3EDE603050}.Debug|x64.ActiveCfg = Debug|x64
+		{67A2DC72-6331-4BDB-BC6F-CC3EDE603050}.Debug|x64.Build.0 = Debug|x64
+		{67A2DC72-6331-4BDB-BC6F-CC3EDE603050}.Debug|x86.ActiveCfg = Debug|Win32
+		{67A2DC72-6331-4BDB-BC6F-CC3EDE603050}.Debug|x86.Build.0 = Debug|Win32
+		{67A2DC72-6331-4BDB-BC6F-CC3EDE603050}.Release|x64.ActiveCfg = Release|x64
+		{67A2DC72-6331-4BDB-BC6F-CC3EDE603050}.Release|x64.Build.0 = Release|x64
+		{67A2DC72-6331-4BDB-BC6F-CC3EDE603050}.Release|x86.ActiveCfg = Release|Win32
+		{67A2DC72-6331-4BDB-BC6F-CC3EDE603050}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
