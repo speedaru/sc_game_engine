@@ -22,6 +22,7 @@ namespace sc_editor {
 
 		m_projectPath = path;
 		m_tilesets.clear();
+		m_extraFieldsByTile.clear();
 
 		if (!m_root.contains("defs") || !m_root["defs"].contains("tilesets")) {
 			return false;
@@ -61,17 +62,15 @@ namespace sc_editor {
 		return &m_tilesets[tilesetIndex];
 	}
 
-	std::vector<Hitbox> LDtkEditorData::GetTileCollisions(int tilesetIndex, int tileId) const {
-		std::vector<Hitbox> result;
-
+	std::vector<Hitbox> LDtkEditorData::GetTileCollisions(int tilesetIndex, int tileId) {
 		const TilesetInfo* tsInfo = FindTilesetDef(tilesetIndex);
 		if (!tsInfo || !tsInfo->defJson) {
-			return result;
+			return {};
 		}
 
 		const nlohmann::json& tsDef = *tsInfo->defJson;
 		if (!tsDef.contains("customData")) {
-			return result;
+			return {};
 		}
 
 		for (const auto& entry : tsDef["customData"]) {
@@ -79,29 +78,25 @@ namespace sc_editor {
 				continue;
 			}
 
-			const std::string data = entry.value("data", std::string());
-			if (data.empty()) {
+			const std::string dataStr = entry.value("data", std::string());
+			if (dataStr.empty()) {
 				break;
 			}
 
+			CustomData data;
 			try {
-				nlohmann::json boxes = nlohmann::json::parse(data);
-				for (const auto& box : boxes) {
-					Hitbox hb;
-					hb.x = box.value("x", 0);
-					hb.y = box.value("y", 0);
-					hb.w = box.value("w", 0);
-					hb.h = box.value("h", 0);
-					result.push_back(hb);
-				}
+				data = nlohmann::json::parse(dataStr).get<CustomData>();
 			}
-			catch (const nlohmann::json::parse_error& e) {
+			catch (const nlohmann::json::exception& e) {
 				std::cerr << "[LDtkEditorData] failed to parse customData for tile " << tileId << ": " << e.what() << "\n";
+				break;
 			}
-			break;
+
+			m_extraFieldsByTile[{ tilesetIndex, tileId }] = data.extra;
+			return data.hitboxes;
 		}
 
-		return result;
+		return {};
 	}
 
 	void LDtkEditorData::SaveTileCollisions(int tilesetIndex, int tileId, const std::vector<Hitbox>& hitboxes) {
@@ -118,7 +113,7 @@ namespace sc_editor {
 		}
 		nlohmann::json& customData = tsDef["customData"];
 
-		// drop any existing entry for this tile; re-added below if it still has boxes
+		// drop any existing entry for this tile; re-added below if it still has data
 		for (auto it = customData.begin(); it != customData.end(); ++it) {
 			if (it->value("tileId", -1) == tileId) {
 				customData.erase(it);
@@ -126,15 +121,17 @@ namespace sc_editor {
 			}
 		}
 
-		if (!hitboxes.empty()) {
-			nlohmann::json boxes = nlohmann::json::array();
-			for (const auto& hb : hitboxes) {
-				boxes.push_back({ {"x", hb.x}, {"y", hb.y}, {"w", hb.w}, {"h", hb.h} });
-			}
+		CustomData data;
+		data.hitboxes = hitboxes;
+		auto extraIt = m_extraFieldsByTile.find({ tilesetIndex, tileId });
+		if (extraIt != m_extraFieldsByTile.end()) {
+			data.extra = extraIt->second;
+		}
 
+		if (!data.IsEmpty()) {
 			nlohmann::json entry;
 			entry["tileId"] = tileId;
-			entry["data"] = boxes.dump(2);
+			entry["data"] = nlohmann::json(data).dump(2);
 			customData.push_back(std::move(entry));
 		}
 

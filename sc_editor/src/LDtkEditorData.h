@@ -1,17 +1,14 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <map>
+#include <utility>
 
 #include <nlohmann/json.hpp>
 
-namespace sc_editor {
+#include "CustomData.h"
 
-	struct Hitbox {
-		int x = 0;
-		int y = 0;
-		int w = 0;
-		int h = 0;
-	};
+namespace sc_editor {
 
 	struct TilesetInfo {
 		std::string identifier;
@@ -35,7 +32,9 @@ namespace sc_editor {
 		const std::string& GetProjectPath() const { return m_projectPath; }
 		const std::vector<TilesetInfo>& GetTilesets() const { return m_tilesets; }
 
-		std::vector<Hitbox> GetTileCollisions(int tilesetIndex, int tileId) const;
+		// also caches any custom-data fields this editor doesn't have UI for (see CustomData.h),
+		// so a later SaveTileCollisions() call doesn't clobber them
+		std::vector<Hitbox> GetTileCollisions(int tilesetIndex, int tileId);
 		void SaveTileCollisions(int tilesetIndex, int tileId, const std::vector<Hitbox>& hitboxes);
 
 	private:
@@ -45,6 +44,9 @@ namespace sc_editor {
 		nlohmann::json m_root;
 		std::string m_projectPath;
 		std::vector<TilesetInfo> m_tilesets;
+
+		// custom-data fields this editor doesn't understand yet, keyed by (tilesetIndex, tileId)
+		std::map<std::pair<int, int>, nlohmann::json> m_extraFieldsByTile;
 	};
 
 }

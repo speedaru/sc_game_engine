@@ -157,10 +157,12 @@
     <ClCompile Include="..\vendor\imgui-1.91.9b\misc\cpp\imgui_stdlib.cpp" />
     <ClCompile Include="..\vendor\imgui-sfml-3.0\imgui-SFML.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\CustomData.cpp" />
     <ClCompile Include="src\LDtkEditorData.cpp" />
     <ClCompile Include="src\TileEditorLayer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\CustomData.h" />
     <ClInclude Include="src\LDtkEditorData.h" />
     <ClInclude Include="src\TileEditorLayer.h" />
   </ItemGroup>
