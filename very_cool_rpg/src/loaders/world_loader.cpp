@@ -50,26 +50,24 @@ namespace {
 		}
 	}
 
-	void ProcessCustomData(ecs::Registry& registry, const std::string& customData, const sf::Vector2f& tilePos, int tileId) {
+	void ProcessCustomData(ecs::Registry& registry, const std::string& customData, const sf::Vector2f& tilePos) {
 		try {
 			auto j = json::parse(customData);
 
 			// ensure the data is an array of hitboxes
 			if (j.is_array() && !j.empty()) {
 				// create physics entity
-				auto entity = registry.CreateEntity("Tile_Collider_" + std::to_string(tileId));
+				auto entity = registry.CreateEntity(std::format("Tile_Collider_{}_{}", (int)tilePos.x, (int)tilePos.y));
 				entity.AddComponent<ecs::TransformComponent>(tilePos);
 
 				AddBoxCollider(entity, j);
-
-				LOG_D("added colider for tileid: %d, tile pos: %.2f %.2f", tileId, tilePos.x, tilePos.y);
 			}
 			else {
-				LOG_W("Custom data for tile %d is not a valid JSON array.", tileId);
+				LOG_W("Custom data for tile at %.f %.f is not a valid JSON array.", tilePos.x, tilePos.y);
 			}
 		}
 		catch (const json::parse_error& e) {
-			LOG_E("Failed to parse JSON hitbox for tile %d. Error: %s", tileId, e.what());
+			LOG_E("Failed to parse JSON hitbox for tile %.f %.f. Error: %s", tilePos.x, tilePos.y, e.what());
 		}
 	}
 
@@ -100,7 +98,7 @@ namespace {
 
 			const std::string& tileData = ldtkTileSet.getTileCustomData(tile.tileId);
 			if (!tileData.empty()) {
-				ProcessCustomData(registry, tileData, instance.pixelPos, tile.tileId);
+				ProcessCustomData(registry, tileData, instance.pixelPos);
 			}
 
 			auto rect = tile.getTextureRect();
