@@ -163,6 +163,7 @@
     <ClCompile Include="src\core\Window.cpp" />
     <ClCompile Include="src\ecs\Registry.cpp" />
     <ClCompile Include="src\math\physics.cpp" />
+    <ClCompile Include="src\math\SpatialGrid.cpp" />
     <ClCompile Include="src\renderer\render2d.cpp" />
     <ClCompile Include="src\graphics\TileSet.cpp" />
     <ClCompile Include="src\graphics\TileSetManager.cpp" />
@@ -188,6 +189,7 @@
     <ClInclude Include="include\engine\ecs\Registry.h" />
     <ClInclude Include="include\engine\graphics\Camera2D.h" />
     <ClInclude Include="include\engine\math\physics.h" />
+    <ClInclude Include="include\engine\math\SpatialGrid.h" />
     <ClInclude Include="include\engine\renderer\render2d.h" />
     <ClInclude Include="include\engine\graphics\SFMLTexture2D.h" />
     <ClInclude Include="include\engine\graphics\Texture2D.h" />

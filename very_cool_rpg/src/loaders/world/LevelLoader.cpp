@@ -1,6 +1,8 @@
 #include <pch.h>
 #include <loaders/world/LevelLoader.h>
 
+#include <engine/ecs/systems/physics_system.h>
+
 namespace world = sc::world;
 
 namespace game::world_loader {
@@ -18,6 +20,9 @@ namespace game::world_loader {
 				engineLevel->AddLayer(std::move(layer));
 			}
 		}
+
+		// build spatial grid for level
+		sc::ecs::physics_system::BuildSpatialGrid(ctx.registry, engineLevel->GetSpatialGrid());
 
 		return engineLevel;
 	}
