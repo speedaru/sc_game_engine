@@ -9,6 +9,7 @@
 #include <engine/ecs/systems/render_system.h>
 #include <engine/graphics/Texture2D.h>
 #include <engine/renderer/render2d.h>
+#include <engine/debug/debug_system.h>
 
 #include <constants.h>
 #include <components/GameComponents.h>
@@ -19,6 +20,7 @@
 
 using Key = sf::Keyboard::Key;
 namespace core = sc::core;
+namespace dbg = sc::debug;
 namespace input = sc::input;
 namespace ecs = sc::ecs;
 namespace gfx = sc::graphics;
@@ -84,6 +86,18 @@ namespace game {
 
 			m_camera.SetPosition(cameraPos);
 		}
+    }
+
+    void GameplayLayer::OnUpdate(float deltaTime) {
+		// published once per frame rather than per physics tick: OnFixedUpdate runs zero
+		// or more times off the accumulator, and deltaTime only exists here.
+		// runs before DebugLayer::OnUpdate because layers update bottom to top
+		SC_DEBUG_ONLY(dbg::SetContext(dbg::DebugContext{
+			.registry = &m_registry,
+			.level = m_currentLevel,
+			.camera = &m_camera,
+			.deltaTime = deltaTime
+		}));
     }
 
     void GameplayLayer::OnRender(sf::RenderWindow& window) {

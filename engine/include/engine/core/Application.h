@@ -4,6 +4,7 @@
 
 #include <engine/core/Window.h>
 #include <engine/core/ILayer.h>
+#include <engine/debug/debug_config.h>
 #include <engine/utils/logging.h>
 using logging::LogLevel;
 
@@ -42,5 +43,11 @@ namespace sc::core {
 		std::unique_ptr<Window> m_window;
 		std::vector<std::shared_ptr<ILayer>> m_layers; // bottom to top
 		std::vector<LayerCommand> m_pendingLayerCommands;
+
+#if SC_ENABLE_DEBUG_TOOLS
+		// imgui-sfml init can fail. every imgui call is gated on this, because calling
+		// into imgui after a failed init crashes rather than no-ops
+		bool m_debugToolsReady = false;
+#endif
 	};
 }

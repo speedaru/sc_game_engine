@@ -15,6 +15,7 @@ namespace game {
 	public:
 		void OnAttach() override;
 		void OnFixedUpdate(float timeStep) override;
+		void OnUpdate(float deltaTime) override;
 		void OnRender(sf::RenderWindow& window) override;
 
 	private:

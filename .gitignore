@@ -5,6 +5,7 @@
 
 # file extensions
 *.vcxproj.user
+/*.md
 
 # ignore build folders and whatnot
 *intermediate/

@@ -3,6 +3,13 @@
 #include <engine/renderer/render2d.h>
 #include <engine/constants.h>
 
+#if SC_ENABLE_DEBUG_TOOLS
+	#include <imgui-SFML.h>
+	#include <imgui.h>
+
+	#include <engine/debug/DebugLayer.h>
+#endif
+
 using namespace sc::renderer;
 
 namespace sc::core {
@@ -24,6 +31,13 @@ namespace sc::core {
 		render2d::Initialize();
 
 		m_window = std::make_unique<Window>(std::move(windowData));
+
+#if SC_ENABLE_DEBUG_TOOLS
+		m_debugToolsReady = ImGui::SFML::Init(m_window->GetNativeWindow());
+		if (!m_debugToolsReady) {
+			LOG_OBJ_E("imgui-sfml failed to initialize, debug tooling is disabled this run");
+		}
+#endif
 	}
 
 	Application::~Application() {
@@ -37,6 +51,13 @@ namespace sc::core {
 
 		// anything still queued never attached, so no OnDetach needed
 		m_pendingLayerCommands.clear();
+
+#if SC_ENABLE_DEBUG_TOOLS
+		if (m_debugToolsReady) {
+			ImGui::SFML::Shutdown();
+			m_debugToolsReady = false;
+		}
+#endif
 
 		render2d::Shutdown();
 
@@ -100,6 +121,11 @@ namespace sc::core {
 		sf::RenderWindow& window = m_window->GetNativeWindow();
 
 		while (const std::optional<sf::Event> event = window.pollEvent()) {
+#if SC_ENABLE_DEBUG_TOOLS
+			// imgui has to see every event so that imgui state stays synced
+			if (m_debugToolsReady) ImGui::SFML::ProcessEvent(window, *event);
+#endif
+
 			if (event->is<sf::Event::Closed>()) {
 				window.close();
 				continue;
@@ -115,6 +141,13 @@ namespace sc::core {
 	void Application::Run() {
 		LOG_OBJ_I("starting main game loop");
 
+#if SC_ENABLE_DEBUG_TOOLS
+		// pushed at the very top above all initial game layers
+		if (m_debugToolsReady) {
+			PushLayer(std::make_shared<debug::DebugLayer>());
+		}
+#endif
+
 		// attach whatever was queued before the loop started
 		FlushLayerCommands();
 
@@ -129,6 +162,11 @@ namespace sc::core {
 
 			// process OS window events
 			ProcessEvents();
+
+#if SC_ENABLE_DEBUG_TOOLS
+			// start imgui frame
+			if (m_debugToolsReady) ImGui::SFML::Update(window, sf::seconds(deltaTime));
+#endif
 
 			// fixed update logic
 			while (accumulator >= timeStep) {
@@ -148,6 +186,12 @@ namespace sc::core {
 			for (auto& layer : m_layers) {
 				layer->OnRender(window);
 			}
+
+#if SC_ENABLE_DEBUG_TOOLS
+			// render imgui above all other game layers
+			if (m_debugToolsReady) ImGui::SFML::Render(window);
+#endif
+
 			window.display();
 
 			// apply layer stack changes here
