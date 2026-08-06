@@ -9,16 +9,5 @@ namespace sc::core {
 		m_window.create(sf::VideoMode(sf::Vector2u(m_data.width, m_data.height)), m_data.title);
 		m_window.setFramerateLimit(MAX_FPS);
 	}
-
-	void Window::Update() {
-		while (true) {
-			std::optional<sf::Event> event = m_window.pollEvent();
-			if (!event.has_value()) break;
-
-			if (auto eventClosed = event.value().getIf<sf::Event::Closed>()) {
-				m_window.close();
-			}
-		}
-	}
 }
 

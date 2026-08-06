@@ -16,8 +16,6 @@ namespace sc::core {
 		Window(WindowData&& windowData);
 		~Window() {}
 
-		void Update();
-
 		sf::RenderWindow& GetNativeWindow() { return m_window; }
 
 	private:
