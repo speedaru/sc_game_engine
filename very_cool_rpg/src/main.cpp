@@ -3,6 +3,7 @@
 #include <engine/utils/logging.h>
 #include <engine/debug/debug_system.h>
 #include <engine/debug/modules/FrameStats.h>
+#include <engine/debug/modules/CollisionOverlay.h>
 
 #include <layers/GameplayLayer.h>
 #include <constants.h>
@@ -12,10 +13,10 @@ using WindowData = sc::core::WindowData;
 using namespace game;
 namespace dbg = sc::debug;
 
+// body only compiles in debug builds: the module types don't exist in release
 void RegisterDebugModules() {
-	// the body is wrapped, not the function: in release the module types don't exist,
-	// so naming FrameStats here at all wouldn't compile
-	dbg::RegisterModule(std::make_unique<dbg::modules::FrameStats>());
+	SC_DEBUG_ONLY(dbg::RegisterModule(std::make_unique<dbg::modules::FrameStats>()));
+	SC_DEBUG_ONLY(dbg::RegisterModule(std::make_unique<dbg::modules::CollisionOverlay>()));
 }
 
 void PushGameLayers(Application& app) {

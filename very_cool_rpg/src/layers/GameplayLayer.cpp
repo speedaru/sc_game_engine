@@ -103,20 +103,8 @@ namespace game {
     void GameplayLayer::OnRender(sf::RenderWindow& window) {
 		ecs::render_system::RenderWorld(m_registry, *m_currentLevel, window, m_camera);
 
-		window.setView(m_camera.GetView());
-
-		const auto& view = m_registry.GetRegistry().view<const ecs::TransformComponent, const ecs::BoxColliderComponent>();
-		//const auto& view = m_registry.GetRegistry().view<ecs::SpriteComponent, ecs::TransformComponent, ecs::BoxColliderComponent>();
-		for (const auto& [entity, trans, collision] : view.each()) {
-			for (const ecs::Hitbox& hitbox : collision.hitboxes) {
-				sf::RectangleShape rect(hitbox.size);
-				rect.setPosition(trans.pos + hitbox.offset);
-				rect.setFillColor(sf::Color(255, 0, 0, 100));
-
-				window.draw(rect);
-			}
-		}
-
-		window.setView(window.getDefaultView());
+		// collision boxes used to be drawn by hand here. that now lives in the
+		// CollisionOverlay debug module, which batches them instead of issuing a draw
+		// call per hitbox, and can be toggled at runtime
     }
 }

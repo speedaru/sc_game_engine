@@ -2,6 +2,8 @@
 #include <engine/debug/debug_config.h>
 
 #if SC_ENABLE_DEBUG_TOOLS
+#include <string>
+
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/Graphics/VertexArray.hpp>
@@ -36,6 +38,15 @@ namespace sc::debug {
 		void Rect(const sf::FloatRect& rect, sf::Color color); // outline only
 		void FilledRect(const sf::FloatRect& rect, sf::Color color);
 		void Cross(sf::Vector2f center, float halfSize, sf::Color color);
+
+		// line from -> to with a head at the far end. headSize is in world units, so it
+		// scales with the camera like everything else here
+		void Arrow(sf::Vector2f from, sf::Vector2f to, sf::Color color, float headSize = 4.f);
+
+		// label centred on a world position, drawn at a constant screen size so it stays
+		// readable at any camera zoom. always lands on top of the shapes above - see the
+		// implementation for why
+		void Text(sf::Vector2f center, sf::Color color, const std::string& text);
 
 	private:
 		// fills go down before outlines, so a rect's border lands on top of its own fill

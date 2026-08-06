@@ -87,6 +87,20 @@ namespace sc::math {
 		m_entityCells.clear();
 	}
 
+	const std::vector<entt::entity>& SpatialGrid::GetCellEntities(uint32_t row, uint32_t col) const {
+		return m_grid.GetCell(row, col);
+	}
+
+	std::optional<CellRange> SpatialGrid::FindEntityCells(entt::entity ent) const {
+		auto it = m_entityCells.find(ent);
+		if (it != m_entityCells.end()) {
+			return it->second;
+		}
+
+		// not found
+		return std::nullopt;
+	}
+
 	void SpatialGrid::InsertRange(entity ent, const CellRange& range) {
 		// update grid map
 		for (auto row = range.minRow; row < range.maxRow; row++) {

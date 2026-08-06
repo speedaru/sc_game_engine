@@ -5,40 +5,10 @@
 #include <engine/math/physics.h>
 
 using namespace sc::ecs;
+using namespace sc::ecs::physics_system;
 namespace math = sc::math;
 
 namespace {
-	// whether an entity belongs in the spatial grid at all.
-	// the set of entities inserted into the grid and the set we call MoveEntity on
-	// must match exactly, so both paths ask this same question
-	bool IsCollidable(const BoxColliderComponent& col) {
-		return !col.hitboxes.empty();
-	}
-
-	// the single world-space AABB encompassing every hitbox in the collider.
-	// insert-time and move-time bounds MUST come from here and nowhere else:
-	// if the two disagree the grid's reverse index silently desyncs
-	sf::FloatRect GetEntityBounds(const TransformComponent& trans, const BoxColliderComponent& col) {
-		assert(IsCollidable(col) && "GetEntityBounds requires at least one hitbox");
-
-		// use first hitbox as initial values
-		sf::Vector2f tl = col.hitboxes[0].offset;
-		sf::Vector2f br = tl + col.hitboxes[0].size;
-
-		for (const auto& hb : col.hitboxes) {
-			// use most topleft pos for tl
-			tl.x = std::min(tl.x, hb.offset.x);
-			tl.y = std::min(tl.y, hb.offset.y);
-
-			// use most bottom right pos for br
-			br.x = std::max(br.x, hb.offset.x + hb.size.x);
-			br.y = std::max(br.y, hb.offset.y + hb.size.y);
-		}
-
-		// convert tl + br to level space pos + size
-		return sf::FloatRect{ trans.pos + tl, br - tl };
-	}
-
 	// narrow phase: sweeps a moving entity against a list of nearby entities.
 	// these are not just statics - any collidable entity in the grid blocks movement,
 	// including other moving entities
@@ -176,6 +146,31 @@ namespace {
 }
 
 namespace sc::ecs::physics_system {
+	bool IsCollidable(const BoxColliderComponent& col) {
+		return !col.hitboxes.empty();
+	}
+
+	sf::FloatRect GetEntityBounds(const TransformComponent& trans, const BoxColliderComponent& col) {
+		assert(IsCollidable(col) && "GetEntityBounds requires at least one hitbox");
+
+		// use first hitbox as initial values
+		sf::Vector2f tl = col.hitboxes[0].offset;
+		sf::Vector2f br = tl + col.hitboxes[0].size;
+
+		for (const auto& hb : col.hitboxes) {
+			// use most topleft pos for tl
+			tl.x = std::min(tl.x, hb.offset.x);
+			tl.y = std::min(tl.y, hb.offset.y);
+
+			// use most bottom right pos for br
+			br.x = std::max(br.x, hb.offset.x + hb.size.x);
+			br.y = std::max(br.y, hb.offset.y + hb.size.y);
+		}
+
+		// convert tl + br to level space pos + size
+		return sf::FloatRect{ trans.pos + tl, br - tl };
+	}
+
 	void BuildSpatialGrid(Registry& registry, math::SpatialGrid& spatialGrid) {
 		auto view = registry.GetRegistry().view<const TransformComponent, const BoxColliderComponent>();
 

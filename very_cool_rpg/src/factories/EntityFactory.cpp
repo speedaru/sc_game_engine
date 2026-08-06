@@ -22,7 +22,7 @@ namespace game::factories {
 			it->second->Build(entity, ldtkData);
 
 			// register entity collisions in the level
-			ecs::physics_system::RegisterEntityCollisions(level.GetSpatialGrid(), entity);
+			//ecs::physics_system::RegisterEntityCollisions(level.GetSpatialGrid(), entity);
 		}
 		else {
 			LOG_W("GameEntityFactory: No blueprint registered for '%s'", ldtkData.getName().c_str());

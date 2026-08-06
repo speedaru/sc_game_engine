@@ -34,6 +34,13 @@ namespace sc::math {
 
 		void Clear();
 
+		// getters for debugging purposes
+
+		uint32_t GetCellSize() const { return m_cellSize; }
+		math::GridSize GetSize() const { return m_size; }
+		const std::vector<entt::entity>& GetCellEntities(uint32_t row, uint32_t col) const;
+		std::optional<CellRange> FindEntityCells(entt::entity ent) const; // null if entity not in grid
+
 	private:
 		// InsertRange and EraseRange only touch m_grid, not m_entityCells
 

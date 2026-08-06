@@ -184,6 +184,7 @@
     <ClCompile Include="src\debug\DebugDraw.cpp" />
     <ClCompile Include="src\debug\DebugLayer.cpp" />
     <ClCompile Include="src\debug\debug_system.cpp" />
+    <ClCompile Include="src\debug\modules\CollisionOverlay.cpp" />
     <ClCompile Include="src\debug\modules\FrameStats.cpp" />
     <ClCompile Include="src\ecs\systems\render_system.cpp" />
     <ClCompile Include="src\ecs\systems\physics_system.cpp" />
@@ -219,6 +220,7 @@
     <ClInclude Include="include\engine\debug\DebugLayer.h" />
     <ClInclude Include="include\engine\debug\debug_system.h" />
     <ClInclude Include="include\engine\debug\IDebugModule.h" />
+    <ClInclude Include="include\engine\debug\modules\CollisionOverlay.h" />
     <ClInclude Include="include\engine\debug\modules\FrameStats.h" />
     <ClInclude Include="include\engine\ecs\systems\render_system.h" />
     <ClInclude Include="include\engine\input\Input.h" />

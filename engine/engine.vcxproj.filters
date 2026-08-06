@@ -108,6 +108,9 @@
     <ClCompile Include="src\debug\modules\FrameStats.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\debug\modules\CollisionOverlay.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\engine\utils\logging.h">
@@ -222,6 +225,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\engine\debug\modules\FrameStats.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\engine\debug\modules\CollisionOverlay.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
