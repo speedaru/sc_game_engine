@@ -13,6 +13,8 @@ namespace fs = std::filesystem;
 #include <cassert>
 #include <memory>
 #include <functional>
+#include <algorithm>
+#include <cmath>
 namespace chrono = std::chrono;
 
 // containers

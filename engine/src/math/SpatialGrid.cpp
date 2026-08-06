@@ -1,29 +1,81 @@
 #include <pch.h>
+
 #include <engine/math/SpatialGrid.h>
 #include <engine/utils/logging.h>
 
 namespace sc::math {
 	void SpatialGrid::InsertEntity(entity ent, const Rect& entBox) {
-		auto cells = GetCellsFromBox(entBox);
-
-		// insert entity into each grid cell that it occupies
-		for (const auto& cell : cells) {
-			m_grid[cell].push_back(ent);
+		// ensure the entity doesnt already exist
+		if (m_entityCells.contains(ent)) {
+			LOG_W("trying to insert entity %u into spatial grid but it already exists", static_cast<uint32_t>(ent));
+			return;
 		}
+
+		CellRange range = GetCellsFromBox(entBox);
+		InsertRange(ent, range);
+
+		// update entity cells map
+		m_entityCells[ent] = range;
+	}
+
+	void SpatialGrid::EraseEntity(entity ent) {
+		if (!m_entityCells.contains(ent)) {
+			LOG_W("trying to erase an entity that doesn't exist in spatial grid: %u", static_cast<uint32_t>(ent));
+			return;
+		}
+
+		// get cell range so we can query the grid map
+		CellRange range = m_entityCells[ent];
+
+		// erase from entity cells map
+		m_entityCells.erase(ent);
+
+		EraseRange(ent, range);
+	}
+
+	void SpatialGrid::MoveEntity(entity ent, const Rect& newBox) {
+		if (!m_entityCells.contains(ent)) {
+			LOG_W("trying to move an entity that doesn't exist in spatial grid: %u", static_cast<uint32_t>(ent));
+			return;
+		}
+
+		CellRange newRange = GetCellsFromBox(newBox);
+		CellRange prevRange = m_entityCells[ent];
+
+		if (newRange == prevRange) {
+			return;
+		}
+
+		// calc which cell range we need to erase entity from
+		// and which one we need to insert entity into
+		if (newRange.Intersects(prevRange)) {
+			// optimization: only erase and insert cells that dont overlap
+			prevRange.Difference(newRange, [this, ent](const CellRange& range) { EraseRange(ent, range); });
+			newRange.Difference(prevRange, [this, ent](const CellRange& range) { InsertRange(ent, range); });
+		}
+		else {
+			// no intersection so we can erase and reinsert everything
+			EraseRange(ent, prevRange);
+			InsertRange(ent, newRange);
+		}
+
+		// update entity cells map to new range
+		m_entityCells[ent] = newRange;
 	}
 	
-	auto SpatialGrid::Query(const Rect& box) -> V {
-		auto cells = GetCellsFromBox(box);
-		V results;
+	auto SpatialGrid::Query(const Rect& box) -> std::vector<entity> {
+		CellRange range = GetCellsFromBox(box);
+		std::vector<entity> results;
+		results.reserve(32);
 
-		for (const auto& cell : cells) {
-			if (m_grid.contains(cell)) {
-				const auto& entitiesInCell = m_grid[cell];
-				results.insert(results.end(), entitiesInCell.begin(), entitiesInCell.end());
+		for (auto row = range.minRow; row < range.maxRow; row++) {
+			for (auto  col = range.minCol; col < range.maxCol; col++) {
+				const auto& entities = m_grid.GetCell(row, col);
+				results.insert(results.end(), entities.begin(), entities.end());
 			}
 		}
 
-		// remove duplicates
+		// remove duplicates because 1 entity can be in multiple cells
 		std::sort(results.begin(), results.end());
 		results.erase(std::unique(results.begin(), results.end()), results.end());
 
@@ -31,39 +83,55 @@ namespace sc::math {
 	}
 
 	void SpatialGrid::Clear() {
-		m_grid.clear();
+		m_grid.Clear();
+		m_entityCells.clear();
 	}
 
-	auto SpatialGrid::GetCellsFromBox(const Rect& box) -> std::vector<K> {
-		std::vector<K> out;
-
-		// calc cell that contains top left coord of the box
-		auto topLeftPos = box.position;
-		K topLeftCell = { 
-			.row = (uint32_t)std::floor(topLeftPos.y / m_cellSize),
-			.col = (uint32_t)std::floor(topLeftPos.x / m_cellSize)
-		};
-
-		auto bottomRightPos = box.position + box.size;
-		K bottomRightCell = {
-			.row = (uint32_t)std::ceil(bottomRightPos.y / m_cellSize),
-			.col = (uint32_t)std::ceil(bottomRightPos.x / m_cellSize)
-		};
-
-		uint32_t xCells = bottomRightCell.col - topLeftCell.col;
-		uint32_t yCells = bottomRightCell.row - topLeftCell.row;
-
-		// add all cells in between
-		for (uint32_t y = 0; y < yCells; y++) {
-			for (uint32_t x = 0; x < xCells; x++) {
-				out.push_back(GridCell{
-					.row = topLeftCell.row + y,
-					.col = topLeftCell.col + x
-				});
+	void SpatialGrid::InsertRange(entity ent, const CellRange& range) {
+		// update grid map
+		for (auto row = range.minRow; row < range.maxRow; row++) {
+			for (auto col = range.minCol; col < range.maxCol; col++) {
+				// add entity to each cell
+				m_grid.GetCell(row, col).push_back(ent);
 			}
 		}
+	}
 
-		return out;
+	void SpatialGrid::EraseRange(entity ent, const CellRange& range) {
+		// erase from grid
+		for (auto row = range.minRow; row < range.maxRow; row++) {
+			for (auto col = range.minCol; col < range.maxCol; col++) {
+				// ensure entity exists in cell
+				auto& entities = m_grid.GetCell(row, col);
+				auto it = std::find(entities.begin(), entities.end(), ent);
+				if (it != entities.end()) {
+					entities.erase(it);
+				}
+			}
+		}
+	}
+
+	auto SpatialGrid::GetCellsFromBox(const Rect& box) const -> CellRange {
+		const float cellSize = static_cast<float>(m_cellSize);
+		const float maxRows = static_cast<float>(m_size.rows);
+		const float maxCols = static_cast<float>(m_size.cols);
+
+		// stay in float space until after clamping: a box can legitimately fall
+		// outside the level (MoveAndResolve stretches query bounds by the movement
+		// delta), and casting a negative float to uint32_t is undefined behaviour
+		float minCol = std::floor(box.position.x / cellSize);
+		float minRow = std::floor(box.position.y / cellSize);
+		float maxCol = std::ceil((box.position.x + box.size.x) / cellSize);
+		float maxRow = std::ceil((box.position.y + box.size.y) / cellSize);
+
+		// cells outside the level hold nothing, so clamping loses no information.
+		// maxes clamp to rows/cols (not -1) because the range is half-open
+		return CellRange{
+			.minRow = static_cast<uint32_t>(std::clamp(minRow, 0.f, maxRows)),
+			.minCol = static_cast<uint32_t>(std::clamp(minCol, 0.f, maxCols)),
+			.maxRow = static_cast<uint32_t>(std::clamp(maxRow, 0.f, maxRows)),
+			.maxCol = static_cast<uint32_t>(std::clamp(maxCol, 0.f, maxCols))
+		};
 	}
 
 }

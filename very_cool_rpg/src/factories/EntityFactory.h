@@ -4,6 +4,8 @@
 
 #include <LDtkLoader/Entity.hpp>
 
+#include <engine/world/Level.h>
+
 #include <blueprints/IBlueprint.h>
 #include <utils/assemblers/LdtkAssemblers.h>
 
@@ -19,7 +21,7 @@ namespace game::factories {
 
 		void Register(const std::string& identifier, std::unique_ptr<blueprints::IBlueprint> blueprint);
 
-		sc::ecs::Entity Spawn(sc::ecs::Registry& registry, const ldtk::Entity& ldtkData);
+		sc::ecs::Entity Spawn(sc::world::Level& level, sc::ecs::Registry& registry, const ldtk::Entity& ldtkData);
 		
 		TextureCache& GetTextureCache() { return m_textureCache; }
 

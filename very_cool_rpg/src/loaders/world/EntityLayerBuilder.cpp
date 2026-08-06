@@ -24,7 +24,7 @@ namespace game::world_loader {
 			int tileId = GetTileIdFromEntity(ldtkEntity, tileset);
 
 			const std::string& customData = tileset.getTileCustomData(tileId);
-			ecs::Entity entity = ctx.entityFactory.Spawn(ctx.registry, ldtkEntity);
+			ecs::Entity entity = ctx.entityFactory.Spawn(*ctx.currentLevel, ctx.registry, ldtkEntity);
 
 			if (!customData.empty()) {
 				sf::Vector2f pivotOffset = CalcPivotOffset(ldtkEntity);

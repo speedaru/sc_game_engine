@@ -41,6 +41,8 @@ namespace sc::ecs {
 			return m_registry->GetRegistry().any_of<T>(m_handle);
 		}
 
+		entt::entity GetHandle() const { return m_handle; }
+
 	private:
 		entt::entity m_handle; // entity handle
 		Registry* m_registry;

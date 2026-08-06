@@ -6,6 +6,9 @@ namespace sc::ecs::physics_system  {
 	// called once after loading a level to build the spatial grid
 	void BuildSpatialGrid(Registry& registry, math::SpatialGrid& spatialGrid);
 
+	// called when spawning a new entity dynamically after BuildSpatialGrid was already called
+	void RegisterEntityCollisions(math::SpatialGrid& grid, const Entity& entity);
+
 	// called every frame in OnFixedUpdate to apply the physics
 	void UpdateKinematics(Registry& registry, math::SpatialGrid& grid, float timeStep);
 }

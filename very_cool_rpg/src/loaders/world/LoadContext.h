@@ -3,6 +3,7 @@
 
 #include <engine/ecs/Registry.h>
 #include <engine/graphics/TileSetManager.h>
+#include <engine/world/Level.h>
 
 #include <factories/EntityFactory.h>
 
@@ -15,5 +16,6 @@ namespace game::world_loader {
 		factories::EntityFactory& entityFactory;
 		sc::graphics::TileSetManager& tileSetManager;
 		fs::path projectDir;
+		sc::world::Level* currentLevel; // raw ptr bcs ctx lives as long as level
 	};
 }

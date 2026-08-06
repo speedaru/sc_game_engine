@@ -1,42 +1,53 @@
 #include <pch.h>
 #include <engine/ecs/systems/physics_system.h>
 #include <engine/ecs/Components.h>
+#include <engine/ecs/Entity.h>
 #include <engine/math/physics.h>
 
 using namespace sc::ecs;
 namespace math = sc::math;
 
 namespace {
-	// get a single hitbox that encapsulates all the hitboxes in the collider
-	Hitbox GetSingleHitbox(const std::vector<Hitbox> hitboxes) {
-		Hitbox singleHitbox = hitboxes[0]; // use first one to start
-		for (const auto& hb : hitboxes) {
-			// take smallest for top left
-			singleHitbox.offset.x = std::min(singleHitbox.offset.x, hb.offset.x);
-			singleHitbox.offset.y = std::min(singleHitbox.offset.y, hb.offset.y);
+	// whether an entity belongs in the spatial grid at all.
+	// the set of entities inserted into the grid and the set we call MoveEntity on
+	// must match exactly, so both paths ask this same question
+	bool IsCollidable(const BoxColliderComponent& col) {
+		return !col.hitboxes.empty();
+	}
 
-			// take biggest for size
-			singleHitbox.size.x = std::max(singleHitbox.size.x, hb.size.x);
-			singleHitbox.size.y = std::max(singleHitbox.size.y, hb.size.y);
+	// the single world-space AABB encompassing every hitbox in the collider.
+	// insert-time and move-time bounds MUST come from here and nowhere else:
+	// if the two disagree the grid's reverse index silently desyncs
+	sf::FloatRect GetEntityBounds(const TransformComponent& trans, const BoxColliderComponent& col) {
+		assert(IsCollidable(col) && "GetEntityBounds requires at least one hitbox");
+
+		// use first hitbox as initial values
+		sf::Vector2f tl = col.hitboxes[0].offset;
+		sf::Vector2f br = tl + col.hitboxes[0].size;
+
+		for (const auto& hb : col.hitboxes) {
+			// use most topleft pos for tl
+			tl.x = std::min(tl.x, hb.offset.x);
+			tl.y = std::min(tl.y, hb.offset.y);
+
+			// use most bottom right pos for br
+			br.x = std::max(br.x, hb.offset.x + hb.size.x);
+			br.y = std::max(br.y, hb.offset.y + hb.size.y);
 		}
 
-		return singleHitbox;
+		// convert tl + br to level space pos + size
+		return sf::FloatRect{ trans.pos + tl, br - tl };
 	}
 
-	sf::FloatRect HitboxToLevelCoords(const sf::Vector2f& pos, const Hitbox& hitbox) {
-		return sf::FloatRect{
-			pos + hitbox.offset,
-			 hitbox.size
-		};
-	}
-
-	// narrow phase: sweeps a moving entity against a list of static entities
+	// narrow phase: sweeps a moving entity against a list of nearby entities.
+	// these are not just statics - any collidable entity in the grid blocks movement,
+	// including other moving entities
 	math::SweepResult FindClosestCollision(
 		entt::entity self,
 		const TransformComponent& dynTrans,
 		const BoxColliderComponent& dynCol,
 		const sf::Vector2f& delta,
-		const std::vector<entt::entity>& nearbyStatics, // filtered by spatial grid
+		const std::vector<entt::entity>& nearbyEntities, // filtered by spatial grid
 		entt::registry& reg
 	)
 	{
@@ -55,21 +66,21 @@ namespace {
 					}
 			);
 
-			// Only sweep against the highly filtered list of nearby statics
-			for (entt::entity staticEnt : nearbyStatics) {
-				if (staticEnt == self) continue;
+			// Only sweep against the highly filtered list of nearby entities
+			for (entt::entity otherEnt : nearbyEntities) {
+				if (otherEnt == self) continue;
 
-				// Safely skip if the static entity was destroyed or lacks components
-				if (!reg.all_of<TransformComponent, BoxColliderComponent>(staticEnt)) continue;
+				// Safely skip if the other entity was destroyed or lacks components
+				if (!reg.all_of<TransformComponent, BoxColliderComponent>(otherEnt)) continue;
 
-				const auto& staticTrans = reg.get<TransformComponent>(staticEnt);
-				const auto& staticCol = reg.get<BoxColliderComponent>(staticEnt);
+				const auto& otherTrans = reg.get<TransformComponent>(otherEnt);
+				const auto& otherCol = reg.get<BoxColliderComponent>(otherEnt);
 
-				for (const auto& statBox : staticCol.hitboxes) {
+				for (const auto& statBox : otherCol.hitboxes) {
 					sf::FloatRect staticRect(
 						{
-							staticTrans.pos.x + statBox.offset.x,
-							staticTrans.pos.y + statBox.offset.y
+							otherTrans.pos.x + statBox.offset.x,
+							otherTrans.pos.y + statBox.offset.y
 						},
 							{
 								statBox.size.x,
@@ -114,19 +125,17 @@ namespace {
 			if (delta.x == 0.0f && delta.y == 0.0f) break;
 
 			// 1. BROAD PHASE BOUNDING BOX
-			// We use the first hitbox to calculate the movement bounds.
-			// std::min(0.0f, delta) ensures the box stretches backward if moving left/up.
-			// std::abs(delta) ensures the box stretches forward if moving right/down.
-			const auto& mainBox = col.hitboxes.front();
+			// Get the true bounding box that encapsulates all hitboxes
+			sf::FloatRect compoundBounds = GetEntityBounds(trans, col);
 			sf::FloatRect queryBounds(
 				{
-					trans.pos.x + mainBox.offset.x + std::min(0.0f, delta.x),
-					trans.pos.y + mainBox.offset.y + std::min(0.0f, delta.y)
+					compoundBounds.position.x + std::min(0.0f, delta.x),
+					compoundBounds.position.y + std::min(0.0f, delta.y)
 				},
-					{
-						mainBox.size.x + std::abs(delta.x),
-						mainBox.size.y + std::abs(delta.y)
-					}
+				{
+					compoundBounds.size.x + std::abs(delta.x),
+					compoundBounds.size.y + std::abs(delta.y)
+				}
 			);
 
 			// 2. BROAD PHASE QUERY
@@ -172,21 +181,55 @@ namespace sc::ecs::physics_system {
 
 		// for each collider insert it into the grid
 		for (auto [entity, trans, collider] : view.each()) {
-			// to convert hitbox coords to level pos
-			Hitbox singleHitbox = GetSingleHitbox(collider.hitboxes);
+			// skip entities with no hitboxes: they have no meaningful bounds, and
+			// inserting them here would make UpdateKinematics' MoveEntity calls
+			// disagree about who is in the grid
+			if (!IsCollidable(collider)) continue;
 
-			spatialGrid.InsertEntity(entity, HitboxToLevelCoords(trans.pos, singleHitbox));
+			spatialGrid.InsertEntity(entity, GetEntityBounds(trans, collider));
 		}
+	}
+
+	void RegisterEntityCollisions(math::SpatialGrid& grid, const Entity& entity) {
+		if (!entity.HasComponent<TransformComponent>() || !entity.HasComponent<BoxColliderComponent>()) {
+			LOG_W("trying to register entity %u but it doesnt have transform and box collider component", static_cast<uint32_t>(entity.GetHandle()));
+			return;
+		}
+
+		const auto& transform = entity.GetComponent<const TransformComponent>();
+		const auto& collider = entity.GetComponent<const BoxColliderComponent>();
+		
+		// ensure collider has hitboxes
+		if (!IsCollidable(collider)) {
+			return;
+		}
+
+		grid.InsertEntity(entity.GetHandle(), GetEntityBounds(transform, collider));
 	}
 
 	void UpdateKinematics(Registry& registry, math::SpatialGrid& grid, float timeStep) {
 		auto& reg = registry.GetRegistry();
 
 		// Grab all entities that can move and collide
-		auto dynamicView = reg.view<TagComponent, TransformComponent, VelocityComponent, const BoxColliderComponent>();
+		auto dynamicView = reg.view<TransformComponent, VelocityComponent, const BoxColliderComponent>();
 
-		for (auto [entity, tag, trans, vel, col] : dynamicView.each()) {
+		for (auto [entity, trans, vel, col] : dynamicView.each()) {
+			const sf::Vector2f oldPos = trans.pos;
+
 			MoveAndResolve(entity, trans, vel, col, timeStep, grid, reg);
+
+			// Keep the grid in sync with where the entity actually ended up.
+			// Done here rather than inside MoveAndResolve's slide loop: the intermediate
+			// positions are invisible to everyone (that loop only queries on behalf of
+			// this entity, which excludes itself), so one update per step is enough.
+			//
+			// Updating immediately instead of after the whole view makes resolution
+			// sequential - entities later in the view sweep against the final positions
+			// of earlier ones, so two entities can never move into the same space. The
+			// tradeoff is order dependence: whoever is iterated first wins contested ground.
+			if (trans.pos != oldPos && IsCollidable(col)) {
+				grid.MoveEntity(entity, GetEntityBounds(trans, col));
+			}
 		}
 	}
 }

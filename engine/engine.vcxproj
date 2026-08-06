@@ -162,6 +162,7 @@
     <ClCompile Include="src\core\Application.cpp" />
     <ClCompile Include="src\core\Window.cpp" />
     <ClCompile Include="src\ecs\Registry.cpp" />
+    <ClCompile Include="src\math\CellRange.cpp" />
     <ClCompile Include="src\math\physics.cpp" />
     <ClCompile Include="src\math\SpatialGrid.cpp" />
     <ClCompile Include="src\renderer\render2d.cpp" />
@@ -188,6 +189,8 @@
     <ClInclude Include="include\engine\ecs\Entity.h" />
     <ClInclude Include="include\engine\ecs\Registry.h" />
     <ClInclude Include="include\engine\graphics\Camera2D.h" />
+    <ClInclude Include="include\engine\math\CellRange.h" />
+    <ClInclude Include="include\engine\math\Grid.hpp" />
     <ClInclude Include="include\engine\math\physics.h" />
     <ClInclude Include="include\engine\math\SpatialGrid.h" />
     <ClInclude Include="include\engine\renderer\render2d.h" />

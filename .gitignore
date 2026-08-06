@@ -24,3 +24,6 @@ vendor/*/docs/
 vendor/*/examples/
 vendor/*/scripts/
 vendor/*.zip
+
+# engine lib that needs to be compiled
+*sc_game_engine.lib
