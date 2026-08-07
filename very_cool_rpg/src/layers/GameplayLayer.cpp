@@ -33,13 +33,14 @@ namespace game {
 		gameplayInput->Bind(Key::A, static_cast<int32_t>(InputAction::MoveLeft));
 		gameplayInput->Bind(Key::S, static_cast<int32_t>(InputAction::MoveDown));
 		gameplayInput->Bind(Key::D, static_cast<int32_t>(InputAction::MoveRight));
+		gameplayInput->Bind(Key::F2, static_cast<int32_t>(InputAction::SpawnEnt));
 		input::PushContext(gameplayInput);
 
 		fs::path projectDir = fs::absolute(ASSETS_DIR);
 		fs::path project = projectDir / "world_test1.ldtk";
 
 		// load entity blueprints
-		blueprints::RegisterAll(m_entityFactory, projectDir);
+		blueprints::RegisterAll(m_entityFactory);
 
 		// load world
 		m_world = world_loader::Load(project, m_registry, m_entityFactory, m_tileSetManager);
@@ -52,6 +53,22 @@ namespace game {
 		if (!m_currentLevel) {
 			LOG_W("failed to get level 0");
 			return;
+		}
+
+		// the factory spawned into whichever level the loader was building at the time;
+		// from here on runtime spawns belong to the level actually being played
+		m_entityFactory.SetCurrentLevel(m_currentLevel);
+
+		// remember which layer runtime spawns should render in
+		for (const auto& layer : m_currentLevel->GetLayers()) {
+			if (layer->GetType() == sc::world::LayerType::Entity) {
+				m_entityLayerUid = layer->GetId().uid;
+				break;
+			}
+		}
+
+		if (m_entityLayerUid < 0) {
+			LOG_W("level has no entity layer, so anything spawned at runtime won't render");
 		}
 
 		// apply bounds to camera
@@ -72,6 +89,14 @@ namespace game {
     void GameplayLayer::OnFixedUpdate(float timeStep) {
 		// handle player keybinds
 		systems::UpdatePlayerInput(m_registry);
+
+		if (input::IsActionActive(static_cast<uint32_t>(InputAction::SpawnEnt))) {
+			const auto& trans = m_player.GetComponent<ecs::TransformComponent>();
+			m_entityFactory.Spawn(entities::EntityType::Dragon, entities::SpawnParams{
+				.position = { trans.pos + sf::Vector2f{ 50.f, 50.f } },
+				.layerUid = m_entityLayerUid
+			});
+		}
 
 		// calculate every entity movement
 		systems::UpdateCharacterMovement(m_registry, timeStep);

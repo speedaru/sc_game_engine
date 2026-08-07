@@ -4,8 +4,8 @@
 #include <engine/ecs/Entity.h>
 #include <engine/world/EntityLayer.h>
 
-#include <loaders/world/HitboxUtils.h>
-#include <loaders/world/CustomData.h>
+#include <entities/EntityType.h>
+#include <entities/SpawnParams.h>
 
 namespace ecs = sc::ecs;
 namespace world = sc::world;
@@ -19,17 +19,19 @@ namespace game::world_loader {
 		world::LayerId layerId{ ldtkLayer.getName(), ldtkLayer.getDefUid() };
 		auto entityLayer = std::make_unique<world::EntityLayer>(layerId);
 
+		// this is the whole LDtk -> spawn bridge now. no tileset lookups, no custom data,
+		// no pivot maths: all of that was per-type work masquerading as per-instance work,
+		// and it moved to EntityDefinitionLoader
 		for (const auto& ldtkEntity : ldtkLayer.allEntities()) {
-			const auto& tileset = *ldtkEntity.getEntityDef()->tileset;
-			int tileId = GetTileIdFromEntity(ldtkEntity, tileset);
+			const ldtk::IntPoint pos = ldtkEntity.getPosition();
 
-			const std::string& customData = tileset.getTileCustomData(tileId);
-			ecs::Entity entity = ctx.entityFactory.Spawn(*ctx.currentLevel, ctx.registry, ldtkEntity);
-
-			if (!customData.empty()) {
-				sf::Vector2f pivotOffset = CalcPivotOffset(ldtkEntity);
-				ApplyCustomData(entity, customData, pivotOffset);
-			}
+			ctx.entityFactory.Spawn(
+				entities::FromLdtkIdentifier(ldtkEntity.getName()),
+				entities::SpawnParams{
+					.position = { static_cast<float>(pos.x), static_cast<float>(pos.y) },
+					.layerUid = ldtkLayer.getDefUid()
+				}
+			);
 		}
 
 		return entityLayer;

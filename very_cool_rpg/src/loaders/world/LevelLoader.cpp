@@ -11,8 +11,8 @@ namespace game::world_loader {
 		sf::Vector2u levelSize(ldtkLevel.size.x, ldtkLevel.size.y);
 		std::shared_ptr<world::Level> engineLevel = std::make_shared<world::Level>(levelId, levelSize);
 
-		// set current level in ctx
-		ctx.currentLevel = engineLevel.get();
+		// entities spawned while building this level's layers index into this level's grid
+		ctx.entityFactory.SetCurrentLevel(engineLevel.get());
 
 		// iterate layers from bottom to top (reverse iterator)
 		for (auto it = ldtkLevel.allLayers().rbegin(); it != ldtkLevel.allLayers().rend(); ++it) {
@@ -25,7 +25,10 @@ namespace game::world_loader {
 			}
 		}
 
-		// build spatial grid for level
+		// entities spawned through the factory already indexed themselves, but tile
+		// colliders are created directly and never touch it, so the sweep still has work
+		// to do. it stays a full rebuild rather than a tile-only pass because
+		// InsertEntity ignores anything already present
 		sc::ecs::physics_system::BuildSpatialGrid(ctx.registry, engineLevel->GetSpatialGrid());
 
 		return engineLevel;

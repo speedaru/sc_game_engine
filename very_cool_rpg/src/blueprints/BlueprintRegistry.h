@@ -1,7 +1,9 @@
 #pragma once
 #include <factories/EntityFactory.h>
-#include <utils/assemblers/LdtkAssemblers.h>
 
 namespace game::blueprints {
-	void RegisterAll(factories::EntityFactory& factory, const fs::path& projDir);
+	// the single place every entity type is declared. explicit rather than self
+	// registering on purpose - see the note in debug_system.h about static libraries
+	// dropping object files nothing references
+	void RegisterAll(factories::EntityFactory& factory);
 }

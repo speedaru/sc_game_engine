@@ -30,6 +30,12 @@ namespace game {
 
 		// world
 		std::shared_ptr<sc::world::World> m_world;
-		sc::world::Level* m_currentLevel;
+		sc::world::Level* m_currentLevel = nullptr;
+
+		// which EntityLayer runtime spawns render into. render_system only draws a sprite
+		// whose layerUid matches the layer being drawn, so a spawn without this is
+		// invisible. resolved from the loaded level for now - once levels have more than
+		// one entity layer this wants a Level::FindLayer(name) instead
+		int32_t m_entityLayerUid = -1;
 	};
 }

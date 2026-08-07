@@ -39,16 +39,10 @@
     <ClCompile Include="src\systems\character_movement.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\utils\assemblers\LdtkAssemblers.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\factories\EntityFactory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\loaders\world_loader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\loaders\world\CustomData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\loaders\world\EntityLayerBuilder.cpp">
@@ -67,6 +61,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\loaders\world\TileLayerBuilder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\loaders\world\TileColliderCache.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\loaders\world\EntityDefinitionLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -101,12 +101,6 @@
     <ClInclude Include="src\systems\character_movement.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\utils\assemblers\LdtkAssemblers.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\blueprints\IBlueprint.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\factories\EntityFactory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -114,9 +108,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\loaders\world_loader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\loaders\world\CustomData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\loaders\world\EntityLayerBuilder.h">
@@ -141,6 +132,24 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\loaders\world\TileLayerBuilder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\SpawnParams.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\EntityDefinition.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\EntityType.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blueprints\IEntityBlueprint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\loaders\world\TileColliderCache.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\loaders\world\EntityDefinitionLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

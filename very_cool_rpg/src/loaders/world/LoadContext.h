@@ -6,6 +6,7 @@
 #include <engine/world/Level.h>
 
 #include <factories/EntityFactory.h>
+#include <loaders/world/TileColliderCache.h>
 
 namespace fs = std::filesystem;
 
@@ -15,7 +16,7 @@ namespace game::world_loader {
 		sc::ecs::Registry& registry;
 		factories::EntityFactory& entityFactory;
 		sc::graphics::TileSetManager& tileSetManager;
+		TileColliderCache& tileColliders;
 		fs::path projectDir;
-		sc::world::Level* currentLevel; // raw ptr bcs ctx lives as long as level
 	};
 }

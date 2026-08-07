@@ -5,8 +5,10 @@
 #include <blueprints/DragonBlueprint.h>
 
 namespace game::blueprints {
-	void RegisterAll(factories::EntityFactory& factory, const fs::path& projDir) {
-		factory.Register("Player", std::make_unique<PlayerBlueprint>(projDir, factory.GetTextureCache()));
-		factory.Register("Dragon", std::make_unique<DragonBlueprint>(projDir, factory.GetTextureCache()));
+	using entities::EntityType;
+
+	void RegisterAll(factories::EntityFactory& factory) {
+		factory.Register(EntityType::Player, std::make_unique<PlayerBlueprint>());
+		factory.Register(EntityType::Dragon, std::make_unique<DragonBlueprint>());
 	}
 }

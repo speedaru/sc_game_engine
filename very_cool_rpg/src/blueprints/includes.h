@@ -3,7 +3,5 @@
 #include <engine/ecs/Components.h>
 
 #include <components/GameComponents.h>
-#include <blueprints/IBlueprint.h>
-#include <utils/assemblers/LdtkAssemblers.h>
-
-using TextureCache = game::utils::assemblers::TextureCache;
+#include <blueprints/IEntityBlueprint.h>
+#include <entities/SpawnParams.h>

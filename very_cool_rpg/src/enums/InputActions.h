@@ -7,5 +7,6 @@ namespace game {
 		MoveDown,
 		MoveLeft,
 		MoveRight,
+		SpawnEnt,
 	};
 }

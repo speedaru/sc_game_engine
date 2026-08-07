@@ -162,15 +162,15 @@
     <ClCompile Include="src\blueprints\BlueprintRegistry.cpp" />
     <ClCompile Include="src\blueprints\DragonBlueprint.cpp" />
     <ClCompile Include="src\blueprints\PlayerBlueprint.cpp" />
+    <ClCompile Include="src\loaders\world\EntityDefinitionLoader.cpp" />
+    <ClCompile Include="src\loaders\world\TileColliderCache.cpp" />
     <ClCompile Include="src\loaders\world_loader.cpp" />
-    <ClCompile Include="src\loaders\world\CustomData.cpp" />
     <ClCompile Include="src\loaders\world\EntityLayerBuilder.cpp" />
     <ClCompile Include="src\loaders\world\HitboxUtils.cpp" />
     <ClCompile Include="src\loaders\world\LayerBuilderRegistry.cpp" />
     <ClCompile Include="src\loaders\world\LayerTags.cpp" />
     <ClCompile Include="src\loaders\world\LevelLoader.cpp" />
     <ClCompile Include="src\loaders\world\TileLayerBuilder.cpp" />
-    <ClCompile Include="src\utils\assemblers\LdtkAssemblers.cpp" />
     <ClCompile Include="src\factories\EntityFactory.cpp" />
     <ClCompile Include="src\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -184,11 +184,15 @@
   <ItemGroup>
     <ClInclude Include="src\blueprints\BlueprintRegistry.h" />
     <ClInclude Include="src\blueprints\DragonBlueprint.h" />
-    <ClInclude Include="src\blueprints\IBlueprint.h" />
+    <ClInclude Include="src\blueprints\IEntityBlueprint.h" />
     <ClInclude Include="src\blueprints\includes.h" />
     <ClInclude Include="src\blueprints\PlayerBlueprint.h" />
+    <ClInclude Include="src\entities\EntityDefinition.h" />
+    <ClInclude Include="src\entities\EntityType.h" />
+    <ClInclude Include="src\entities\SpawnParams.h" />
+    <ClInclude Include="src\loaders\world\EntityDefinitionLoader.h" />
+    <ClInclude Include="src\loaders\world\TileColliderCache.h" />
     <ClInclude Include="src\loaders\world_loader.h" />
-    <ClInclude Include="src\loaders\world\CustomData.h" />
     <ClInclude Include="src\loaders\world\EntityLayerBuilder.h" />
     <ClInclude Include="src\loaders\world\HitboxUtils.h" />
     <ClInclude Include="src\loaders\world\ILayerBuilder.h" />
@@ -197,7 +201,6 @@
     <ClInclude Include="src\loaders\world\LevelLoader.h" />
     <ClInclude Include="src\loaders\world\LoadContext.h" />
     <ClInclude Include="src\loaders\world\TileLayerBuilder.h" />
-    <ClInclude Include="src\utils\assemblers\LdtkAssemblers.h" />
     <ClInclude Include="src\components\GameComponents.h" />
     <ClInclude Include="src\factories\EntityFactory.h" />
     <ClInclude Include="src\enums\InputActions.h" />

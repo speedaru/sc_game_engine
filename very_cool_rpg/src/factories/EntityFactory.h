@@ -1,13 +1,15 @@
 #pragma once
 #include <memory>
 #include <string>
-
-#include <LDtkLoader/Entity.hpp>
+#include <string_view>
+#include <unordered_map>
 
 #include <engine/world/Level.h>
 
-#include <blueprints/IBlueprint.h>
-#include <utils/assemblers/LdtkAssemblers.h>
+#include <blueprints/IEntityBlueprint.h>
+#include <entities/EntityDefinition.h>
+#include <entities/EntityType.h>
+#include <entities/SpawnParams.h>
 
 namespace sc::ecs {
 	class Entity;
@@ -15,18 +17,32 @@ namespace sc::ecs {
 }
 
 namespace game::factories {
+	// owns the entity type -> {definition, blueprint} mapping and is the single place
+	// an entity is allowed to come into existence. nothing outside Spawn may add components 
+	// that the spatial grid cares about, because Spawn indexes the entity the moment it is
+	// finished building it
 	class EntityFactory {
 	public:
-		using TextureCache = utils::assemblers::TextureCache;
+		using EntityType = entities::EntityType;
 
-		void Register(const std::string& identifier, std::unique_ptr<blueprints::IBlueprint> blueprint);
+		void Register(EntityType type, std::unique_ptr<blueprints::IEntityBlueprint> blueprint);
 
-		sc::ecs::Entity Spawn(sc::world::Level& level, sc::ecs::Registry& registry, const ldtk::Entity& ldtkData);
-		
-		TextureCache& GetTextureCache() { return m_textureCache; }
+		// filled in by EntityDefinitionLoader before any level loads
+		void SetDefinition(EntityType type, entities::EntityDefinition definition);
+
+		void SetRegistry(sc::ecs::Registry& registry) { m_registry = &registry; }
+
+		// the level whose spatial grid new entities get indexed into
+		void SetCurrentLevel(sc::world::Level* level) { m_currentLevel = level; }
+
+		// returns a null Entity if the type has no blueprint or no definition
+		sc::ecs::Entity Spawn(EntityType type, const entities::SpawnParams& params);
 
 	private:
-		TextureCache m_textureCache;
-		std::unordered_map<std::string, std::unique_ptr<blueprints::IBlueprint>> m_blueprints;
+		std::unordered_map<EntityType, std::unique_ptr<blueprints::IEntityBlueprint>> m_blueprints;
+		std::unordered_map<EntityType, entities::EntityDefinition> m_definitions;
+
+		sc::ecs::Registry* m_registry = nullptr;
+		sc::world::Level* m_currentLevel = nullptr;
 	};
 }
