@@ -66,6 +66,27 @@ namespace sc::debug::modules {
 			}
 		}
 
+		if (ImGui::CollapsingHeader("Tile collision", ImGuiTreeNodeFlags_DefaultOpen)) {
+			const world::CollisionLayer& tiles = ctx.level->GetCollisionLayer();
+			const math::GridSize tileSize = tiles.GetSize();
+
+			ImGui::Text("%ux%u cells at %upx, %u shapes",
+				tileSize.rows, tileSize.cols, tiles.GetCellSize(), tiles.GetShapeCount());
+			ImGui::SetItemTooltip("static level geometry. these are not entities and are not in the spatial grid");
+
+			ImGui::Checkbox("Shapes", &m_showTileShapes);
+			if (m_showTileShapes) {
+				ImGui::Indent();
+				ColorEdit("Tile fill", m_tileFill);
+				ColorEdit("Tile outline", m_tileOutline);
+				ImGui::Unindent();
+			}
+
+			ImGui::Checkbox("Cell grid", &m_showTileCells);
+			ImGui::Checkbox("Shape indices", &m_showShapeIndices);
+			ImGui::SetItemTooltip("the palette index each cell resolves to. equal indices mean identical geometry");
+		}
+
 		if (ImGui::CollapsingHeader("Spatial grid")) {
 			ImGui::Checkbox("Cells", &m_showGrid);
 			ImGui::Checkbox("Occupancy counts", &m_showCellOccupancy);
@@ -74,8 +95,56 @@ namespace sc::debug::modules {
 	}
 
 	void CollisionOverlay::OnDrawOverlay(const DebugContext& ctx, DebugDraw& draw) {
+		DrawTileCollision(ctx, draw);
 		DrawColliders(ctx, draw);
 		DrawSpatialGrid(ctx, draw);
+	}
+
+	void CollisionOverlay::DrawTileCollision(const DebugContext& ctx, DebugDraw& draw) {
+		if (!m_showTileShapes && !m_showTileCells && !m_showShapeIndices) return;
+
+		const world::CollisionLayer& tiles = ctx.level->GetCollisionLayer();
+
+		// only what the camera can see. a level's collision grid is far denser than its
+		// spatial grid, so drawing all of it would put the whole level in the vertex batch
+		// every frame
+		const sf::View& view = ctx.camera->GetView();
+		const sf::Vector2f viewSize = view.getSize();
+		const sf::FloatRect visible{ view.getCenter() - viewSize / 2.f, viewSize };
+
+		// the same range QueryArea would walk, so what is drawn is what physics would find
+		const math::CellRange range = tiles.GetCellsFromBox(visible);
+
+		for (uint32_t row = range.minRow; row < range.maxRow; row++) {
+			for (uint32_t col = range.minCol; col < range.maxCol; col++) {
+				const uint16_t shapeIndex = tiles.GetCell(row, col);
+
+				if (m_showTileCells) {
+					draw.Rect(tiles.CellRect(row, col), m_tileCellLine);
+				}
+
+				if (shapeIndex == world::CollisionLayer::EMPTY_SHAPE) continue;
+
+				if (m_showShapeIndices) {
+					const sf::FloatRect cell = tiles.CellRect(row, col);
+					draw.Text(cell.position + cell.size / 2.f, m_shapeIndexText, std::format("{}", shapeIndex));
+				}
+
+				if (!m_showTileShapes) continue;
+
+				const sf::Vector2f cellOrigin = tiles.CellOrigin(row, col);
+
+				for (const math::Hitbox& box : tiles.GetShape(shapeIndex).boxes) {
+					const sf::FloatRect rect{ cellOrigin + box.offset, box.size };
+
+					draw.FilledRect(rect, m_tileFill);
+
+					// outlines are what make baking visible: a solid run that was collapsed
+					// into one box per cell looks different from one that was not
+					draw.Rect(rect, m_tileOutline);
+				}
+			}
+		}
 	}
 
 	void CollisionOverlay::DrawColliders(const DebugContext& ctx, DebugDraw& draw) {
@@ -89,7 +158,7 @@ namespace sc::debug::modules {
 			if (col.hitboxes.empty()) continue;
 
 			if (m_showHitboxes) {
-				for (const ecs::Hitbox& hitbox : col.hitboxes) {
+				for (const math::Hitbox& hitbox : col.hitboxes) {
 					const sf::FloatRect rect{ trans.pos + hitbox.offset, hitbox.size };
 
 					draw.FilledRect(rect, m_hitboxFill);

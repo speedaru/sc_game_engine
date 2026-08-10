@@ -2,29 +2,63 @@
 #include <cstdint>
 #include <vector>
 
-#include <engine/world/ILevelLayer.h>
+#include <SFML/Graphics/Rect.hpp>
+#include <SFML/System/Vector2.hpp>
+
+#include <engine/math/CellRange.h>
+#include <engine/math/Hitbox.h>
+#include <engine/physics/ColliderRef.h>
 
 namespace sc::world {
-    class CollisionLayer : public ILevelLayer {
-    public:
-        // width and height in tiles
-        CollisionLayer(const LayerId& id, int width, int height, int gridSize)
-            : ILevelLayer(LayerType::Collision, id, true),
-            m_width(width), m_height(height), m_gridSize(gridSize)
-        {
-            m_grid.assign(m_width * m_height, EMPTY_TILE); // initialize empty grid
-        }
+	// the collision geometry of one grid cell, in cell local coordinates
+	struct TileShape {
+		std::vector<math::Hitbox> boxes;
+		uint32_t flags = 0;
 
-        void SetData(const std::vector<int32_t>& gridData) { m_grid = gridData; }
+		bool operator==(const TileShape& other) const = default;
+	};
 
-        // helper function for the physics system to check overlaps
-        bool IsSolid(float pixelX, float pixelY) const;
+	// static level geometry as a uniform grid of shape indices
+	// cells hold a uint16_t index into a deduped shape palette rather than their own
+	// box list to avoid information duplication
+	class CollisionLayer {
+	public:
+		static constexpr uint16_t EMPTY_SHAPE = 0;
 
-    private:
-        static constexpr int32_t EMPTY_TILE = -1;
-        int m_width;
-        int m_height;
-        int m_gridSize;
-        std::vector<int32_t> m_grid;
-    };
+		// an empty layer. Level default constructs one and the loader move assigns the
+		// result into it.
+		CollisionLayer() : CollisionLayer({ 0.f, 0.f }, 1u, math::GridSize{ 0u, 0u }) {}
+
+		CollisionLayer(sf::Vector2f origin, uint32_t cellSize, math::GridSize size);
+
+		void QueryArea(const sf::FloatRect& area, physics::CandidateBuffer& out) const;
+
+		uint16_t GetCell(uint32_t row, uint32_t col) const;
+
+		// out of range coordinates are ignored with a warning
+		void SetCell(uint32_t row, uint32_t col, uint16_t shapeIndex);
+
+		uint16_t AddShape(TileShape&& shape);
+
+		const TileShape& GetShape(uint16_t index) const;
+		uint32_t GetShapeCount() const { return static_cast<uint32_t>(m_shapes.size()); }
+
+		uint32_t CellIndex(uint32_t row, uint32_t col) const;
+		sf::Vector2f CellOrigin(uint32_t row, uint32_t col) const;
+		sf::FloatRect CellRect(uint32_t row, uint32_t col) const;
+
+		sf::Vector2f GetOrigin() const { return m_origin; }
+		uint32_t GetCellSize() const { return m_cellSize; }
+		math::GridSize GetSize() const { return m_size; }
+
+		math::CellRange GetCellsFromBox(const sf::FloatRect& area) const;
+
+	private:
+		sf::Vector2f m_origin; // world position of cell (0, 0)
+		uint32_t m_cellSize;
+		math::GridSize m_size;
+
+		std::vector<uint16_t> m_cells; // rows * cols, indexes into m_shapes
+		std::vector<TileShape> m_shapes; // deduped palette; m_shapes[EMPTY_SHAPE] is empty
+	};
 }

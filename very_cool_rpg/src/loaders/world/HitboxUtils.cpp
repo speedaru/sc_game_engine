@@ -3,11 +3,11 @@
 
 #include <engine/utils/logging.h>
 
-namespace ecs = sc::ecs;
+namespace math = sc::math;
 
 namespace game::world_loader {
-	std::vector<ecs::Hitbox> ParseHitboxes(const nlohmann::json& hitboxArray, sf::Vector2f origin) {
-		std::vector<ecs::Hitbox> hitboxes;
+	std::vector<math::Hitbox> ParseHitboxes(const nlohmann::json& hitboxArray, sf::Vector2f origin) {
+		std::vector<math::Hitbox> hitboxes;
 
 		if (!hitboxArray.is_array()) {
 			LOG_W("hitbox custom data was not a json array, ignoring it");
@@ -28,7 +28,7 @@ namespace game::world_loader {
 		return hitboxes;
 	}
 
-	std::vector<ecs::Hitbox> ParseHitboxesFromCustomData(const std::string& jsonStr, sf::Vector2f origin) {
+	std::vector<math::Hitbox> ParseHitboxesFromCustomData(const std::string& jsonStr, sf::Vector2f origin) {
 		if (jsonStr.empty()) return {};
 
 		nlohmann::json data;

@@ -12,6 +12,6 @@ namespace game::entities {
 		// -1 by default is an invalid layer, meaning its never drawn if no valid uid is specified
 		int32_t layerUid = -1;
 
-		// TODO: per instance collider overrides std::optional<std::vector<sc::ecs::Hitbox>>
+		// TODO: per instance collider overrides std::optional<std::vector<sc::math::Hitbox>>
 	};
 }

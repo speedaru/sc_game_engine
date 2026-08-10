@@ -7,9 +7,9 @@
 #include <engine/debug/IDebugModule.h>
 
 namespace sc::debug::modules {
-	// draws what the physics system actually sees: every hitbox, the single compound
-	// AABB each entity is inserted into the spatial grid with, and - once SpatialGrid
-	// exposes a read API - the grid itself
+	// draws what the physics system actually sees, from both of its broad phases: entity
+	// hitboxes and their compound AABBs out of the spatial grid, and static level geometry
+	// out of the collision layer
 	class CollisionOverlay : public IDebugModule {
 	public:
 		const char* Name() const override { return "Collisions"; }
@@ -21,16 +21,26 @@ namespace sc::debug::modules {
 	private:
 		void DrawColliders(const DebugContext& ctx, DebugDraw& draw);
 		void DrawSpatialGrid(const DebugContext& ctx, DebugDraw& draw);
+		void DrawTileCollision(const DebugContext& ctx, DebugDraw& draw);
 
 	private:
-		// colliders
+		// entity colliders
 		bool m_showHitboxes = true;
 		bool m_showEntityBounds = false;
 		sf::Color m_hitboxFill{ 255, 0, 0, 100 };
 		sf::Color m_hitboxOutline{ 255, 80, 80, 200 };
 		sf::Color m_boundsOutline{ 255, 255, 0, 180 };
 
-		// spatial grid - not wired up yet, see DrawSpatialGrid for what it's waiting on
+		// static tile collision
+		bool m_showTileShapes = true;
+		bool m_showTileCells = false;
+		bool m_showShapeIndices = false;
+		sf::Color m_tileFill{ 0, 140, 255, 90 };
+		sf::Color m_tileOutline{ 120, 200, 255, 200 };
+		sf::Color m_tileCellLine{ 255, 255, 255, 40 };
+		sf::Color m_shapeIndexText{ 200, 230, 255, 230 };
+
+		// spatial grid
 		bool m_showGrid = false;
 		bool m_showCellOccupancy = true;
 		bool m_showEntityCellLinks = false;

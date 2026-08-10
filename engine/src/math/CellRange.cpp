@@ -53,4 +53,27 @@ namespace sc::math{
 			func(CellRange{ intersection.minRow, intersection.maxCol, intersection.maxRow, maxCol });
 		}
 	}
+
+	CellRange CellsFromBox(const sf::FloatRect& box, sf::Vector2f origin, float cellSize, GridSize size) {
+		const float maxRows = static_cast<float>(size.rows);
+		const float maxCols = static_cast<float>(size.cols);
+
+		// grid space, so a grid that doesn't start at the world origin still works
+		const float localX = box.position.x - origin.x;
+		const float localY = box.position.y - origin.y;
+
+		// stay in float space so we dont underflow
+		const float minCol = std::floor(localX / cellSize);
+		const float minRow = std::floor(localY / cellSize);
+		const float maxCol = std::ceil((localX + box.size.x) / cellSize);
+		const float maxRow = std::ceil((localY + box.size.y) / cellSize);
+
+		// clamp to world space coordinates
+		return CellRange{
+			.minRow = static_cast<uint32_t>(std::clamp(minRow, 0.f, maxRows)),
+			.minCol = static_cast<uint32_t>(std::clamp(minCol, 0.f, maxCols)),
+			.maxRow = static_cast<uint32_t>(std::clamp(maxRow, 0.f, maxRows)),
+			.maxCol = static_cast<uint32_t>(std::clamp(maxCol, 0.f, maxCols))
+		};
+	}
 }

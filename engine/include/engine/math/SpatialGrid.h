@@ -31,6 +31,7 @@ namespace sc::math {
 
 		// request a list of entities inside this box
 		auto Query(const Rect& box) -> std::vector<entity>;
+		void Query(const Rect& box, std::vector<entity>& out) const;
 
 		void Clear();
 

@@ -36,19 +36,24 @@ namespace sc::ecs::render_system {
 				render2d::FlushQuads();
 			}
 
-			if (layer->GetType() == world::LayerType::Tile) {
+			switch (layer->GetType()) {
+			case world::LayerType::Tile:
+			{
 				auto* tileLayer = static_cast<world::TileLayer*>(layer.get());
 				render2d::DrawTileLayer(*tileLayer);
+				break;
 			}
-			else if (layer->GetType() == world::LayerType::YSortedTile) {
+			case world::LayerType::YSortedTile:
+			{
 				auto* yTileLayer = static_cast<world::YSortedTileLayer*>(layer.get());
 				render2d::SubmitYSortedTileLayer(*yTileLayer);
+				break;
 			}
-			else if (layer->GetType() == world::LayerType::Entity) {
+			case world::LayerType::Entity:
+			{
 				DrawEntityLayer(registry, layer.get());
+				break;
 			}
-			else if (layer->GetType() == world::LayerType::Collision) {
-				// TODO: implement debug collisions viewing
 			}
 		}
 

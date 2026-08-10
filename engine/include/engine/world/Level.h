@@ -6,6 +6,7 @@
 #include <SFML/System/Vector2.hpp>
 
 #include <engine/world/ILevelLayer.h>
+#include <engine/world/CollisionLayer.h>
 #include <engine/math/SpatialGrid.h>
 
 namespace sc::world {
@@ -23,7 +24,7 @@ namespace sc::world {
 		Level(const LevelId& id, const sf::Vector2u& size, uint32_t cellSize = DEFAULT_SPATIAL_GRID_CELL_SIZE)
 			: m_id(id),
 			m_size(size),
-			// round up: truncating division leaves the level's right/bottom edge uncovered
+			// round up
 			m_spatialGrid(cellSize, math::GridSize{
 				.rows = (size.y + cellSize - 1) / cellSize,
 				.cols = (size.x + cellSize - 1) / cellSize
@@ -40,6 +41,13 @@ namespace sc::world {
 		const math::SpatialGrid& GetSpatialGrid() const { return m_spatialGrid; }
 		math::SpatialGrid& GetSpatialGrid() { return m_spatialGrid; }
 
+		const CollisionLayer& GetCollisionLayer() const { return m_collisionLayer; }
+		CollisionLayer& GetCollisionLayer() { return m_collisionLayer; }
+
+		// the loader bakes the collision layer from all of a level's sources at once and
+		// moves the finished result in
+		void SetCollisionLayer(CollisionLayer&& collisionLayer) { m_collisionLayer = std::move(collisionLayer); }
+
 		// expose layer stack for renderer
 		const std::vector<std::unique_ptr<ILevelLayer>>& GetLayers() const { return m_layers; }
 
@@ -47,6 +55,7 @@ namespace sc::world {
 		LevelId m_id;
 		sf::Vector2u m_size;
 		math::SpatialGrid m_spatialGrid;
+		CollisionLayer m_collisionLayer;
 		std::vector<std::unique_ptr<ILevelLayer>> m_layers;
 	};
 }

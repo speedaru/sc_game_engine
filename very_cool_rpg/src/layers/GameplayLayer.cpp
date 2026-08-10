@@ -90,19 +90,11 @@ namespace game {
 		// handle player keybinds
 		systems::UpdatePlayerInput(m_registry);
 
-		if (input::IsActionActive(static_cast<uint32_t>(InputAction::SpawnEnt))) {
-			const auto& trans = m_player.GetComponent<ecs::TransformComponent>();
-			m_entityFactory.Spawn(entities::EntityType::Dragon, entities::SpawnParams{
-				.position = { trans.pos + sf::Vector2f{ 50.f, 50.f } },
-				.layerUid = m_entityLayerUid
-			});
-		}
-
 		// calculate every entity movement
 		systems::UpdateCharacterMovement(m_registry, timeStep);
 
 		// move entities in engine
-		ecs::physics_system::UpdateKinematics(m_registry, m_currentLevel->GetSpatialGrid(), timeStep);
+		ecs::physics_system::UpdateKinematics(m_registry, *m_currentLevel, timeStep);
 
 		// center camera on player
 		if (m_player && m_player.HasComponent<ecs::TransformComponent>()) {
@@ -123,6 +115,14 @@ namespace game {
 			.camera = &m_camera,
 			.deltaTime = deltaTime
 		}));
+
+		if (input::IsActionActive(static_cast<uint32_t>(InputAction::SpawnEnt))) {
+			const auto& trans = m_player.GetComponent<ecs::TransformComponent>();
+			m_entityFactory.Spawn(entities::EntityType::Dragon, entities::SpawnParams{
+				.position = { trans.pos + sf::Vector2f{ 50.f, 50.f } },
+				.layerUid = m_entityLayerUid
+			});
+		}
     }
 
     void GameplayLayer::OnRender(sf::RenderWindow& window) {

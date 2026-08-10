@@ -7,63 +7,27 @@
 using namespace sc::ecs;
 using namespace sc::ecs::physics_system;
 namespace math = sc::math;
+namespace physics = sc::physics;
 
 namespace {
-	// narrow phase: sweeps a moving entity against a list of nearby entities.
-	// these are not just statics - any collidable entity in the grid blocks movement,
-	// including other moving entities
+	// narrow phase: sweeps a moving entity against already resolved boxes.
 	math::SweepResult FindClosestCollision(
-		entt::entity self,
 		const TransformComponent& dynTrans,
 		const BoxColliderComponent& dynCol,
 		const sf::Vector2f& delta,
-		const std::vector<entt::entity>& nearbyEntities, // filtered by spatial grid
-		entt::registry& reg
+		const physics::CandidateBuffer& candidates
 	)
 	{
 		math::SweepResult closestSweep;
 
-		// Check every hitbox in the moving entity
-		for (const auto& dynBox : dynCol.hitboxes) {
-			sf::FloatRect movingRect(
-				{
-					dynTrans.pos.x + dynBox.offset.x,
-					dynTrans.pos.y + dynBox.offset.y
-				},
-					{
-						dynBox.size.x,
-						dynBox.size.y
-					}
-			);
+		for (const math::Hitbox& dynBox : dynCol.hitboxes) {
+			const sf::FloatRect movingRect{ dynTrans.pos + dynBox.offset, dynBox.size };
 
-			// Only sweep against the highly filtered list of nearby entities
-			for (entt::entity otherEnt : nearbyEntities) {
-				if (otherEnt == self) continue;
+			for (const physics::ColliderRef& other : candidates) {
+				const math::SweepResult sweep = math::SweptAABB(movingRect, delta, other.box);
 
-				// Safely skip if the other entity was destroyed or lacks components
-				if (!reg.all_of<TransformComponent, BoxColliderComponent>(otherEnt)) continue;
-
-				const auto& otherTrans = reg.get<TransformComponent>(otherEnt);
-				const auto& otherCol = reg.get<BoxColliderComponent>(otherEnt);
-
-				for (const auto& statBox : otherCol.hitboxes) {
-					sf::FloatRect staticRect(
-						{
-							otherTrans.pos.x + statBox.offset.x,
-							otherTrans.pos.y + statBox.offset.y
-						},
-							{
-								statBox.size.x,
-								statBox.size.y
-							}
-					);
-
-					// Perform the pure math check
-					auto sweep = math::SweptAABB(movingRect, delta, staticRect);
-
-					if (sweep.time < closestSweep.time) {
-						closestSweep = sweep;
-					}
+				if (sweep.time < closestSweep.time) {
+					closestSweep = sweep;
 				}
 			}
 		}
@@ -71,15 +35,30 @@ namespace {
 		return closestSweep;
 	}
 
-	// pipeline orchestrator: runs the broad phase, calls the narrow phase, and handles the slide resolution
+	sf::FloatRect SweptBounds(const sf::FloatRect& bounds, const sf::Vector2f& delta) {
+		return sf::FloatRect{
+			{
+				bounds.position.x + std::min(0.0f, delta.x),
+				bounds.position.y + std::min(0.0f, delta.y)
+			},
+			{
+				bounds.size.x + std::abs(delta.x),
+				bounds.size.y + std::abs(delta.y)
+			}
+		};
+	}
+
+	// pipeline orchestrator: runs both broad phases, calls the narrow phase, and handles the slide resolution
 	void MoveAndResolve(
 		entt::entity self,
 		TransformComponent& trans,
 		VelocityComponent& vel,
 		const BoxColliderComponent& col,
 		float timeStep,
-		math::SpatialGrid& grid,
-		entt::registry& reg
+		sc::world::Level& level,
+		entt::registry& reg,
+		physics::CandidateBuffer& candidates,
+		std::vector<entt::entity>& scratch
 	)
 	{
 		sf::Vector2f delta = vel.velocity * timeStep;
@@ -91,48 +70,44 @@ namespace {
 			return;
 		}
 
+		if (delta.x == 0.0f && delta.y == 0.0f) return;
+
+		// broad phase, once for the whole step, not once per slide.
+		// sliding only ever shortens the remaining delta, so every later iteration's query
+		// range is a strict subset of this one: the position after a slide is
+		// pos + delta*t which lies on the swept path, and (pos + delta*t) + delta*(1-t)
+		// is still exactly pos + delta, so the far extent never grows. re-querying inside
+		// the loop was doing the same work up to three times over
+		const sf::FloatRect queryBounds = SweptBounds(GetEntityBounds(trans, col), delta);
+
+		candidates.clear();
+		level.GetCollisionLayer().QueryArea(queryBounds, candidates);
+		CollectEntityCandidates(level.GetSpatialGrid(), reg, queryBounds, self, candidates, scratch);
+
 		for (int i = 0; i < MAX_SLIDES; ++i) {
 			if (delta.x == 0.0f && delta.y == 0.0f) break;
 
-			// 1. BROAD PHASE BOUNDING BOX
-			// Get the true bounding box that encapsulates all hitboxes
-			sf::FloatRect compoundBounds = GetEntityBounds(trans, col);
-			sf::FloatRect queryBounds(
-				{
-					compoundBounds.position.x + std::min(0.0f, delta.x),
-					compoundBounds.position.y + std::min(0.0f, delta.y)
-				},
-				{
-					compoundBounds.size.x + std::abs(delta.x),
-					compoundBounds.size.y + std::abs(delta.y)
-				}
-			);
+			// narrow phase
+			const math::SweepResult sweep = FindClosestCollision(trans, col, delta, candidates);
 
-			// 2. BROAD PHASE QUERY
-			// Ask the grid *only* for the cells we are moving towards
-			std::vector<entt::entity> nearbyEntities = grid.Query(queryBounds);
-
-			// 3. NARROW PHASE
-			auto sweep = FindClosestCollision(self, trans, col, delta, nearbyEntities, reg);
-
-			// If the path is entirely clear, move the full distance and exit the loop
+			// if the path is entirely clear, move the full distance and exit the loop
 			if (sweep.time >= 1.0f) {
 				trans.pos += delta;
 				break;
 			}
 
-			// 4. RESOLUTION (Sliding)
+			// resolution (sliding)
 			const float EPSILON = 0.001f;
 			float safeTime = std::max(0.0f, sweep.time - EPSILON);
 
-			// Move the entity up to the point of impact
+			// move the entity up to the point of impact
 			trans.pos += delta * safeTime;
 
-			// Calculate the remaining time in this frame
+			// calculate the remaining time in this frame
 			float remainingTime = 1.0f - sweep.time;
 			delta = delta * remainingTime;
 
-			// Slide Response: Strip out the velocity going into the wall
+			// slide response: strip out the velocity going into the wall
 			if (sweep.normal.x != 0.0f) {
 				delta.x = 0.0f;
 				vel.velocity.x = 0.0f;
@@ -193,7 +168,7 @@ namespace sc::ecs::physics_system {
 
 		const auto& transform = entity.GetComponent<const TransformComponent>();
 		const auto& collider = entity.GetComponent<const BoxColliderComponent>();
-		
+
 		// ensure collider has hitboxes
 		if (!IsCollidable(collider)) {
 			return;
@@ -202,16 +177,54 @@ namespace sc::ecs::physics_system {
 		grid.InsertEntity(entity.GetHandle(), GetEntityBounds(transform, collider));
 	}
 
-	void UpdateKinematics(Registry& registry, math::SpatialGrid& grid, float timeStep) {
+	void CollectEntityCandidates(
+		const math::SpatialGrid& grid,
+		entt::registry& reg,
+		const sf::FloatRect& area,
+		entt::entity self,
+		physics::CandidateBuffer& out,
+		std::vector<entt::entity>& scratch
+	)
+	{
+		scratch.clear();
+		grid.Query(area, scratch);
+
+		for (entt::entity other : scratch) {
+			if (other == self) continue;
+
+			// nothing calls SpatialGrid::EraseEntity anywhere yet, so a destroyed entity
+			// leaves its handle behind in the cells it occupied. get<> on a dead handle is
+			// undefined behaviour, so check before touching it
+			if (!reg.valid(other)) continue;
+
+			const auto* otherTrans = reg.try_get<TransformComponent>(other);
+			const auto* otherCol = reg.try_get<BoxColliderComponent>(other);
+			if (!otherTrans || !otherCol) continue;
+
+			for (const math::Hitbox& hitbox : otherCol->hitboxes) {
+				out.push_back(physics::ColliderRef{
+					.box = sf::FloatRect{ otherTrans->pos + hitbox.offset, hitbox.size },
+					.entity = other
+				});
+			}
+		}
+	}
+
+	void UpdateKinematics(Registry& registry, world::Level& level, float timeStep) {
 		auto& reg = registry.GetRegistry();
 
 		// Grab all entities that can move and collide
 		auto dynamicView = reg.view<TransformComponent, VelocityComponent, const BoxColliderComponent>();
 
+		// one set of buffers for every entity this step. they are cleared per entity but
+		// keep their capacity, so after the first entity the broad phase stops allocating
+		physics::CandidateBuffer candidates;
+		std::vector<entt::entity> scratch;
+
 		for (auto [entity, trans, vel, col] : dynamicView.each()) {
 			const sf::Vector2f oldPos = trans.pos;
 
-			MoveAndResolve(entity, trans, vel, col, timeStep, grid, reg);
+			MoveAndResolve(entity, trans, vel, col, timeStep, level, reg, candidates, scratch);
 
 			// Keep the grid in sync with where the entity actually ended up.
 			// Done here rather than inside MoveAndResolve's slide loop: the intermediate
@@ -223,7 +236,7 @@ namespace sc::ecs::physics_system {
 			// of earlier ones, so two entities can never move into the same space. The
 			// tradeoff is order dependence: whoever is iterated first wins contested ground.
 			if (trans.pos != oldPos && IsCollidable(col)) {
-				grid.MoveEntity(entity, GetEntityBounds(trans, col));
+				level.GetSpatialGrid().MoveEntity(entity, GetEntityBounds(trans, col));
 			}
 		}
 	}

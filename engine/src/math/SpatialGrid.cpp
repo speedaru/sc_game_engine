@@ -64,22 +64,28 @@ namespace sc::math {
 	}
 	
 	auto SpatialGrid::Query(const Rect& box) -> std::vector<entity> {
-		CellRange range = GetCellsFromBox(box);
 		std::vector<entity> results;
 		results.reserve(32);
+		Query(box, results);
+		return results;
+	}
+
+	void SpatialGrid::Query(const Rect& box, std::vector<entity>& out) const {
+		const CellRange range = GetCellsFromBox(box);
+
+		// append so callers can reuse one buffer across frames
+		const size_t start = out.size();
 
 		for (auto row = range.minRow; row < range.maxRow; row++) {
-			for (auto  col = range.minCol; col < range.maxCol; col++) {
+			for (auto col = range.minCol; col < range.maxCol; col++) {
 				const auto& entities = m_grid.GetCell(row, col);
-				results.insert(results.end(), entities.begin(), entities.end());
+				out.insert(out.end(), entities.begin(), entities.end());
 			}
 		}
 
 		// remove duplicates because 1 entity can be in multiple cells
-		std::sort(results.begin(), results.end());
-		results.erase(std::unique(results.begin(), results.end()), results.end());
-
-		return results;
+		std::sort(out.begin() + start, out.end());
+		out.erase(std::unique(out.begin() + start, out.end()), out.end());
 	}
 
 	void SpatialGrid::Clear() {
@@ -126,26 +132,8 @@ namespace sc::math {
 	}
 
 	auto SpatialGrid::GetCellsFromBox(const Rect& box) const -> CellRange {
-		const float cellSize = static_cast<float>(m_cellSize);
-		const float maxRows = static_cast<float>(m_size.rows);
-		const float maxCols = static_cast<float>(m_size.cols);
-
-		// stay in float space until after clamping: a box can legitimately fall
-		// outside the level (MoveAndResolve stretches query bounds by the movement
-		// delta), and casting a negative float to uint32_t is undefined behaviour
-		float minCol = std::floor(box.position.x / cellSize);
-		float minRow = std::floor(box.position.y / cellSize);
-		float maxCol = std::ceil((box.position.x + box.size.x) / cellSize);
-		float maxRow = std::ceil((box.position.y + box.size.y) / cellSize);
-
-		// cells outside the level hold nothing, so clamping loses no information.
-		// maxes clamp to rows/cols (not -1) because the range is half-open
-		return CellRange{
-			.minRow = static_cast<uint32_t>(std::clamp(minRow, 0.f, maxRows)),
-			.minCol = static_cast<uint32_t>(std::clamp(minCol, 0.f, maxCols)),
-			.maxRow = static_cast<uint32_t>(std::clamp(maxRow, 0.f, maxRows)),
-			.maxCol = static_cast<uint32_t>(std::clamp(maxCol, 0.f, maxCols))
-		};
+		// the spatial grid always starts at the world origin
+		return CellsFromBox(box, { 0.f, 0.f }, static_cast<float>(m_cellSize), m_size);
 	}
 
 }

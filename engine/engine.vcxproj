@@ -206,6 +206,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\utils\logging.cpp" />
+    <ClCompile Include="src\world\CollisionLayer.cpp" />
+    <ClCompile Include="src\world\CollisionLayerBuilder.cpp" />
     <ClCompile Include="src\world\Level.cpp" />
     <ClCompile Include="src\world\TileLayer.cpp" />
     <ClCompile Include="src\world\World.cpp" />
@@ -232,8 +234,10 @@
     <ClInclude Include="include\engine\graphics\Camera2D.h" />
     <ClInclude Include="include\engine\math\CellRange.h" />
     <ClInclude Include="include\engine\math\Grid.hpp" />
+    <ClInclude Include="include\engine\math\Hitbox.h" />
     <ClInclude Include="include\engine\math\physics.h" />
     <ClInclude Include="include\engine\math\SpatialGrid.h" />
+    <ClInclude Include="include\engine\physics\ColliderRef.h" />
     <ClInclude Include="include\engine\renderer\render2d.h" />
     <ClInclude Include="include\engine\graphics\SFMLTexture2D.h" />
     <ClInclude Include="include\engine\graphics\Texture2D.h" />
@@ -242,6 +246,7 @@
     <ClInclude Include="include\engine\ecs\systems\physics_system.h" />
     <ClInclude Include="include\engine\utils\logging.h" />
     <ClInclude Include="include\engine\world\CollisionLayer.h" />
+    <ClInclude Include="include\engine\world\CollisionLayerBuilder.h" />
     <ClInclude Include="include\engine\world\EntityLayer.h" />
     <ClInclude Include="include\engine\world\Level.h" />
     <ClInclude Include="include\engine\world\ILevelLayer.h" />

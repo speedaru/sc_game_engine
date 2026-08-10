@@ -3,10 +3,10 @@
 
 #include <loaders/world/HitboxUtils.h>
 
-namespace ecs = sc::ecs;
+namespace math = sc::math;
 
 namespace game::world_loader {
-	const std::vector<ecs::Hitbox>& TileColliderCache::Get(const ldtk::Tileset& tileset, int tileId) {
+	const std::vector<math::Hitbox>& TileColliderCache::Get(const ldtk::Tileset& tileset, int tileId) {
 		const uint64_t key = MakeKey(tileset.uid, tileId);
 
 		auto it = m_cache.find(key);

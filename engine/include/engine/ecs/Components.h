@@ -6,6 +6,7 @@
 #include <SFML/Graphics.hpp>
 
 #include <engine/graphics/Texture2D.h>
+#include <engine/math/Hitbox.h>
 
 namespace sc::ecs {
 	struct TagComponent {
@@ -35,16 +36,9 @@ namespace sc::ecs {
 			: SpriteComponent(texture, layerUid, sf::IntRect({ 0, 0 }, { (int32_t)texture->GetWidth(), (int32_t)texture->GetHeight() })) {}
 	};
 
-	struct Hitbox {
-		sf::Vector2f offset;
-		sf::Vector2f size;
-
-		Hitbox(float offsetX, float offsetY, float w, float h)
-			: offset(offsetX, offsetY), size(w, h) {}
-	};
 
 	struct BoxColliderComponent {
-		std::vector<Hitbox> hitboxes;
+		std::vector<math::Hitbox> hitboxes;
 
 		BoxColliderComponent() = default;
 	};

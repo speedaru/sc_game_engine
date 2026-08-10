@@ -10,10 +10,10 @@
 
 namespace game::world_loader {
 	// parses a JSON array of {x, y, w, h} rects into hitboxes
-	std::vector<sc::ecs::Hitbox> ParseHitboxes(const nlohmann::json& hitboxArray, sf::Vector2f origin = { 0.f, 0.f });
+	std::vector<sc::math::Hitbox> ParseHitboxes(const nlohmann::json& hitboxArray, sf::Vector2f origin = { 0.f, 0.f });
 
 	// extract hitboxes from root JSON custom data
-	std::vector<sc::ecs::Hitbox> ParseHitboxesFromCustomData(const std::string& jsonStr, sf::Vector2f origin = { 0.f, 0.f });
+	std::vector<sc::math::Hitbox> ParseHitboxesFromCustomData(const std::string& jsonStr, sf::Vector2f origin = { 0.f, 0.f });
 
 	// find tile id from a texture rect inside a ldtk tileset
 	int GetTileIdFromRect(const ldtk::IntRect& rect, const ldtk::Tileset& tileset);

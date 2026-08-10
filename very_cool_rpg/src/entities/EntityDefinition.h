@@ -24,6 +24,6 @@ namespace game::entities {
 		sf::Vector2f pivot;
 
 		// already pivot adjusted
-		std::vector<sc::ecs::Hitbox> hitboxes;
+		std::vector<sc::math::Hitbox> hitboxes;
 	};
 }

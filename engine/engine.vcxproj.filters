@@ -111,6 +111,12 @@
     <ClCompile Include="src\debug\modules\CollisionOverlay.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\world\CollisionLayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\world\CollisionLayerBuilder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\engine\utils\logging.h">
@@ -228,6 +234,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\engine\math\SpatialGrid.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\engine\math\Hitbox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\engine\physics\ColliderRef.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\engine\world\CollisionLayerBuilder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
