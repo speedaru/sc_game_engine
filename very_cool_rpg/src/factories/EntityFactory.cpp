@@ -41,18 +41,19 @@ namespace game::factories {
 			return {};
 		}
 
+		// create entity
 		const entities::EntityDefinition& definition = definitionIt->second;
 		ecs::Entity entity = m_registry->CreateEntity(definition.debugName);
 
-		// common assembly: identical for every type, so blueprints never touch it. the
-		// collider in particular is attached here precisely so that no blueprint can
-		// forget it, or add it after the grid has already looked at the entity
+		// add transform component
 		entity.AddComponent<ecs::TransformComponent>(params.position, definition.pivot);
 
+		// add texture component if present
 		if (definition.texture) {
 			entity.AddComponent<ecs::SpriteComponent>(definition.texture, params.layerUid, definition.textureRect);
 		}
 
+		// add collider component
 		if (!definition.hitboxes.empty()) {
 			auto& collider = entity.AddComponent<ecs::BoxColliderComponent>();
 			collider.hitboxes = definition.hitboxes;
@@ -61,9 +62,7 @@ namespace game::factories {
 		// type specific components
 		blueprintIt->second->Build(entity, params);
 
-		// the entity is complete here, which is the entire reason this is now correct.
-		// it used to run immediately after Build, before the world loader had applied the
-		// hitboxes, so it hit its own guard clause and no-oped every single time
+		// register collisions with level
 		if (m_currentLevel) {
 			ecs::physics_system::RegisterEntityCollisions(m_currentLevel->GetSpatialGrid(), entity);
 		}

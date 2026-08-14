@@ -25,8 +25,7 @@ namespace sc::world {
 	public:
 		static constexpr uint16_t EMPTY_SHAPE = 0;
 
-		// an empty layer. Level default constructs one and the loader move assigns the
-		// result into it.
+		// an empty layer. Level default constructs one and the loader move assigns the result into it
 		CollisionLayer() : CollisionLayer({ 0.f, 0.f }, 1u, math::GridSize{ 0u, 0u }) {}
 
 		CollisionLayer(sf::Vector2f origin, uint32_t cellSize, math::GridSize size);
@@ -58,7 +57,7 @@ namespace sc::world {
 		uint32_t m_cellSize;
 		math::GridSize m_size;
 
-		std::vector<uint16_t> m_cells; // rows * cols, indexes into m_shapes
-		std::vector<TileShape> m_shapes; // deduped palette; m_shapes[EMPTY_SHAPE] is empty
+		std::vector<uint16_t> m_cells; // rows * cols, contains indexes into m_shapes
+		std::vector<TileShape> m_shapes; // deduped palette, index EMPTY_SHAPE is an empty shape
 	};
 }

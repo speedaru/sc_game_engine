@@ -162,6 +162,7 @@
     <ClCompile Include="src\blueprints\BlueprintRegistry.cpp" />
     <ClCompile Include="src\blueprints\DragonBlueprint.cpp" />
     <ClCompile Include="src\blueprints\PlayerBlueprint.cpp" />
+    <ClCompile Include="src\debug\PlayerMovement.cpp" />
     <ClCompile Include="src\loaders\world\collision_baker.cpp" />
     <ClCompile Include="src\loaders\world\EntityDefinitionLoader.cpp" />
     <ClCompile Include="src\loaders\world\TileColliderCache.cpp" />
@@ -188,6 +189,7 @@
     <ClInclude Include="src\blueprints\IEntityBlueprint.h" />
     <ClInclude Include="src\blueprints\includes.h" />
     <ClInclude Include="src\blueprints\PlayerBlueprint.h" />
+    <ClInclude Include="src\debug\PlayerMovement.h" />
     <ClInclude Include="src\entities\EntityDefinition.h" />
     <ClInclude Include="src\entities\EntityType.h" />
     <ClInclude Include="src\entities\SpawnParams.h" />

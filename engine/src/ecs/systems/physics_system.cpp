@@ -73,11 +73,7 @@ namespace {
 		if (delta.x == 0.0f && delta.y == 0.0f) return;
 
 		// broad phase, once for the whole step, not once per slide.
-		// sliding only ever shortens the remaining delta, so every later iteration's query
-		// range is a strict subset of this one: the position after a slide is
-		// pos + delta*t which lies on the swept path, and (pos + delta*t) + delta*(1-t)
-		// is still exactly pos + delta, so the far extent never grows. re-querying inside
-		// the loop was doing the same work up to three times over
+		// sliding only ever shortens the remaining delta
 		const sf::FloatRect queryBounds = SweptBounds(GetEntityBounds(trans, col), delta);
 
 		candidates.clear();
@@ -146,20 +142,6 @@ namespace sc::ecs::physics_system {
 		return sf::FloatRect{ trans.pos + tl, br - tl };
 	}
 
-	void BuildSpatialGrid(Registry& registry, math::SpatialGrid& spatialGrid) {
-		auto view = registry.GetRegistry().view<const TransformComponent, const BoxColliderComponent>();
-
-		// for each collider insert it into the grid
-		for (auto [entity, trans, collider] : view.each()) {
-			// skip entities with no hitboxes: they have no meaningful bounds, and
-			// inserting them here would make UpdateKinematics' MoveEntity calls
-			// disagree about who is in the grid
-			if (!IsCollidable(collider)) continue;
-
-			spatialGrid.InsertEntity(entity, GetEntityBounds(trans, collider));
-		}
-	}
-
 	void RegisterEntityCollisions(math::SpatialGrid& grid, const Entity& entity) {
 		if (!entity.HasComponent<TransformComponent>() || !entity.HasComponent<BoxColliderComponent>()) {
 			LOG_W("trying to register entity %u but it doesnt have transform and box collider component", static_cast<uint32_t>(entity.GetHandle()));
@@ -213,11 +195,9 @@ namespace sc::ecs::physics_system {
 	void UpdateKinematics(Registry& registry, world::Level& level, float timeStep) {
 		auto& reg = registry.GetRegistry();
 
-		// Grab all entities that can move and collide
+		// grab all entities that can move and collide
 		auto dynamicView = reg.view<TransformComponent, VelocityComponent, const BoxColliderComponent>();
 
-		// one set of buffers for every entity this step. they are cleared per entity but
-		// keep their capacity, so after the first entity the broad phase stops allocating
 		physics::CandidateBuffer candidates;
 		std::vector<entt::entity> scratch;
 

@@ -72,6 +72,9 @@
     <ClCompile Include="src\loaders\world\collision_baker.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\debug\PlayerMovement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\layers\GameplayLayer.h">
@@ -156,6 +159,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\loaders\world\collision_baker.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\debug\PlayerMovement.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

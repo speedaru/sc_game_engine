@@ -106,9 +106,6 @@ namespace game {
     }
 
     void GameplayLayer::OnUpdate(float deltaTime) {
-		// published once per frame rather than per physics tick: OnFixedUpdate runs zero
-		// or more times off the accumulator, and deltaTime only exists here.
-		// runs before DebugLayer::OnUpdate because layers update bottom to top
 		SC_DEBUG_ONLY(dbg::SetContext(dbg::DebugContext{
 			.registry = &m_registry,
 			.level = m_currentLevel,
@@ -126,6 +123,11 @@ namespace game {
     }
 
     void GameplayLayer::OnRender(sf::RenderWindow& window) {
+		if (!m_currentLevel) {
+			LOG_W("level was null");
+			return;
+		}
+
 		ecs::render_system::RenderWorld(m_registry, *m_currentLevel, window, m_camera);
 
 		// collision boxes used to be drawn by hand here. that now lives in the

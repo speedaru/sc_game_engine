@@ -6,17 +6,20 @@
 #include <engine/debug/modules/CollisionOverlay.h>
 
 #include <layers/GameplayLayer.h>
+#include <debug/PlayerMovement.h>
 #include <constants.h>
 
 using Application = sc::core::Application;
 using WindowData = sc::core::WindowData;
 using namespace game;
 namespace dbg = sc::debug;
+namespace game_dbg = game::debug;
 
 // body only compiles in debug builds: the module types don't exist in release
 void RegisterDebugModules() {
 	SC_DEBUG_ONLY(dbg::RegisterModule(std::make_unique<dbg::modules::FrameStats>()));
 	SC_DEBUG_ONLY(dbg::RegisterModule(std::make_unique<dbg::modules::CollisionOverlay>()));
+	SC_DEBUG_ONLY(dbg::RegisterModule(std::make_unique<game_dbg::PlayerMovement>()));
 }
 
 void PushGameLayers(Application& app) {
