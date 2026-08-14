@@ -16,17 +16,11 @@ namespace sc::debug {
 		if (const auto* key = event.getIf<sf::Event::KeyPressed>()) {
 			if (key->code == TOGGLE_KEY) {
 				ToggleOverlay();
-				return true; // consume: the game should never see the toggle key
+				return true; // consume the toggle key
 			}
 		}
 
-		// swallow input the gui is currently using, so clicking a checkbox or typing in
-		// a debug field doesn't also reach the game.
-		//
-		// CAVEAT: this only bites once the game reads input from events. sc::input is
-		// still polling based (InputContext::IsActionPressed calls
-		// sf::Keyboard::isKeyPressed directly), so consuming a key event here does not
-		// currently stop the player walking while you type
+		// consume gui input
 		const ImGuiIO& io = ImGui::GetIO();
 
 		// consum key event
@@ -52,8 +46,7 @@ namespace sc::debug {
 	}
 
 	void DebugLayer::OnUpdate(float deltaTime) {
-		// imgui widgets are built here rather than in OnRender because they have to sit
-		// between Application's ImGui::SFML::Update and ImGui::SFML::Render
+		// imgui widgets are built here
 		DrawUI();
 	}
 

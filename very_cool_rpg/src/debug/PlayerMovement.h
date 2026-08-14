@@ -1,6 +1,8 @@
 #pragma once
 #include <engine/debug/debug_config.h>
 
+namespace game::debug {}
+
 #if SC_ENABLE_DEBUG_TOOLS
 #include <SFML/Graphics/Color.hpp>
 

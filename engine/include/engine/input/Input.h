@@ -11,5 +11,10 @@ namespace sc::input {
 
 	void ClearContexts();
 
+	// held state (while key held down)
 	bool IsActionActive(ActionId action);
+
+	// true exactly 1 per key press/release
+	bool IsActionJustPressed(ActionId action);
+	bool IsActionJustReleased(ActionId action);
 }

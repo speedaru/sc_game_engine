@@ -113,7 +113,7 @@ namespace game {
 			.deltaTime = deltaTime
 		}));
 
-		if (input::IsActionActive(static_cast<uint32_t>(InputAction::SpawnEnt))) {
+		if (input::IsActionJustPressed(static_cast<uint32_t>(InputAction::SpawnEnt))) {
 			const auto& trans = m_player.GetComponent<ecs::TransformComponent>();
 			m_entityFactory.Spawn(entities::EntityType::Dragon, entities::SpawnParams{
 				.position = { trans.pos + sf::Vector2f{ 50.f, 50.f } },
@@ -129,9 +129,5 @@ namespace game {
 		}
 
 		ecs::render_system::RenderWorld(m_registry, *m_currentLevel, window, m_camera);
-
-		// collision boxes used to be drawn by hand here. that now lives in the
-		// CollisionOverlay debug module, which batches them instead of issuing a draw
-		// call per hitbox, and can be toggled at runtime
     }
 }

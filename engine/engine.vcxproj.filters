@@ -51,6 +51,12 @@
     <ClCompile Include="src\input\Input.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\input\InputState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\input\InputLayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="src\ecs\systems\physics_system.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -171,6 +177,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\engine\input\Input.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\engine\input\InputState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\engine\input\InputLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\engine\ecs\systems\physics_system.h">

@@ -2,6 +2,9 @@
 #include <engine/core/Application.h>
 #include <engine/renderer/render2d.h>
 #include <engine/constants.h>
+#include <engine/input/Input.h>
+#include <engine/input/InputState.h>
+#include <engine/input/InputLayer.h>
 
 #if SC_ENABLE_DEBUG_TOOLS
 	#include <imgui-SFML.h>
@@ -31,6 +34,9 @@ namespace sc::core {
 		render2d::Initialize();
 
 		m_window = std::make_unique<Window>(std::move(windowData));
+
+		// needs to be last layer so it's the last one to see events
+		PushLayer(std::make_shared<input::InputLayer>());
 
 #if SC_ENABLE_DEBUG_TOOLS
 		m_debugToolsReady = ImGui::SFML::Init(m_window->GetNativeWindow());
@@ -159,6 +165,8 @@ namespace sc::core {
 		while (window.isOpen()) {
 			float deltaTime = clock.restart().asSeconds();
 			accumulator += deltaTime;
+
+			input::NewFrame();
 
 			// process OS window events
 			ProcessEvents();
