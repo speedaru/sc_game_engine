@@ -55,8 +55,6 @@ namespace game {
 			return;
 		}
 
-		// the factory spawned into whichever level the loader was building at the time;
-		// from here on runtime spawns belong to the level actually being played
 		m_entityFactory.SetCurrentLevel(m_currentLevel);
 
 		// remember which layer runtime spawns should render in

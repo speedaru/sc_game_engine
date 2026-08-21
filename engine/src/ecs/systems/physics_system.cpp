@@ -9,6 +9,8 @@ using namespace sc::ecs::physics_system;
 namespace math = sc::math;
 namespace physics = sc::physics;
 
+constexpr float EPSILON = 0.001f;
+
 namespace {
 	// narrow phase: sweeps a moving entity against already resolved boxes.
 	math::SweepResult FindClosestCollision(
@@ -48,7 +50,7 @@ namespace {
 		};
 	}
 
-	// pipeline orchestrator: runs both broad phases, calls the narrow phase, and handles the slide resolution
+	// runs both broad phases, calls the narrow phase, and handles the slide resolution
 	void MoveAndResolve(
 		entt::entity self,
 		TransformComponent& trans,
@@ -64,8 +66,8 @@ namespace {
 		sf::Vector2f delta = vel.velocity * timeStep;
 		const int MAX_SLIDES = 3;
 
-		// If the entity has no hitboxes, just move it and return
-		if (col.hitboxes.empty()) {
+		// if entity has no hitboxes, just move it and return
+		if (!IsCollidable(col)) {
 			trans.pos += delta;
 			return;
 		}
@@ -76,11 +78,12 @@ namespace {
 		// sliding only ever shortens the remaining delta
 		const sf::FloatRect queryBounds = SweptBounds(GetEntityBounds(trans, col), delta);
 
+		// query candidates in collision layer (static tiles), and spatial grid (dynamic entities)
 		candidates.clear();
 		level.GetCollisionLayer().QueryArea(queryBounds, candidates);
 		CollectEntityCandidates(level.GetSpatialGrid(), reg, queryBounds, self, candidates, scratch);
 
-		for (int i = 0; i < MAX_SLIDES; ++i) {
+		for (int i = 0; i < MAX_SLIDES; i++) {
 			if (delta.x == 0.0f && delta.y == 0.0f) break;
 
 			// narrow phase
@@ -92,18 +95,17 @@ namespace {
 				break;
 			}
 
-			// resolution (sliding)
-			const float EPSILON = 0.001f;
+			// sliding
 			float safeTime = std::max(0.0f, sweep.time - EPSILON);
 
 			// move the entity up to the point of impact
 			trans.pos += delta * safeTime;
 
-			// calculate the remaining time in this frame
+			// calculate remaining time in this frame
 			float remainingTime = 1.0f - sweep.time;
 			delta = delta * remainingTime;
 
-			// slide response: strip out the velocity going into the wall
+			// remove velocity going into wall
 			if (sweep.normal.x != 0.0f) {
 				delta.x = 0.0f;
 				vel.velocity.x = 0.0f;
@@ -174,9 +176,7 @@ namespace sc::ecs::physics_system {
 		for (entt::entity other : scratch) {
 			if (other == self) continue;
 
-			// nothing calls SpatialGrid::EraseEntity anywhere yet, so a destroyed entity
-			// leaves its handle behind in the cells it occupied. get<> on a dead handle is
-			// undefined behaviour, so check before touching it
+			// entities are not yet erased in spatial grid
 			if (!reg.valid(other)) continue;
 
 			const auto* otherTrans = reg.try_get<TransformComponent>(other);
@@ -204,17 +204,10 @@ namespace sc::ecs::physics_system {
 		for (auto [entity, trans, vel, col] : dynamicView.each()) {
 			const sf::Vector2f oldPos = trans.pos;
 
+			// move entities and handle collisions
 			MoveAndResolve(entity, trans, vel, col, timeStep, level, reg, candidates, scratch);
 
-			// Keep the grid in sync with where the entity actually ended up.
-			// Done here rather than inside MoveAndResolve's slide loop: the intermediate
-			// positions are invisible to everyone (that loop only queries on behalf of
-			// this entity, which excludes itself), so one update per step is enough.
-			//
-			// Updating immediately instead of after the whole view makes resolution
-			// sequential - entities later in the view sweep against the final positions
-			// of earlier ones, so two entities can never move into the same space. The
-			// tradeoff is order dependence: whoever is iterated first wins contested ground.
+			// move entities in spatial grid
 			if (trans.pos != oldPos && IsCollidable(col)) {
 				level.GetSpatialGrid().MoveEntity(entity, GetEntityBounds(trans, col));
 			}

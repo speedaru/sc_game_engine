@@ -30,11 +30,8 @@ namespace game::world_loader {
 
 		const fs::path projectDir = projectFilePath.parent_path();
 
-		// the factory needs to know where entities go before anything can spawn
 		entityFactory.SetRegistry(registry);
 
-		// per type data first, and once. every spawn from here on - during the load or
-		// years later at runtime - reads from these definitions rather than from LDtk
 		LoadEntityDefinitions(ldtkProject, entityFactory, projectDir);
 
 		TileColliderCache tileColliders;
@@ -46,7 +43,7 @@ namespace game::world_loader {
 			world->AddLevel(LoadLevel(ldtkLevel, builders, ctx));
 		}
 
-		// the loader's notion of "current" dies with it. GameplayLayer sets the real one
+		// unset current level
 		entityFactory.SetCurrentLevel(nullptr);
 
 		return world;
