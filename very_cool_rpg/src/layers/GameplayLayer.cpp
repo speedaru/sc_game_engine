@@ -7,6 +7,7 @@
 #include <engine/ecs/Components.h>
 #include <engine/ecs/systems/physics_system.h>
 #include <engine/ecs/systems/render_system.h>
+#include <engine/ecs/systems/lifecycle_system.h>
 #include <engine/graphics/Texture2D.h>
 #include <engine/renderer/render2d.h>
 #include <engine/math/math.h>
@@ -99,6 +100,8 @@ namespace game {
 		// move entities in engine
 		ecs::physics_system::UpdateKinematics(m_registry, *m_currentLevel, timeStep);
 
+		// flush destroyed entities
+		ecs::lifecycle_system::FlushDestroyed(m_registry, *m_currentLevel);
     }
 
     void GameplayLayer::OnUpdate(float deltaTime) {

@@ -68,9 +68,6 @@ namespace {
 		for (entt::entity other : scratch) {
 			if (other == self) continue;
 
-			// entities are not yet erased in spatial grid
-			if (!reg.valid(other)) continue;
-
 			const auto* otherTrans = reg.try_get<TransformComponent>(other);
 			const auto* otherCol = reg.try_get<BoxColliderComponent>(other);
 			if (!otherTrans || !otherCol) continue;
@@ -194,7 +191,14 @@ namespace sc::ecs::physics_system {
 
 		grid.InsertEntity(entity.GetHandle(), EntityGetBounds(transform, collider));
 	}
-	
+
+	void EntityUnregisterCollisions(math::SpatialGrid& grid, entt::entity handle) {
+		// non collidable entities are never inserted so only erase tracked ones
+		if (grid.FindEntityCells(handle)) {
+			grid.EraseEntity(handle);
+		}
+	}
+
 	void UpdateKinematics(Registry& registry, world::Level& level, float timeStep) {
 		auto& reg = registry.GetRegistry();
 
@@ -219,16 +223,22 @@ namespace sc::ecs::physics_system {
 	}
 
 	void Teleport(math::SpatialGrid& grid, Entity& entity, sf::Vector2f newPos) {
-		// update entity position
 		auto& trans = entity.GetComponent<TransformComponent>();
+
+		// update entity position
 		trans.prevPos = newPos;
 		trans.pos = newPos;
 
-		// get new entity bounds
+		// update grid if collidable
+		if (!entity.HasComponent<BoxColliderComponent>()) return;
+
 		auto& collider = entity.GetComponent<BoxColliderComponent>();
-		sf::FloatRect newBounds = EntityGetBounds(trans, collider);
-		
-		// update level spatial grid
-		grid.MoveEntity(entity.GetHandle(), newBounds);
+		if (ColliderIsCollidable(collider)) {
+			// get new entity bounds
+			sf::FloatRect newBounds = EntityGetBounds(trans, collider);
+
+			// update level spatial grid
+			grid.MoveEntity(entity.GetHandle(), newBounds);
+		}
 	}
 }

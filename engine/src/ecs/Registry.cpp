@@ -24,4 +24,8 @@ namespace sc::ecs {
 
 		return ent;
 	}
+
+	void Registry::QueueDestroy(entt::entity ent) {
+		m_pendingDestroy.push_back(ent);
+	}
 }

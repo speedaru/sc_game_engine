@@ -255,11 +255,6 @@ namespace sc::debug::modules {
 				const sf::Vector2f cellCentre{ cellOrigin.x + cellHalf, cellOrigin.y + cellHalf };
 
 				for (entt::entity entity : entities) {
-					// nothing calls SpatialGrid::EraseEntity anywhere yet, so a destroyed
-					// entity leaves its handle behind in the cell. get<> on a dead handle
-					// is undefined behaviour, so check before touching it
-					if (!reg.valid(entity)) continue;
-
 					const auto* trans = reg.try_get<ecs::TransformComponent>(entity);
 					const auto* collider = reg.try_get<ecs::BoxColliderComponent>(entity);
 					if (!trans || !collider || collider->hitboxes.empty()) continue;

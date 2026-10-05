@@ -19,6 +19,8 @@ namespace sc::ecs::physics_system  {
 	// called when spawning a new entity
 	void EntityRegisterCollisions(math::SpatialGrid& grid, const Entity& entity);
 
+	void EntityUnregisterCollisions(math::SpatialGrid& grid, entt::entity handle);
+
 	// called every frame in OnFixedUpdate to apply the physics
 	// takes the whole Level because collision are stored in
 	// the level's spatial grid (entities) and its collision layer (static tile geometry)
