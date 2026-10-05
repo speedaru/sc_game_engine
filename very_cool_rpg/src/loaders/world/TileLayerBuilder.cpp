@@ -37,14 +37,15 @@ namespace game::world_loader {
 			tileInstances.reserve(ldtkLayer.allTiles().size());
 
 			for (const auto& tile : ldtkLayer.allTiles()) {
+				if (tile.flipX || tile.flipY) {
+					LOG_W("flipped tiles not supported");
+				}
+
 				world::TileInstance instance;
 				instance.pixelPos = sf::Vector2f(static_cast<float>(tile.getPosition().x), static_cast<float>(tile.getPosition().y));
 
 				auto rect = tile.getTextureRect();
 				instance.textureRect = sf::IntRect({ rect.x, rect.y }, { rect.width, rect.height });
-
-				instance.flipX = tile.flipX;
-				instance.flipY = tile.flipY;
 
 				tileInstances.push_back(instance);
 			}

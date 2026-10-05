@@ -239,6 +239,7 @@
     <ClInclude Include="include\engine\math\CellRange.h" />
     <ClInclude Include="include\engine\math\Grid.hpp" />
     <ClInclude Include="include\engine\math\Hitbox.h" />
+    <ClInclude Include="include\engine\math\math.h" />
     <ClInclude Include="include\engine\math\physics.h" />
     <ClInclude Include="include\engine\math\SpatialGrid.h" />
     <ClInclude Include="include\engine\physics\ColliderRef.h" />

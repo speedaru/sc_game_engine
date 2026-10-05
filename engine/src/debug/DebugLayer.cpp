@@ -23,10 +23,9 @@ namespace sc::debug {
 		// consume gui input
 		const ImGuiIO& io = ImGui::GetIO();
 
-		// consum key event
+		// consum key event (dont consume releases)
 		if (io.WantCaptureKeyboard &&
 			(event.is<sf::Event::KeyPressed>() ||
-			 event.is<sf::Event::KeyReleased>() ||
 			 event.is<sf::Event::TextEntered>()))
 		{
 			return true;
@@ -35,7 +34,6 @@ namespace sc::debug {
 		// consum mouse event
 		if (io.WantCaptureMouse &&
 			(event.is<sf::Event::MouseButtonPressed>() ||
-			 event.is<sf::Event::MouseButtonReleased>() ||
 			 event.is<sf::Event::MouseWheelScrolled>() ||
 			 event.is<sf::Event::MouseMoved>()))
 		{

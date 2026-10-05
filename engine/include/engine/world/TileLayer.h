@@ -11,8 +11,6 @@ namespace sc::world {
 	struct TileInstance {
         sf::Vector2f pixelPos;
         sf::IntRect textureRect;
-        bool flipX = false;
-        bool flipY = false;
     };
 
     class TileLayer : public ILevelLayer {
