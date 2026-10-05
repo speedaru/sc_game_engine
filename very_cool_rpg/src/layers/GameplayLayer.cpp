@@ -36,6 +36,7 @@ namespace game {
 		gameplayInput->Bind(Key::S, static_cast<int32_t>(InputAction::MoveDown));
 		gameplayInput->Bind(Key::D, static_cast<int32_t>(InputAction::MoveRight));
 		gameplayInput->Bind(Key::F2, static_cast<int32_t>(InputAction::SpawnEnt));
+		gameplayInput->Bind(Key::F3, static_cast<int32_t>(InputAction::DestroyEnt));
 		input::PushContext(gameplayInput);
 
 		fs::path projectDir = fs::absolute(ASSETS_DIR);
@@ -122,6 +123,17 @@ namespace game {
 				.position = { trans.pos + sf::Vector2f{ 50.f, 50.f } },
 				.layerUid = m_entityLayerUid
 			});
+		}
+
+		// temporary test for entity destruction: F3 destroys the first dragon found
+		if (input::IsActionJustPressed(static_cast<uint32_t>(InputAction::DestroyEnt))) {
+			for (auto [handle, tag] : m_registry.GetRegistry().view<const ecs::TagComponent>().each()) {
+				if (tag.tag == "Dragon") {
+					LOG_I("destroying dragon %u", static_cast<uint32_t>(handle));
+					m_registry.QueueDestroy(handle);
+					break;
+				}
+			}
 		}
     }
 

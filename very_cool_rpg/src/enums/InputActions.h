@@ -8,5 +8,6 @@ namespace game {
 		MoveLeft,
 		MoveRight,
 		SpawnEnt,
+		DestroyEnt,
 	};
 }
