@@ -28,3 +28,8 @@ vendor/*.zip
 
 # engine lib that needs to be compiled
 *sc_game_engine.lib
+
+# claude code
+CLAUDE.md
+CLAUDE.local.md
+.claude/
