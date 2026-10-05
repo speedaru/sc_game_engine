@@ -17,7 +17,7 @@ namespace sc::debug {
 		void OnDetach() override;
 		bool OnEvent(const sf::Event& event) override;
 		void OnUpdate(float deltaTime) override;
-		void OnRender(sf::RenderWindow& window) override;
+		void OnRender(sf::RenderWindow& window, float alpha) override;
 
 	private:
 		DebugDraw m_draw;

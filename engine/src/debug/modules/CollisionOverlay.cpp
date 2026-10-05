@@ -169,7 +169,7 @@ namespace sc::debug::modules {
 			}
 
 			if (m_showEntityBounds) {
-				draw.Rect(ecs::physics_system::GetEntityBounds(trans, col), m_boundsOutline);
+				draw.Rect(ecs::physics_system::EntityGetBounds(trans, col), m_boundsOutline);
 			}
 		}
 	}
@@ -264,7 +264,7 @@ namespace sc::debug::modules {
 					const auto* collider = reg.try_get<ecs::BoxColliderComponent>(entity);
 					if (!trans || !collider || collider->hitboxes.empty()) continue;
 
-					const sf::FloatRect bounds = ecs::physics_system::GetEntityBounds(*trans, *collider);
+					const sf::FloatRect bounds = ecs::physics_system::EntityGetBounds(*trans, *collider);
 					draw.Arrow(bounds.position + bounds.size / 2.f, cellCentre, m_cellLink);
 				}
 			}

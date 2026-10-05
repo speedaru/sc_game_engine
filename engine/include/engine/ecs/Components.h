@@ -14,8 +14,12 @@ namespace sc::ecs {
 	};
 
 	struct TransformComponent {
-		sf::Vector2f pos;
+		sf::Vector2f pos; // current position
+		sf::Vector2f prevPos; // previous position for rendering interpolation
 		sf::Vector2f pivot{}; // 0 - 1 range
+
+		TransformComponent(sf::Vector2f pos, sf::Vector2f pivot)
+			: pos(pos), prevPos(pos), pivot(pivot) {}
 	};
 
 	struct VelocityComponent {

@@ -24,6 +24,6 @@ namespace sc::core {
 		virtual void OnUpdate(float deltaTime) {}
 
 		// called during the render phase
-		virtual void OnRender(sf::RenderWindow& window) {}
+		virtual void OnRender(sf::RenderWindow& window, float alpha) {}
 	};
 }

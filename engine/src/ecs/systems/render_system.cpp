@@ -2,20 +2,21 @@
 #include <engine/ecs/systems/render_system.h>
 #include <engine/ecs/Components.h>
 #include <engine/renderer/render2d.h>
+#include <engine/math/math.h>
 
 using namespace sc::graphics;
 using namespace sc::renderer;
 
 namespace sc::ecs::render_system {
 	namespace {
-		void DrawEntityLayer(const Registry& registry, const world::ILevelLayer* layer) {
+		void DrawEntityLayer(const Registry& registry, const world::ILevelLayer* layer, float alpha) {
 			auto view = registry.GetRegistry().view<const TransformComponent, const SpriteComponent>();
 
 			for (auto [entity, trans, spr] : view.each()) {
 				if (spr.layerUid != layer->GetId().uid) continue;
 
 				QuadProps quad;
-				quad.position = trans.pos;
+				quad.position = math::Lerp(trans.prevPos, trans.pos, alpha);
 				quad.pivot = trans.pivot;
 
 				quad.texture = spr.texture;
@@ -26,7 +27,7 @@ namespace sc::ecs::render_system {
 		}
 	}
 
-	void RenderWorld(const Registry& registry, const world::Level& level, sf::RenderWindow& window, const Camera2D& camera) {
+	void RenderWorld(const Registry& registry, const world::Level& level, sf::RenderWindow& window, const Camera2D& camera, float alpha) {
 		render2d::BeginBatch(window, camera);
 
 		for (const auto& layer : level.GetLayers()) {
@@ -51,7 +52,7 @@ namespace sc::ecs::render_system {
 			}
 			case world::LayerType::Entity:
 			{
-				DrawEntityLayer(registry, layer.get());
+				DrawEntityLayer(registry, layer.get(), alpha);
 				break;
 			}
 			}

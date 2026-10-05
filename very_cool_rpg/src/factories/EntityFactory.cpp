@@ -64,7 +64,7 @@ namespace game::factories {
 
 		// register collisions with level
 		if (m_currentLevel) {
-			ecs::physics_system::RegisterEntityCollisions(m_currentLevel->GetSpatialGrid(), entity);
+			ecs::physics_system::EntityRegisterCollisions(m_currentLevel->GetSpatialGrid(), entity);
 		}
 		else {
 			LOG_W("spawned '%s' with no current level set, so it is in no spatial grid", definition.debugName.c_str());

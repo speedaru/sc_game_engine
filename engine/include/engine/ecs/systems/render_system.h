@@ -11,6 +11,7 @@ namespace sc::ecs::render_system  {
         const Registry& registry,
         const sc::world::Level& level,
         sf::RenderWindow& window,
-        const sc::graphics::Camera2D& camera
+        const sc::graphics::Camera2D& camera,
+        float alpha
     );
 }

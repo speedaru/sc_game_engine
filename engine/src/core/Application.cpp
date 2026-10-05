@@ -158,13 +158,13 @@ namespace sc::core {
 		FlushLayerCommands();
 
 		sf::Clock clock;
-		constexpr const float timeStep = 1.f / PHYSICS_HZ;
+		constexpr float TIME_STEP = 1.f / PHYSICS_HZ;
 		float accumulator = 0.f;
 
 		sf::RenderWindow& window = m_window->GetNativeWindow();
 		while (window.isOpen()) {
 			float deltaTime = clock.restart().asSeconds();
-			accumulator += deltaTime;
+			accumulator += std::min(0.25f, deltaTime); // cap to 0.25s max
 
 			input::NewFrame();
 
@@ -177,12 +177,14 @@ namespace sc::core {
 #endif
 
 			// fixed update logic
-			while (accumulator >= timeStep) {
+			while (accumulator >= TIME_STEP) {
 				for (auto& layer : m_layers) {
-					layer->OnFixedUpdate(timeStep);
+					layer->OnFixedUpdate(TIME_STEP);
 				}
-				accumulator -= timeStep;
+				accumulator -= TIME_STEP;
 			}
+
+			const float alpha = accumulator / TIME_STEP; // 0 = just ticked, approaching 1 = next tick imminent
 
 			// variable update logic
 			for (auto& layer : m_layers) {
@@ -192,7 +194,7 @@ namespace sc::core {
 			// render
 			window.clear(sf::Color::Black);
 			for (auto& layer : m_layers) {
-				layer->OnRender(window);
+				layer->OnRender(window, alpha);
 			}
 
 #if SC_ENABLE_DEBUG_TOOLS

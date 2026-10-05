@@ -26,7 +26,13 @@ namespace game::world_loader {
 		}
 
 		ldtk::Project ldtkProject;
-		ldtkProject.loadFromFile(projectFilePath.string());
+		try {
+			ldtkProject.loadFromFile(projectFilePath.string());
+		}
+		catch (const std::exception& e) {
+			LOG_E("failed to load ldtk project '%s': %s", projectFilePath.string().c_str(), e.what());
+			return nullptr;
+		}
 
 		const fs::path projectDir = projectFilePath.parent_path();
 

@@ -22,6 +22,11 @@ namespace game::world_loader {
 			auto it = cache.find(key);
 			if (it != cache.end()) return it->second;
 
+			if (!fs::is_regular_file(path)) {
+				LOG_W("entity texture path doesn't exist: %s", key.c_str());
+				return nullptr;
+			}
+
 			auto texture = gfx::CreateTexture2D(key);
 			cache[key] = texture;
 			return texture;

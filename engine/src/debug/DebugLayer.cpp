@@ -50,7 +50,7 @@ namespace sc::debug {
 		DrawUI();
 	}
 
-	void DebugLayer::OnRender(sf::RenderWindow& window) {
+	void DebugLayer::OnRender(sf::RenderWindow& window, float alpha) {
 		const DebugContext& ctx = GetContext();
 		if (!ctx.IsValid()) {
 			return;

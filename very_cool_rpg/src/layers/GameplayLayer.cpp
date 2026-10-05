@@ -9,6 +9,7 @@
 #include <engine/ecs/systems/render_system.h>
 #include <engine/graphics/Texture2D.h>
 #include <engine/renderer/render2d.h>
+#include <engine/math/math.h>
 #include <engine/debug/debug_system.h>
 
 #include <constants.h>
@@ -85,6 +86,10 @@ namespace game {
     }
 
     void GameplayLayer::OnFixedUpdate(float timeStep) {
+		if (!m_currentLevel) {
+			return;
+		}
+
 		// handle player keybinds
 		systems::UpdatePlayerInput(m_registry);
 
@@ -94,13 +99,6 @@ namespace game {
 		// move entities in engine
 		ecs::physics_system::UpdateKinematics(m_registry, *m_currentLevel, timeStep);
 
-		// center camera on player
-		if (m_player && m_player.HasComponent<ecs::TransformComponent>()) {
-			const auto& trans = m_player.GetComponent<ecs::TransformComponent>();
-			sf::Vector2f cameraPos = trans.pos;
-
-			m_camera.SetPosition(cameraPos);
-		}
     }
 
     void GameplayLayer::OnUpdate(float deltaTime) {
@@ -111,6 +109,10 @@ namespace game {
 			.deltaTime = deltaTime
 		}));
 
+		if (!m_player) {
+			return;
+		}
+
 		if (input::IsActionJustPressed(static_cast<uint32_t>(InputAction::SpawnEnt))) {
 			const auto& trans = m_player.GetComponent<ecs::TransformComponent>();
 			m_entityFactory.Spawn(entities::EntityType::Dragon, entities::SpawnParams{
@@ -120,12 +122,19 @@ namespace game {
 		}
     }
 
-    void GameplayLayer::OnRender(sf::RenderWindow& window) {
+    void GameplayLayer::OnRender(sf::RenderWindow& window, float alpha) {
 		if (!m_currentLevel) {
 			LOG_W("level was null");
 			return;
 		}
 
-		ecs::render_system::RenderWorld(m_registry, *m_currentLevel, window, m_camera);
+		// center camera on player
+		if (m_player && m_player.HasComponent<ecs::TransformComponent>()) {
+			// interpolate camera pos
+			const auto& trans = m_player.GetComponent<ecs::TransformComponent>();
+			m_camera.SetPosition(sc::math::Lerp(trans.prevPos, trans.pos, alpha));
+		}
+
+		ecs::render_system::RenderWorld(m_registry, *m_currentLevel, window, m_camera, alpha);
     }
 }

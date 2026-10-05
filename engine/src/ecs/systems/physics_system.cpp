@@ -50,6 +50,40 @@ namespace {
 		};
 	}
 
+	// resolves every entity overlapping area into world space boxes and appends them to
+	// out, skipping self. the entity half of the broad phase; CollisionLayer::QueryArea
+	// is the other half, and both append to the same buffer
+	void EntityCollectCandidates(
+		const math::SpatialGrid& grid,
+		entt::registry& reg,
+		const sf::FloatRect& area,
+		entt::entity self,
+		physics::CandidateBuffer& out,
+		std::vector<entt::entity>& scratch
+	)
+	{
+		scratch.clear();
+		grid.Query(area, scratch);
+
+		for (entt::entity other : scratch) {
+			if (other == self) continue;
+
+			// entities are not yet erased in spatial grid
+			if (!reg.valid(other)) continue;
+
+			const auto* otherTrans = reg.try_get<TransformComponent>(other);
+			const auto* otherCol = reg.try_get<BoxColliderComponent>(other);
+			if (!otherTrans || !otherCol) continue;
+
+			for (const math::Hitbox& hitbox : otherCol->hitboxes) {
+				out.push_back(physics::ColliderRef{
+					.box = sf::FloatRect{ otherTrans->pos + hitbox.offset, hitbox.size },
+					.entity = other
+					});
+			}
+		}
+	}
+
 	// runs both broad phases, calls the narrow phase, and handles the slide resolution
 	void MoveAndResolve(
 		entt::entity self,
@@ -67,7 +101,7 @@ namespace {
 		const int MAX_SLIDES = 3;
 
 		// if entity has no hitboxes, just move it and return
-		if (!IsCollidable(col)) {
+		if (!ColliderIsCollidable(col)) {
 			trans.pos += delta;
 			return;
 		}
@@ -76,12 +110,12 @@ namespace {
 
 		// broad phase, once for the whole step, not once per slide.
 		// sliding only ever shortens the remaining delta
-		const sf::FloatRect queryBounds = SweptBounds(GetEntityBounds(trans, col), delta);
+		const sf::FloatRect queryBounds = SweptBounds(EntityGetBounds(trans, col), delta);
 
 		// query candidates in collision layer (static tiles), and spatial grid (dynamic entities)
 		candidates.clear();
 		level.GetCollisionLayer().QueryArea(queryBounds, candidates);
-		CollectEntityCandidates(level.GetSpatialGrid(), reg, queryBounds, self, candidates, scratch);
+		EntityCollectCandidates(level.GetSpatialGrid(), reg, queryBounds, self, candidates, scratch);
 
 		for (int i = 0; i < MAX_SLIDES; i++) {
 			if (delta.x == 0.0f && delta.y == 0.0f) break;
@@ -119,12 +153,12 @@ namespace {
 }
 
 namespace sc::ecs::physics_system {
-	bool IsCollidable(const BoxColliderComponent& col) {
+	bool ColliderIsCollidable(const BoxColliderComponent& col) {
 		return !col.hitboxes.empty();
 	}
 
-	sf::FloatRect GetEntityBounds(const TransformComponent& trans, const BoxColliderComponent& col) {
-		assert(IsCollidable(col) && "GetEntityBounds requires at least one hitbox");
+	sf::FloatRect EntityGetBounds(const TransformComponent& trans, const BoxColliderComponent& col) {
+		assert(ColliderIsCollidable(col) && "GetEntityBounds requires at least one hitbox");
 
 		// use first hitbox as initial values
 		sf::Vector2f tl = col.hitboxes[0].offset;
@@ -144,7 +178,7 @@ namespace sc::ecs::physics_system {
 		return sf::FloatRect{ trans.pos + tl, br - tl };
 	}
 
-	void RegisterEntityCollisions(math::SpatialGrid& grid, const Entity& entity) {
+	void EntityRegisterCollisions(math::SpatialGrid& grid, const Entity& entity) {
 		if (!entity.HasComponent<TransformComponent>() || !entity.HasComponent<BoxColliderComponent>()) {
 			LOG_W("trying to register entity %u but it doesnt have transform and box collider component", static_cast<uint32_t>(entity.GetHandle()));
 			return;
@@ -154,44 +188,13 @@ namespace sc::ecs::physics_system {
 		const auto& collider = entity.GetComponent<const BoxColliderComponent>();
 
 		// ensure collider has hitboxes
-		if (!IsCollidable(collider)) {
+		if (!ColliderIsCollidable(collider)) {
 			return;
 		}
 
-		grid.InsertEntity(entity.GetHandle(), GetEntityBounds(transform, collider));
+		grid.InsertEntity(entity.GetHandle(), EntityGetBounds(transform, collider));
 	}
-
-	void CollectEntityCandidates(
-		const math::SpatialGrid& grid,
-		entt::registry& reg,
-		const sf::FloatRect& area,
-		entt::entity self,
-		physics::CandidateBuffer& out,
-		std::vector<entt::entity>& scratch
-	)
-	{
-		scratch.clear();
-		grid.Query(area, scratch);
-
-		for (entt::entity other : scratch) {
-			if (other == self) continue;
-
-			// entities are not yet erased in spatial grid
-			if (!reg.valid(other)) continue;
-
-			const auto* otherTrans = reg.try_get<TransformComponent>(other);
-			const auto* otherCol = reg.try_get<BoxColliderComponent>(other);
-			if (!otherTrans || !otherCol) continue;
-
-			for (const math::Hitbox& hitbox : otherCol->hitboxes) {
-				out.push_back(physics::ColliderRef{
-					.box = sf::FloatRect{ otherTrans->pos + hitbox.offset, hitbox.size },
-					.entity = other
-				});
-			}
-		}
-	}
-
+	
 	void UpdateKinematics(Registry& registry, world::Level& level, float timeStep) {
 		auto& reg = registry.GetRegistry();
 
@@ -203,14 +206,29 @@ namespace sc::ecs::physics_system {
 
 		for (auto [entity, trans, vel, col] : dynamicView.each()) {
 			const sf::Vector2f oldPos = trans.pos;
+			trans.prevPos = oldPos;
 
 			// move entities and handle collisions
 			MoveAndResolve(entity, trans, vel, col, timeStep, level, reg, candidates, scratch);
 
 			// move entities in spatial grid
-			if (trans.pos != oldPos && IsCollidable(col)) {
-				level.GetSpatialGrid().MoveEntity(entity, GetEntityBounds(trans, col));
+			if (trans.pos != oldPos && ColliderIsCollidable(col)) {
+				level.GetSpatialGrid().MoveEntity(entity, EntityGetBounds(trans, col));
 			}
 		}
+	}
+
+	void Teleport(math::SpatialGrid& grid, Entity& entity, sf::Vector2f newPos) {
+		// update entity position
+		auto& trans = entity.GetComponent<TransformComponent>();
+		trans.prevPos = newPos;
+		trans.pos = newPos;
+
+		// get new entity bounds
+		auto& collider = entity.GetComponent<BoxColliderComponent>();
+		sf::FloatRect newBounds = EntityGetBounds(trans, collider);
+		
+		// update level spatial grid
+		grid.MoveEntity(entity.GetHandle(), newBounds);
 	}
 }

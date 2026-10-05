@@ -7,28 +7,16 @@ namespace sc::graphics {
 		: m_tileSize(tileSize)
 	{
 		m_texture = CreateTexture2D(file);
-
-		if (m_texture) {
-			m_cols = m_texture->GetWidth() / m_tileSize;
-			m_rows = m_texture->GetHeight() / m_tileSize;
-		}
-		else {
-			LOG_E("failed to load tile set from path: %s", file.string().c_str());
-		}
+		m_cols = m_texture->GetWidth() / m_tileSize;
+		m_rows = m_texture->GetHeight() / m_tileSize;
 	}
 
 	TileSet::TileSet(const std::vector<uint8_t>& data, uint32_t tileSize)
 		: m_tileSize(tileSize)
 	{
 		m_texture = CreateTexture2D(data);
-
-		if (m_texture) {
-			m_cols = m_texture->GetWidth() / m_tileSize;
-			m_rows = m_texture->GetHeight() / m_tileSize;
-		}
-		else {
-			LOG_E("failed to load tile set from memory: %llu bytes", data.size());
-		}
+		m_cols = m_texture->GetWidth() / m_tileSize;
+		m_rows = m_texture->GetHeight() / m_tileSize;
 	}
 
 	sf::IntRect TileSet::GetTileRect(uint32_t row, uint32_t col) const {
