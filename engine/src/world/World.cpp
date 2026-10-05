@@ -16,7 +16,7 @@ namespace sc::world {
 		return nullptr;
 	}
 
-	std::shared_ptr<Level> World::GetLevel(const uint32_t uid) {
+	std::shared_ptr<Level> World::GetLevel(const int32_t uid) {
 		auto it = m_levels.find(uid);
 		return (it != m_levels.end()) ? it->second : nullptr;
 	}
