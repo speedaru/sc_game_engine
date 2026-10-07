@@ -5,5 +5,5 @@ namespace sc::ecs {
 }
 
 namespace game::systems {
-	void UpdatePlayerInput(sc::ecs::Registry& registry);
+	void UpdatePlayerInput(sc::ecs::Registry& registry, int32_t levelUid);
 }

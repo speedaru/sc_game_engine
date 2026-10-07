@@ -1,4 +1,5 @@
 #include <pch.h>
+#include <systems/character_movement.h>
 
 #include <engine/ecs/Registry.h>
 #include <engine/ecs/Components.h>
@@ -8,10 +9,10 @@
 namespace ecs = sc::ecs;
 
 namespace game::systems {
-	void UpdateCharacterMovement(sc::ecs::Registry& registry, float timeStep) {
-		auto view = registry.GetRegistry().view<components::CharacterController, ecs::VelocityComponent>();
+	void UpdateCharacterMovement(sc::ecs::Registry& registry, int32_t levelUid, float timeStep) {
+		auto view = registry.ViewLevel<components::CharacterController, ecs::VelocityComponent>(levelUid);
 
-		for (auto [entity, controller, vel] : view.each()) {
+		for (auto [entity, controller, vel] : view) {
 			// normalize direction to prevent diagonal speed boost
 			float length = std::sqrt(controller.direction.x * controller.direction.x + controller.direction.y * controller.direction.y);
 			sf::Vector2f normalDirection = controller.direction;

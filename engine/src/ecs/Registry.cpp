@@ -14,7 +14,7 @@ namespace sc::ecs {
 
 	Entity Registry::CreateEntity(const std::string& name) {
 		// create entity
-		entt::entity handle = m_registry.create();
+		EntityHandle handle = m_registry.create();
 		Entity ent(handle, this);
 
 		// automatically always add a tag component
@@ -25,7 +25,19 @@ namespace sc::ecs {
 		return ent;
 	}
 
-	void Registry::QueueDestroy(entt::entity ent) {
-		m_pendingDestroy.push_back(ent);
+	void Registry::QueueDestroy(EntityHandle handle) {
+		m_pendingDestroy.push_back(handle);
+	}
+
+	std::vector<EntityHandle> Registry::TakePendingDestroy() {
+		return std::exchange(m_pendingDestroy, {});
+	}
+
+	void Registry::DestroyNow(EntityHandle handle) {
+		m_registry.destroy(handle);
+	}
+
+	bool Registry::IsEntityValid(EntityHandle handle) const {
+		return m_registry.valid(handle);
 	}
 }

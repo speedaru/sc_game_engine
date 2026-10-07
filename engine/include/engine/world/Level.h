@@ -35,7 +35,8 @@ namespace sc::world {
 		// adds layers in bottom to top
 		void AddLayer(std::unique_ptr<ILevelLayer> layer);
 
-		const LevelId& GetId() const { return m_id; }
+		const std::string& GetName() const { return m_id.name; }
+		int32_t GetUid() const { return m_id.uid; }
 		sf::Vector2u GetSize() const { return m_size; }
 
 		const math::SpatialGrid& GetSpatialGrid() const { return m_spatialGrid; }

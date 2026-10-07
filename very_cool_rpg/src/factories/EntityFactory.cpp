@@ -24,21 +24,25 @@ namespace game::factories {
 	}
 
 	ecs::Entity EntityFactory::Spawn(EntityType type, const entities::SpawnParams& params) {
-		if (!m_registry) {
-			LOG_E("EntityFactory::Spawn called before SetRegistry");
-			return {};
+		if (!m_registry || !m_currentLevel) {
+			if (!m_registry) LOG_E("EntityFactory::Spawn called before SetRegistry");
+			if (!m_currentLevel) LOG_E("can't spawn entity because current level is not set");
+
+			return ecs::NULL_ENT;
 		}
 
+		// find blueprint
 		auto blueprintIt = m_blueprints.find(type);
 		if (blueprintIt == m_blueprints.end()) {
 			LOG_W("no blueprint registered for entity type %llu", static_cast<uint64_t>(type));
-			return {};
+			return ecs::NULL_ENT;
 		}
 
+		// find entity definition
 		auto definitionIt = m_definitions.find(type);
 		if (definitionIt == m_definitions.end()) {
 			LOG_W("no definition loaded for entity type %llu", static_cast<uint64_t>(type));
-			return {};
+			return ecs::NULL_ENT;
 		}
 
 		// create entity
@@ -47,6 +51,9 @@ namespace game::factories {
 
 		// add transform component
 		entity.AddComponent<ecs::TransformComponent>(params.position, definition.pivot);
+
+		// add level component
+		entity.AddComponent<ecs::LevelComponent>(m_currentLevel->GetUid());
 
 		// add texture component if present
 		if (definition.texture) {
@@ -63,12 +70,7 @@ namespace game::factories {
 		blueprintIt->second->Build(entity, params);
 
 		// register collisions with level
-		if (m_currentLevel) {
-			ecs::physics_system::EntityRegisterCollisions(m_currentLevel->GetSpatialGrid(), entity);
-		}
-		else {
-			LOG_W("spawned '%s' with no current level set, so it is in no spatial grid", definition.debugName.c_str());
-		}
+		ecs::physics_system::EntityRegisterCollisions(m_currentLevel->GetSpatialGrid(), entity);
 
 		return entity;
 	}

@@ -5,5 +5,5 @@ namespace sc::ecs {
 }
 
 namespace game::systems {
-	void UpdateCharacterMovement(sc::ecs::Registry& registry, float timeStep);
+	void UpdateCharacterMovement(sc::ecs::Registry& registry, int32_t levelUid, float timeStep);
 }

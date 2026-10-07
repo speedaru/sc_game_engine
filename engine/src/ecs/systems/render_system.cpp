@@ -9,11 +9,12 @@ using namespace sc::renderer;
 
 namespace sc::ecs::render_system {
 	namespace {
-		void DrawEntityLayer(const Registry& registry, const world::ILevelLayer* layer, float alpha) {
-			auto view = registry.GetRegistry().view<const TransformComponent, const SpriteComponent>();
+		void DrawEntityLayer(const Registry& registry, int32_t levelUid, const world::ILevelLayer* layer, float alpha) {
+			auto view = registry.ViewLevel<const TransformComponent, const SpriteComponent>(levelUid);
 
-			for (auto [entity, trans, spr] : view.each()) {
-				if (spr.layerUid != layer->GetId().uid) continue;
+			for (auto [entity, trans, spr] : view) {
+				// layer uid is the layer definition, shared across levels, so the level filter above is what keeps other levels out
+				if (spr.layerUid != layer->GetUid()) continue;
 
 				QuadProps quad;
 				quad.position = math::Lerp(trans.prevPos, trans.pos, alpha);
@@ -52,7 +53,7 @@ namespace sc::ecs::render_system {
 			}
 			case world::LayerType::Entity:
 			{
-				DrawEntityLayer(registry, layer.get(), alpha);
+				DrawEntityLayer(registry, level.GetUid(), layer.get(), alpha);
 				break;
 			}
 			}

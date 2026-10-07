@@ -3,12 +3,12 @@
 
 namespace sc::world {
 	void World::AddLevel(const std::shared_ptr<Level>& level) {
-		m_levels[level->GetId().uid] = level;
+		m_levels[level->GetUid()] = level;
 	}
 
 	std::shared_ptr<Level> World::GetLevel(const std::string& name) {
 		for (const auto& [uid, level] : m_levels) {
-			if (level->GetId().name == name) {
+			if (level->GetName() == name) {
 				return level;
 			}
 		}

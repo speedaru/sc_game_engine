@@ -55,7 +55,7 @@ namespace {
 	// is the other half, and both append to the same buffer
 	void EntityCollectCandidates(
 		const math::SpatialGrid& grid,
-		entt::registry& reg,
+		Registry& registry,
 		const sf::FloatRect& area,
 		entt::entity self,
 		physics::CandidateBuffer& out,
@@ -68,8 +68,8 @@ namespace {
 		for (entt::entity other : scratch) {
 			if (other == self) continue;
 
-			const auto* otherTrans = reg.try_get<TransformComponent>(other);
-			const auto* otherCol = reg.try_get<BoxColliderComponent>(other);
+			const auto* otherTrans = registry.TryGetComponent<TransformComponent>(other);
+			const auto* otherCol = registry.TryGetComponent<BoxColliderComponent>(other);
 			if (!otherTrans || !otherCol) continue;
 
 			for (const math::Hitbox& hitbox : otherCol->hitboxes) {
@@ -89,7 +89,7 @@ namespace {
 		const BoxColliderComponent& col,
 		float timeStep,
 		sc::world::Level& level,
-		entt::registry& reg,
+		Registry& registry,
 		physics::CandidateBuffer& candidates,
 		std::vector<entt::entity>& scratch
 	)
@@ -112,7 +112,7 @@ namespace {
 		// query candidates in collision layer (static tiles), and spatial grid (dynamic entities)
 		candidates.clear();
 		level.GetCollisionLayer().QueryArea(queryBounds, candidates);
-		EntityCollectCandidates(level.GetSpatialGrid(), reg, queryBounds, self, candidates, scratch);
+		EntityCollectCandidates(level.GetSpatialGrid(), registry, queryBounds, self, candidates, scratch);
 
 		for (int i = 0; i < MAX_SLIDES; i++) {
 			if (delta.x == 0.0f && delta.y == 0.0f) break;
@@ -200,20 +200,22 @@ namespace sc::ecs::physics_system {
 	}
 
 	void UpdateKinematics(Registry& registry, world::Level& level, float timeStep) {
-		auto& reg = registry.GetRegistry();
-
 		// grab all entities that can move and collide
-		auto dynamicView = reg.view<TransformComponent, VelocityComponent, const BoxColliderComponent>();
+		auto dynamicEntitiesView = registry.ViewLevel<
+			TransformComponent,
+			VelocityComponent,
+			const BoxColliderComponent
+		>(level.GetUid());
 
 		physics::CandidateBuffer candidates;
 		std::vector<entt::entity> scratch;
 
-		for (auto [entity, trans, vel, col] : dynamicView.each()) {
+		for (auto [entity, trans, vel, col] : dynamicEntitiesView) {
 			const sf::Vector2f oldPos = trans.pos;
 			trans.prevPos = oldPos;
 
 			// move entities and handle collisions
-			MoveAndResolve(entity, trans, vel, col, timeStep, level, reg, candidates, scratch);
+			MoveAndResolve(entity, trans, vel, col, timeStep, level, registry, candidates, scratch);
 
 			// move entities in spatial grid
 			if (trans.pos != oldPos && ColliderIsCollidable(col)) {

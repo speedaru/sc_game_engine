@@ -63,7 +63,7 @@ namespace game {
 		// remember which layer runtime spawns should render in
 		for (const auto& layer : m_currentLevel->GetLayers()) {
 			if (layer->GetType() == sc::world::LayerType::Entity) {
-				m_entityLayerUid = layer->GetId().uid;
+				m_entityLayerUid = layer->GetUid();
 				break;
 			}
 		}
@@ -76,8 +76,8 @@ namespace game {
 		m_camera.SetBounds({ 0.f, 0.f }, static_cast<sf::Vector2f>(m_currentLevel->GetSize()));
 
 		// get player reference
-		const auto view = m_registry.GetRegistry().view<const components::PlayerTag>();
-		for (auto entityHandle : view) {
+		const auto view = m_registry.ViewAll<game::components::PlayerTag>();
+		for (auto [entityHandle] : view) {
 			m_player = sc::ecs::Entity(entityHandle, &m_registry);
 			break; // only 1 player
 		}
@@ -93,16 +93,16 @@ namespace game {
 		}
 
 		// handle player keybinds
-		systems::UpdatePlayerInput(m_registry);
+		systems::UpdatePlayerInput(m_registry, m_currentLevel->GetUid());
 
 		// calculate every entity movement
-		systems::UpdateCharacterMovement(m_registry, timeStep);
+		systems::UpdateCharacterMovement(m_registry, m_currentLevel->GetUid(), timeStep);
 
 		// move entities in engine
 		ecs::physics_system::UpdateKinematics(m_registry, *m_currentLevel, timeStep);
 
 		// flush destroyed entities
-		ecs::lifecycle_system::FlushDestroyed(m_registry, *m_currentLevel);
+		ecs::lifecycle_system::FlushDestroyed(m_registry, *m_world);
     }
 
     void GameplayLayer::OnUpdate(float deltaTime) {
@@ -127,7 +127,7 @@ namespace game {
 
 		// temporary test for entity destruction: F3 destroys the first dragon found
 		if (input::IsActionJustPressed(static_cast<uint32_t>(InputAction::DestroyEnt))) {
-			for (auto [handle, tag] : m_registry.GetRegistry().view<const ecs::TagComponent>().each()) {
+			for (auto [handle, tag] : m_registry.ViewAll<const ecs::TagComponent>()) {
 				if (tag.tag == "Dragon") {
 					LOG_I("destroying dragon %u", static_cast<uint32_t>(handle));
 					m_registry.QueueDestroy(handle);

@@ -2,9 +2,9 @@
 #include <engine/ecs/Registry.h>
 
 namespace sc::world {
-	class Level;
+	class World;
 }
 
 namespace sc::ecs::lifecycle_system {
-	void FlushDestroyed(Registry& registry, world::Level& level);
+	void FlushDestroyed(Registry& registry, world::World& world);
 }

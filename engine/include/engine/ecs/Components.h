@@ -40,10 +40,13 @@ namespace sc::ecs {
 			: SpriteComponent(texture, layerUid, sf::IntRect({ 0, 0 }, { (int32_t)texture->GetWidth(), (int32_t)texture->GetHeight() })) {}
 	};
 
-
 	struct BoxColliderComponent {
 		std::vector<math::Hitbox> hitboxes;
 
 		BoxColliderComponent() = default;
+	};
+
+	struct LevelComponent {
+		int32_t uid;
 	};
 }

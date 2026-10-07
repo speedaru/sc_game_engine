@@ -34,11 +34,11 @@ namespace sc::debug::modules {
 	}
 
 	void CollisionOverlay::OnDrawUI(const DebugContext& ctx) {
-		auto view = ctx.registry->GetRegistry().view<const ecs::TransformComponent, const ecs::BoxColliderComponent>();
+		auto view = ctx.registry->ViewLevel<const ecs::TransformComponent, const ecs::BoxColliderComponent>(ctx.level->GetUid());
 
 		std::size_t colliderCount = 0;
 		std::size_t hitboxCount = 0;
-		for (auto [entity, trans, col] : view.each()) {
+		for (auto [entity, trans, col] : view) {
 			if (col.hitboxes.empty()) continue;
 
 			colliderCount++;
@@ -150,9 +150,9 @@ namespace sc::debug::modules {
 	void CollisionOverlay::DrawColliders(const DebugContext& ctx, DebugDraw& draw) {
 		if (!m_showHitboxes && !m_showEntityBounds) return;
 
-		auto view = ctx.registry->GetRegistry().view<const ecs::TransformComponent, const ecs::BoxColliderComponent>();
+		auto view = ctx.registry->ViewLevel<const ecs::TransformComponent, const ecs::BoxColliderComponent>(ctx.level->GetUid());
 
-		for (auto [entity, trans, col] : view.each()) {
+		for (auto [entity, trans, col] : view) {
 			// matches physics_system's IsCollidable: an empty collider has no bounds and
 			// is never put in the grid, so drawing one would misrepresent the physics
 			if (col.hitboxes.empty()) continue;
@@ -225,7 +225,6 @@ namespace sc::debug::modules {
 
 		if (!m_showCellOccupancy && !m_showEntityCellLinks) return;
 
-		auto& reg = ctx.registry->GetRegistry();
 		const float cellHalf = cellSize / 2.f;
 
 		// one pass for both overlays: they used to walk the same cells twice, asking the
@@ -255,8 +254,8 @@ namespace sc::debug::modules {
 				const sf::Vector2f cellCentre{ cellOrigin.x + cellHalf, cellOrigin.y + cellHalf };
 
 				for (entt::entity entity : entities) {
-					const auto* trans = reg.try_get<ecs::TransformComponent>(entity);
-					const auto* collider = reg.try_get<ecs::BoxColliderComponent>(entity);
+					const auto* trans = ctx.registry->TryGetComponent<ecs::TransformComponent>(entity);
+					const auto* collider = ctx.registry->TryGetComponent<ecs::BoxColliderComponent>(entity);
 					if (!trans || !collider || collider->hitboxes.empty()) continue;
 
 					const sf::FloatRect bounds = ecs::physics_system::EntityGetBounds(*trans, *collider);

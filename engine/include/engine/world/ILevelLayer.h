@@ -24,7 +24,8 @@ namespace sc::world {
     public:
         virtual ~ILevelLayer() = default;
 
-        const LayerId& GetId() const { return m_id; }
+        const std::string& GetName() const { return m_id.name; }
+        int32_t GetUid() const { return m_id.uid; }
         LayerType GetType() const { return m_type; }
         bool IsDepthBoundary() const { return m_isDepthBoundary; }
 

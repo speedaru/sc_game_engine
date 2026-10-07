@@ -7,16 +7,17 @@
 #include <engine/debug/DebugDraw.h>
 #include <engine/ecs/Registry.h>
 #include <engine/ecs/Components.h>
+#include <engine/world/Level.h>
 
 #include <components/GameComponents.h>
 
 namespace ecs = sc::ecs;
 
 namespace game::debug {
-	void PlayerMovement ::OnDrawUI(const DebugContext& ctx) {
-		auto view = ctx.registry->GetRegistry().view<ecs::TransformComponent, ecs::VelocityComponent, components::PlayerTag>();
+	void PlayerMovement::OnDrawUI(const DebugContext& ctx) {
+		auto view = ctx.registry->ViewLevel<ecs::TransformComponent, ecs::VelocityComponent, components::PlayerTag>(ctx.level->GetUid());
 
-		for (auto [ent, trans, vel] : view.each()) {
+		for (auto [ent, trans, vel] : view) {
 			ImGui::Text("player pos: %.2f %.2f", trans.pos.x, trans.pos.y);
 			ImGui::Text("player velocity: %.2f %.2f", vel.velocity.x, vel.velocity.y);
 		}
@@ -33,9 +34,9 @@ namespace game::debug {
 	void PlayerMovement ::DrawMovementeVec(const DebugContext& ctx, DebugDraw& draw) {
 		if (!m_showMovementVec) return;
 
-		auto view = ctx.registry->GetRegistry().view<ecs::TransformComponent, ecs::VelocityComponent, components::PlayerTag>();
+		auto view = ctx.registry->ViewLevel<ecs::TransformComponent, ecs::VelocityComponent, components::PlayerTag>(ctx.level->GetUid());
 
-		for (auto [ent, trans, vel] : view.each()) {
+		for (auto [ent, trans, vel] : view) {
 			const auto& pos = trans.pos;
 			const auto& velocity = vel.velocity;
 
