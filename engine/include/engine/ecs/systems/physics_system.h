@@ -7,6 +7,7 @@
 namespace sc::ecs {
 	struct TransformComponent;
 	struct BoxColliderComponent;
+	class Registry;
 }
 
 namespace sc::ecs::physics_system  {
@@ -18,8 +19,9 @@ namespace sc::ecs::physics_system  {
 
 	// called when spawning a new entity
 	void EntityRegisterCollisions(math::SpatialGrid& grid, const Entity& entity);
+	void EntityRegisterCollisions(math::SpatialGrid& grid, EntityHandle handle, Registry& registry);
 
-	void EntityUnregisterCollisions(math::SpatialGrid& grid, entt::entity handle);
+	void EntityUnregisterCollisions(math::SpatialGrid& grid, EntityHandle handle);
 
 	// called every frame in OnFixedUpdate to apply the physics
 	// takes the whole Level because collision are stored in

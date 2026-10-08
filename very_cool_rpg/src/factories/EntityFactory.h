@@ -32,9 +32,10 @@ namespace game::factories {
 
 		void SetRegistry(sc::ecs::Registry& registry) { m_registry = &registry; }
 
-		// the level whose spatial grid new entities get indexed into
+		// set the level in which new entities will spawn into
 		void SetCurrentLevel(sc::world::Level* level) { m_currentLevel = level; }
 
+		// spawns a new entity in m_currentLevel
 		// returns a null Entity if the type has no blueprint or no definition
 		sc::ecs::Entity Spawn(EntityType type, const entities::SpawnParams& params);
 

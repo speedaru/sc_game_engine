@@ -11,7 +11,7 @@ namespace game::debug {}
 namespace game::debug {
 	using namespace sc::debug;
 
-	class PlayerMovement : public IDebugModule{
+	class PlayerMovement : public IDebugModule {
 	public:
 		const char* Name() const override { return "Movement"; }
 		const char* Category() const override { return "Physics"; }

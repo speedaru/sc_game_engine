@@ -14,6 +14,7 @@
 #include <engine/debug/debug_system.h>
 
 #include <constants.h>
+#include <debug/FeatureTest.h>
 #include <components/GameComponents.h>
 #include <enums/InputActions.h>
 #include <blueprints/BlueprintRegistry.h>
@@ -28,6 +29,19 @@ namespace ecs = sc::ecs;
 namespace gfx = sc::graphics;
 
 namespace game {
+	namespace {
+		int32_t FindEntityLayerUid(const sc::world::Level& level) {
+			for (const auto& layer : level.GetLayers()) {
+				if (layer->GetType() == sc::world::LayerType::Entity) {
+					return layer->GetUid();
+				}
+			}
+
+			LOG_W("level %s has no entity layer, so anything spawned at runtime won't render", level.GetName());
+			return -1;
+		}
+	}
+
     void GameplayLayer::OnAttach() {
 		// load keybinds
 		auto gameplayInput = std::make_shared<input::InputContext>();
@@ -51,6 +65,9 @@ namespace game {
 			return;
 		}
 
+		// add feature test module (requires world)
+		SC_DEBUG_ONLY(dbg::RegisterModule(std::make_unique<game::debug::FeatureTest>(*m_world, [this](int32_t uid) { SwitchLevel(uid); })));
+
 		// get level
 		m_currentLevel = m_world->GetLevel("World_Level_0").get();
 		if (!m_currentLevel) {
@@ -60,20 +77,11 @@ namespace game {
 
 		m_entityFactory.SetCurrentLevel(m_currentLevel);
 
-		// remember which layer runtime spawns should render in
-		for (const auto& layer : m_currentLevel->GetLayers()) {
-			if (layer->GetType() == sc::world::LayerType::Entity) {
-				m_entityLayerUid = layer->GetUid();
-				break;
-			}
-		}
-
-		if (m_entityLayerUid < 0) {
-			LOG_W("level has no entity layer, so anything spawned at runtime won't render");
-		}
+		// find which layer spawned entities should be in
+		m_entityLayerUid = FindEntityLayerUid(*m_currentLevel);
 
 		// apply bounds to camera
-		m_camera.SetBounds({ 0.f, 0.f }, static_cast<sf::Vector2f>(m_currentLevel->GetSize()));
+		UpdateCameraBounds();
 
 		// get player reference
 		const auto view = m_registry.ViewAll<game::components::PlayerTag>();
@@ -92,11 +100,13 @@ namespace game {
 			return;
 		}
 
+		int32_t levelUid = m_currentLevel->GetUid();
+
 		// handle player keybinds
-		systems::UpdatePlayerInput(m_registry, m_currentLevel->GetUid());
+		systems::UpdatePlayerInput(m_registry, levelUid);
 
 		// calculate every entity movement
-		systems::UpdateCharacterMovement(m_registry, m_currentLevel->GetUid(), timeStep);
+		systems::UpdateCharacterMovement(m_registry, levelUid, timeStep);
 
 		// move entities in engine
 		ecs::physics_system::UpdateKinematics(m_registry, *m_currentLevel, timeStep);
@@ -152,4 +162,23 @@ namespace game {
 
 		ecs::render_system::RenderWorld(m_registry, *m_currentLevel, window, m_camera, alpha);
     }
+
+	void GameplayLayer::SwitchLevel(int32_t levelUid) {
+		sc::world::Level* targetLevel = m_world->GetLevel(levelUid).get();
+		if (!targetLevel || !m_player) {
+			if (!targetLevel) LOG_W("trying to switch to an unknown level: %d", levelUid);
+			else if (!m_player) LOG_W("trying to switch to a level but there is no player");
+			return;
+		}
+
+		m_currentLevel = targetLevel;
+		m_entityLayerUid = FindEntityLayerUid(*m_currentLevel);
+		m_entityFactory.SetCurrentLevel(m_currentLevel);
+		UpdateCameraBounds();
+		ecs::lifecycle_system::MoveToLevel(m_registry, *m_world, m_player.GetHandle(), levelUid, { 0.f, 0.f });
+	}
+
+	void GameplayLayer::UpdateCameraBounds() {
+		m_camera.SetBounds({ 0.f, 0.f }, static_cast<sf::Vector2f>(m_currentLevel->GetSize()));
+	}
 }

@@ -18,6 +18,12 @@ namespace game {
 		void OnUpdate(float deltaTime) override;
 		void OnRender(sf::RenderWindow& window, float alpha) override;
 
+		void SwitchLevel(int32_t levelUid);
+
+	private:
+		// update camera bounds based on level size
+		void UpdateCameraBounds();
+
 	private:
 		// core engine stuff
 		sc::ecs::Registry m_registry = sc::ecs::Registry ("GameplayLayer registry");

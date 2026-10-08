@@ -7,6 +7,7 @@
 
 #include <layers/GameplayLayer.h>
 #include <debug/PlayerMovement.h>
+#include <debug/FeatureTest.h>
 #include <constants.h>
 
 using Application = sc::core::Application;

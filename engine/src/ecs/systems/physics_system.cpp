@@ -192,7 +192,11 @@ namespace sc::ecs::physics_system {
 		grid.InsertEntity(entity.GetHandle(), EntityGetBounds(transform, collider));
 	}
 
-	void EntityUnregisterCollisions(math::SpatialGrid& grid, entt::entity handle) {
+	void EntityRegisterCollisions(math::SpatialGrid& grid, EntityHandle handle, Registry& registry) {
+		EntityRegisterCollisions(grid, Entity(handle, &registry));
+	}
+
+	void EntityUnregisterCollisions(math::SpatialGrid& grid, EntityHandle handle) {
 		// non collidable entities are never inserted so only erase tracked ones
 		if (grid.FindEntityCells(handle)) {
 			grid.EraseEntity(handle);
