@@ -33,3 +33,6 @@ vendor/*.zip
 CLAUDE.md
 CLAUDE.local.md
 .claude/
+
+# photoshop sources
+*.psd
