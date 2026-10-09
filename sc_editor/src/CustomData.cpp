@@ -4,6 +4,11 @@ namespace sc_editor {
 
 	void to_json(nlohmann::json& j, const Hitbox& hb) {
 		j = { {"x", hb.x}, {"y", hb.y}, {"w", hb.w}, {"h", hb.h} };
+
+		// only written when set, so solid boxes keep the format they always had
+		if (hb.trigger) {
+			j["trigger"] = true;
+		}
 	}
 
 	void from_json(const nlohmann::json& j, Hitbox& hb) {
@@ -11,6 +16,7 @@ namespace sc_editor {
 		hb.y = j.value("y", 0);
 		hb.w = j.value("w", 0);
 		hb.h = j.value("h", 0);
+		hb.trigger = j.value("trigger", false);
 	}
 
 	void to_json(nlohmann::json& j, const CustomData& data) {

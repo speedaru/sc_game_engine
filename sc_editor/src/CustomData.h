@@ -12,6 +12,9 @@ namespace sc_editor {
 		int y = 0;
 		int w = 0;
 		int h = 0;
+
+		// reports an overlap instead of blocking movement
+		bool trigger = false;
 	};
 
 	void to_json(nlohmann::json& j, const Hitbox& hb);

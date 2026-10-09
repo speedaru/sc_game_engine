@@ -316,8 +316,18 @@ namespace sc_editor {
 				ImVec2 rmax(canvasPos.x + (hb.x + hb.w) * scale, canvasPos.y + (hb.y + hb.h) * scale);
 
 				bool selected = (i == m_selectedHitboxIndex);
-				ImU32 fill = selected ? IM_COL32(255, 80, 80, 90) : IM_COL32(80, 160, 255, 70);
-				ImU32 border = selected ? IM_COL32(255, 80, 80, 255) : IM_COL32(80, 160, 255, 255);
+
+				// triggers get their own colours (green, yellow when selected) so they can't be
+				// mistaken for solid boxes (blue, red when selected)
+				ImU32 fill, border;
+				if (hb.trigger) {
+					fill = selected ? IM_COL32(255, 210, 60, 90) : IM_COL32(80, 220, 120, 70);
+					border = selected ? IM_COL32(255, 210, 60, 255) : IM_COL32(80, 220, 120, 255);
+				}
+				else {
+					fill = selected ? IM_COL32(255, 80, 80, 90) : IM_COL32(80, 160, 255, 70);
+					border = selected ? IM_COL32(255, 80, 80, 255) : IM_COL32(80, 160, 255, 255);
+				}
 				drawList->AddRectFilled(rmin, rmax, fill);
 				drawList->AddRect(rmin, rmax, border, 0.0f, 0, 2.0f);
 			}
@@ -341,12 +351,31 @@ namespace sc_editor {
 				}
 				ApplyResizeCursor(hoverHandle);
 
-				HandleCanvasInteraction(canvasPos, scale, ts->tileSize);
+				// a click outside the canvas belongs to the widgets below it, so it must not
+				// deselect or start a new box. an interaction already in progress keeps going
+				ImVec2 mouse = ImGui::GetIO().MousePos;
+				bool overCanvas = PointInRect(mouse,
+					ImVec2(canvasPos.x - kHandleMargin, canvasPos.y - kHandleMargin),
+					ImVec2(canvasMax.x + kHandleMargin, canvasMax.y + kHandleMargin));
+
+				if (m_state != InteractionState::Idle || overCanvas) {
+					HandleCanvasInteraction(canvasPos, scale, ts->tileSize);
+				}
 			}
 
 			if (m_state == InteractionState::Idle && m_selectedHitboxIndex >= 0 && ImGui::IsKeyPressed(ImGuiKey_Delete)) {
 				m_activeHitboxes.erase(m_activeHitboxes.begin() + m_selectedHitboxIndex);
 				m_selectedHitboxIndex = -1;
+			}
+
+			// properties of the selected hitbox
+			if (m_selectedHitboxIndex >= 0 && m_selectedHitboxIndex < (int)m_activeHitboxes.size()) {
+				ImGui::Checkbox("Trigger", &m_activeHitboxes[m_selectedHitboxIndex].trigger);
+				ImGui::SameLine();
+				ImGui::TextDisabled("(reports an overlap instead of blocking)");
+			}
+			else {
+				ImGui::TextDisabled("Select a hitbox to edit its properties.");
 			}
 		}
 		else {

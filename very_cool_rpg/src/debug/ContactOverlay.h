@@ -27,6 +27,7 @@ namespace game::debug {
 		static constexpr sf::Color TILE_COLOR{ 255, 165, 0, 220 };
 		static constexpr sf::Color ENTITY_COLOR{ 255, 60, 200, 220 };
 		static constexpr sf::Color NORMAL_COLOR{ 255, 255, 255, 230 };
+		static constexpr sf::Color OVERLAP_COLOR{ 125, 35, 255, 220 };
 		static constexpr float NORMAL_LENGTH = 12.f;
 
 		const sc::physics::PhysicsScratch& m_scratch;

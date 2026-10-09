@@ -16,6 +16,12 @@ namespace sc::physics {
 		Tile
 	};
 
+	enum class ContactKind : uint8_t {
+		Unknown,
+		Block,
+		Overlap,
+	};
+
 	// level space collision box
 	// uses world coordinates instead of cell coordinates, because different layers can have different cell sizes
 	struct ColliderRef {
@@ -23,6 +29,7 @@ namespace sc::physics {
 		sf::FloatRect box;
 
 		ColliderType type = ColliderType::Unknown;
+		bool trigger = false;
 
 		// access via accessors to assert type
 		union {
@@ -40,6 +47,7 @@ namespace sc::physics {
 		ecs::EntityHandle self; // the mover
 		ColliderRef other;
 		sf::Vector2f normal;
+		ContactKind kind = ContactKind::Unknown;
 	};
 
 	// reusable buffers for the physics step owned by caller

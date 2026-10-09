@@ -42,9 +42,13 @@ namespace {
 		Hit closestHit{};
 
 		for (const math::Hitbox& dynBox : mover.col.hitboxes) {
+			if (dynBox.trigger) continue;
+
 			const sf::FloatRect movingRect{ mover.trans.pos + dynBox.offset, dynBox.size };
 
 			for (const physics::ColliderRef& other : ctx.scratch.candidates) {
+				if (other.trigger) continue;
+
 				const math::SweepResult sweep = math::SweptAABB(movingRect, delta, other.box);
 
 				if (sweep.time < closestHit.sweep.time) {
@@ -87,6 +91,7 @@ namespace {
 				ctx.scratch.candidates.push_back(physics::ColliderRef{
 					.box = sf::FloatRect{ otherTrans->pos + hitbox.offset, hitbox.size },
 					.type = physics::ColliderType::Entity,
+					.trigger = hitbox.trigger,
 					.data = { .entity = other }
 				});
 			}
@@ -108,8 +113,6 @@ namespace {
 			return;
 		}
 
-		if (delta.x == 0.0f && delta.y == 0.0f) return;
-
 		// broad phase
 		const sf::FloatRect queryBounds = SweptBounds(EntityGetBounds(trans, col), delta);
 
@@ -128,10 +131,8 @@ namespace {
 				break;
 			}
 
-			//LOG_D("collider type: %u, normal: %.f %.f",
-			//	static_cast<uint32_t>(hit.other->type), hit.sweep.normal.x, hit.sweep.normal.y);
 			// collect contacts
-			ctx.scratch.contacts.push_back(physics::Contact{ mover.self, *hit.other, hit.sweep.normal });
+			ctx.scratch.contacts.push_back(physics::Contact{ mover.self, *hit.other, hit.sweep.normal, physics::ContactKind::Block });
 
 			// sliding
 			float safeTime = std::max(0.0f, hit.sweep.time - EPSILON);
@@ -151,6 +152,20 @@ namespace {
 			if (hit.sweep.normal.y != 0.0f) {
 				delta.y = 0.0f;
 				vel.velocity.y = 0.0f;
+			}
+		}
+
+		// collect trigger contacts
+		for (const math::Hitbox& dynBox : col.hitboxes) {
+			const sf::FloatRect rect{ trans.pos + dynBox.offset, dynBox.size };
+
+			for (const physics::ColliderRef& other : ctx.scratch.candidates) {
+				// trigger vs trigger is ignored
+				if (dynBox.trigger == other.trigger) continue;
+
+				if (rect.findIntersection(other.box)) {
+					ctx.scratch.contacts.push_back(physics::Contact{ mover.self, other, {}, physics::ContactKind::Overlap });
+				}
 			}
 		}
 	}

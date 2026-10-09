@@ -31,6 +31,7 @@ namespace sc::world {
 					out.push_back(physics::ColliderRef{
 						.box = sf::FloatRect{ cellOrigin + box.offset, box.size },
 						.type = physics::ColliderType::Tile,
+						.trigger = box.trigger,
 						.data = { .tileIndex = index }
 					});
 				}

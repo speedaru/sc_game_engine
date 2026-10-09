@@ -5,6 +5,7 @@
 #include <imgui.h>
 
 #include <engine/debug/DebugDraw.h>
+#include <engine/physics/Collisions.h>
 
 namespace game::debug {
 	ContactOverlay::ContactOverlay(const sc::physics::PhysicsScratch& scratch)
@@ -24,10 +25,16 @@ namespace game::debug {
 		for (const sc::physics::Contact& contact : m_scratch.contacts) {
 			const sf::FloatRect& box = contact.other.box;
 
+			const bool isOverlap = contact.kind == sc::physics::ContactKind::Overlap;
 			if (m_showColliders) {
 				const bool isTile = contact.other.type == sc::physics::ColliderType::Tile;
-				draw.Rect(box, isTile ? TILE_COLOR : ENTITY_COLOR);
+				sf::Color color = isTile ? TILE_COLOR : ENTITY_COLOR;
+				if (isOverlap) color = OVERLAP_COLOR;
+
+				draw.Rect(box, color);
 			}
+
+			if (isOverlap) continue; // dont drow arrows for overlapping boxes
 
 			if (m_showNormals) {
 				// the normal points away from the hit face

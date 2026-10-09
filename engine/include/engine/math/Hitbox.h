@@ -5,12 +5,12 @@ namespace sc::math {
 	struct Hitbox {
 		sf::Vector2f offset;
 		sf::Vector2f size;
+		bool trigger;
 
-		Hitbox(float offsetX, float offsetY, float w, float h)
-			: offset(offsetX, offsetY), size(w, h) {}
+		Hitbox(float offX, float offY, float w, float h, bool trigger = false)
+			: offset(offX, offY), size(w, h), trigger(trigger) {}
 
-		// exact equality, on purpose: the collision shape palette dedups by comparing
-		// whole box lists, and two shapes are only interchangeable if they are identical
+		// exact equality so collision palette can dedup by comparing box lists
 		bool operator==(const Hitbox& other) const = default;
 	};
 }

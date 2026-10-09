@@ -21,7 +21,8 @@ namespace game::world_loader {
 				box.value("x", 0.f) - origin.x,
 				box.value("y", 0.f) - origin.y,
 				box.value("w", 16.f),
-				box.value("h", 16.f)
+				box.value("h", 16.f),
+				box.value("trigger", false)
 			);
 		}
 
