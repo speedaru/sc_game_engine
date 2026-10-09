@@ -4,6 +4,7 @@
 #include <engine/ecs/Entity.h>
 #include <engine/graphics/Camera2D.h>
 #include <engine/graphics/TileSetManager.h>
+#include <engine/physics/Collisions.h>
 #include <engine/world/World.h>
 
 #include <factories/EntityFactory.h>
@@ -21,6 +22,8 @@ namespace game {
 		void SwitchLevel(int32_t levelUid);
 
 	private:
+		void RegisterDebugModules();
+
 		// update camera bounds based on level size
 		void UpdateCameraBounds();
 
@@ -29,6 +32,7 @@ namespace game {
 		sc::ecs::Registry m_registry = sc::ecs::Registry ("GameplayLayer registry");
 		sc::graphics::Camera2D m_camera{ NATIVE_WIDTH, NATIVE_HEIGHT };
 		sc::graphics::TileSetManager m_tileSetManager;
+		sc::physics::PhysicsScratch m_physicsScratch;
 
 		// entities
 		sc::ecs::Entity m_player;

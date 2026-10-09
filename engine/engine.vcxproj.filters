@@ -254,7 +254,7 @@
     <ClInclude Include="include\engine\math\Hitbox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\engine\physics\ColliderRef.h">
+    <ClInclude Include="include\engine\physics\Collisions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\engine\world\CollisionLayerBuilder.h">

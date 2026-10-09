@@ -15,6 +15,7 @@
 
 #include <constants.h>
 #include <debug/FeatureTest.h>
+#include <debug/ContactOverlay.h>
 #include <components/GameComponents.h>
 #include <enums/InputActions.h>
 #include <blueprints/BlueprintRegistry.h>
@@ -66,7 +67,7 @@ namespace game {
 		}
 
 		// add feature test module (requires world)
-		SC_DEBUG_ONLY(dbg::RegisterModule(std::make_unique<game::debug::FeatureTest>(*m_world, [this](int32_t uid) { SwitchLevel(uid); })));
+		RegisterDebugModules();
 
 		// get level
 		m_currentLevel = m_world->GetLevel("World_Level_0").get();
@@ -109,7 +110,7 @@ namespace game {
 		systems::UpdateCharacterMovement(m_registry, levelUid, timeStep);
 
 		// move entities in engine
-		ecs::physics_system::UpdateKinematics(m_registry, *m_currentLevel, timeStep);
+		ecs::physics_system::UpdateKinematics(m_registry, *m_currentLevel, timeStep, m_physicsScratch);
 
 		// flush destroyed entities
 		ecs::lifecycle_system::FlushDestroyed(m_registry, *m_world);
@@ -176,6 +177,11 @@ namespace game {
 		m_entityFactory.SetCurrentLevel(m_currentLevel);
 		UpdateCameraBounds();
 		ecs::lifecycle_system::MoveToLevel(m_registry, *m_world, m_player.GetHandle(), levelUid, { 0.f, 0.f });
+	}
+
+	void GameplayLayer::RegisterDebugModules() {
+		SC_DEBUG_ONLY(dbg::RegisterModule(std::make_unique<game::debug::FeatureTest>(*m_world, [this](int32_t uid) { SwitchLevel(uid); })));
+		SC_DEBUG_ONLY(dbg::RegisterModule(std::make_unique<game::debug::ContactOverlay>(m_physicsScratch)));
 	}
 
 	void GameplayLayer::UpdateCameraBounds() {

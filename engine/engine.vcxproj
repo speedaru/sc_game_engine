@@ -244,7 +244,7 @@
     <ClInclude Include="include\engine\math\math.h" />
     <ClInclude Include="include\engine\math\physics.h" />
     <ClInclude Include="include\engine\math\SpatialGrid.h" />
-    <ClInclude Include="include\engine\physics\ColliderRef.h" />
+    <ClInclude Include="include\engine\physics\Collisions.h" />
     <ClInclude Include="include\engine\renderer\render2d.h" />
     <ClInclude Include="include\engine\graphics\SFMLTexture2D.h" />
     <ClInclude Include="include\engine\graphics\Texture2D.h" />

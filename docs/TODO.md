@@ -8,18 +8,18 @@ section 4 is new subsystems that depend on them.
 
 ## 1. Fix first
 
-- [ ] **Clamp the frame delta.** `engine/src/core/Application.cpp:166-185`
+- [x] **Clamp the frame delta.** `engine/src/core/Application.cpp:166-185`
   `accumulator += deltaTime` has no cap. After a breakpoint, a window drag or a slow load, one frame
   carries seconds of time and the loop runs hundreds of fixed updates in a burst. Clamp `deltaTime`
   to something like 0.25s before adding it.
 
-- [ ] **Render interpolation.** `engine/src/core/Application.cpp:179-196`
+- [x] **Render interpolation.** `engine/src/core/Application.cpp:179-196`
   Physics steps at 60 Hz, rendering is capped at 165 fps, and the camera is set in `OnFixedUpdate`
   (`GameplayLayer.cpp:98-103`), so movement judders on a high-refresh monitor. Standard fix: keep
   previous and current position, render at `alpha = accumulator / timeStep`. Decide early, it
   changes what `TransformComponent` holds and what `OnRender` receives.
 
-- [ ] **Null level crash.** `very_cool_rpg/src/layers/GameplayLayer.cpp:95`
+- [x] **Null level crash.** `very_cool_rpg/src/layers/GameplayLayer.cpp:95`
   If the world fails to load, `OnAttach` returns early at line 47 and `OnFixedUpdate` dereferences
   `*m_currentLevel` anyway. `OnRender` checks for null, this path doesn't. Line 115 has the same
   shape with `m_player` (no validity check before `GetComponent`).
@@ -30,11 +30,11 @@ section 4 is new subsystems that depend on them.
   (`very_cool_rpg/src/loaders/world_loader.cpp:29`) also throws. Nothing catches either.
   `EntityDefinitionLoader.cpp:54` doesn't check the file exists the way `TileLayerBuilder.cpp:27` does.
 
-- [ ] **Flipped tiles are lost in Y-sorted layers.** `engine/src/renderer/render2d.cpp:73-78`
+- [x] **Flipped tiles are lost in Y-sorted layers.** `engine/src/renderer/render2d.cpp:73-78`
   `TileInstance` has `flipX`/`flipY`, `QuadProps` doesn't, so a flipped tile in a `_YS_` layer draws
   unflipped. The current level has no flipped tiles, so it hasn't shown up.
 
-- [ ] **Stuck keys with the debug UI (unconfirmed).** `engine/src/debug/DebugLayer.cpp:27-33`
+- [x] **Stuck keys with the debug UI (unconfirmed).** `engine/src/debug/DebugLayer.cpp:27-33`
   If imgui grabs the keyboard while a key is held, the `KeyReleased` is consumed and `InputLayer`
   never sees it, so the key stays down. Release events should probably never be consumed.
   Try: hold W, click into an imgui text field, release W.
@@ -43,14 +43,14 @@ section 4 is new subsystems that depend on them.
 
 The biggest structural gap. Blocks projectiles, pickups, deaths and level transitions.
 
-- [ ] **Entity destruction.**
+- [x] **Entity destruction.**
   `Registry` has `CreateEntity` and no destroy, and nothing calls `SpatialGrid::EraseEntity`. Two
   places already work around it with `reg.valid()` checks: `engine/src/ecs/systems/physics_system.cpp:180`
   and `engine/src/debug/modules/CollisionOverlay.cpp:261`. `EntityFactory` is "the single place an
   entity comes into existence"; there needs to be a matching single place where one leaves, which
   also removes it from the grid. Remove the two `valid()` workarounds once it exists.
 
-- [ ] **Entities need to belong to a level.**
+- [x] **Entities need to belong to a level.**
   The loader spawns every level's entities into one registry (`world_loader.cpp:42-44`), but
   `UpdateKinematics` iterates all of them against the current level's grid
   (`physics_system.cpp:199-213`). Rendering filters by `layerUid`, which is the LDtk layer
@@ -59,7 +59,7 @@ The biggest structural gap. Blocks projectiles, pickups, deaths and level transi
   Options to weigh: a level component on every entity, a registry per level, or spawning a level's
   entities only when it becomes active.
 
-- [ ] `World::GetLevel(uint32_t)` vs `LevelId::uid` being `int32_t` (`World.h:12`, `Level.h:15`). Pick one.
+- [x] `World::GetLevel(uint32_t)` vs `LevelId::uid` being `int32_t` (`World.h:12`, `Level.h:15`). Pick one.
 
 ## 3. Collision results
 

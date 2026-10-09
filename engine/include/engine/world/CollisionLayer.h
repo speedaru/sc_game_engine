@@ -7,7 +7,7 @@
 
 #include <engine/math/CellRange.h>
 #include <engine/math/Hitbox.h>
-#include <engine/physics/ColliderRef.h>
+#include <engine/physics/Collisions.h>
 
 namespace sc::world {
 	// the collision geometry of one grid cell, in cell local coordinates

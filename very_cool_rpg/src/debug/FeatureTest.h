@@ -17,7 +17,7 @@ namespace game::debug {
 
 	class FeatureTest : public IDebugModule {
 	public:
-		FeatureTest(const sc::world::World& world, std::function<void(int32_t)> onTeleport);
+		explicit FeatureTest(const sc::world::World& world, std::function<void(int32_t)> onTeleport);
 
 		const char* Name() const override { return "testing"; }
 		const char* Category() const override { return "Features"; }

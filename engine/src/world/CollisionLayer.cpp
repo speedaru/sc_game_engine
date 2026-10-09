@@ -30,8 +30,8 @@ namespace sc::world {
 				for (const math::Hitbox& box : m_shapes[shapeIndex].boxes) {
 					out.push_back(physics::ColliderRef{
 						.box = sf::FloatRect{ cellOrigin + box.offset, box.size },
-						.entity = entt::null,
-						.tileIndex = index
+						.type = physics::ColliderType::Tile,
+						.data = { .tileIndex = index }
 					});
 				}
 			}

@@ -163,8 +163,10 @@ namespace sc::core {
 
 		sf::RenderWindow& window = m_window->GetNativeWindow();
 		while (window.isOpen()) {
-			float deltaTime = clock.restart().asSeconds();
-			accumulator += std::min(0.25f, deltaTime); // cap to 0.25s max
+			// cap to 0.25s max, and use the capped value everywhere so a long stall
+			// doesn't hand OnUpdate or imgui a multi second delta either
+			const float deltaTime = std::min(0.25f, clock.restart().asSeconds());
+			accumulator += deltaTime;
 
 			input::NewFrame();
 
