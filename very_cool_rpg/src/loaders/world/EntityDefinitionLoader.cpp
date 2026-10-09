@@ -38,7 +38,7 @@ namespace game::world_loader {
 
 		for (const auto& ldtkDef : project.getEntityDefs()) {
 			const std::string& name = ldtkDef.name;
-			entities::EntityType type = static_cast<entities::EntityType>(entities::hash(name));
+			entities::EntityType type = static_cast<entities::EntityType>(enums::hash(name));
 
 			entities::EntityDefinition definition;
 			definition.type = type; // hash name to get EntityType

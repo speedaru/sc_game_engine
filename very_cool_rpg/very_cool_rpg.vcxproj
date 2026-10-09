@@ -217,6 +217,7 @@
     <ClInclude Include="src\layers\GameplayLayer.h" />
     <ClInclude Include="src\systems\character_movement.h" />
     <ClInclude Include="src\systems\player_input.h" />
+    <ClInclude Include="src\enums\hash.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />

@@ -176,6 +176,9 @@
     <ClInclude Include="src\debug\ContactOverlay.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\enums\hash.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />
