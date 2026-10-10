@@ -8,7 +8,7 @@
 
 namespace ecs = sc::ecs;
 
-namespace game::systems {
+namespace game::character_movement {
 	void UpdateCharacterMovement(sc::ecs::Registry& registry, int32_t levelUid, float timeStep) {
 		auto view = registry.ViewLevel<components::CharacterController, ecs::VelocityComponent>(levelUid);
 

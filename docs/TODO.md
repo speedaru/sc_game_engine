@@ -73,6 +73,23 @@ The biggest structural gap. Blocks projectiles, pickups, deaths and level transi
 
 - [ ] **Collision filtering** (layers/masks, solid vs trigger). Nothing exists yet.
 
+- [ ] **Several hitboxes on one entity.** `engine/include/engine/physics/Collisions.h`, `engine/include/engine/math/Hitbox.h`
+  A `Contact` names the other entity but not which of its boxes was touched, or which of the
+  mover's boxes touched it. A coin made of two boxes should count once; a boss whose boxes are
+  different attacks needs each handled on its own. `s_handledEntities` in
+  `very_cool_rpg/src/systems/collision_system.cpp` dedupes by entity, which only fits the coin.
+  Likely shape: a hitbox index on both sides of the contact, an id or tag on `math::Hitbox` set
+  in the editor, and the dedup decided by each handler instead of the dispatcher. Touches the
+  same struct as collision filtering above, so design them together.
+
+- [ ] **Repeat rate for overlap contacts.** `very_cool_rpg/src/systems/collision_system.cpp`
+  An overlap contact is reported every step while the boxes overlap, so a damage handler would
+  fire 60 times a second. Each handler should choose its own rate (spikes twice a second, fire
+  ten times). The timer has to be per pair (who is touched, by what), not per handler, or one
+  entity standing on spikes blocks the damage for every other entity. Count it in fixed steps,
+  not wall clock time. A cooldown of zero is the same thing as the per-step dedup, so build both
+  as one table of pairs.
+
 - [ ] **Depenetration.** `engine/src/math/physics.cpp:59-69`
   An entity that starts overlapping gets `time = 0` and loses velocity on that axis every step, so
   it's stuck. The F2 dragon spawn at +50,+50 (`GameplayLayer.cpp:114-120`) can land inside a rock.

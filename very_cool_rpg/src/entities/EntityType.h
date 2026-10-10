@@ -6,6 +6,7 @@ namespace game::entities {
 	enum class EntityType : uint64_t {
 		Player = enums::hash("Player"),
 		Dragon = enums::hash("Dragon"),
+		Chest = enums::hash("Chest"),
 	};
 
 	constexpr EntityType FromLdtkIdentifier(std::string_view identifier) {

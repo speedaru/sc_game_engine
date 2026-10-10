@@ -2,8 +2,10 @@
 #include <SFML/System/Vector2.hpp>
 
 namespace game::components {
-	// empty, used to identify the player
+	// tags are empty and just used to identify entities
+
 	struct PlayerTag {};
+	struct PickupTag {};
 
 	struct CharacterController {
 		float maxSpeed = 200.f;

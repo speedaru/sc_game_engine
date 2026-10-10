@@ -36,9 +36,9 @@
 				"identifier": "Player",
 				"keepAspectRatio": false,
 				"limitBehavior": "MoveLastOne",
-				"limitScope": "PerLevel",
+				"limitScope": "PerWorld",
 				"lineOpacity": 0,
-				"maxCount": 0,
+				"maxCount": 1,
 				"maxHeight": null,
 				"maxWidth": null,
 				"minHeight": null,
@@ -110,6 +110,53 @@
 				"tilesetId": 116,
 				"uiTileRect": null,
 				"uid": 123,
+				"width": 64
+			},
+			{
+				"allowOutOfBounds": false,
+				"color": "#EAD4AA",
+				"doc": null,
+				"exportToToc": false,
+				"fieldDefs": [],
+				"fillOpacity": 0.08,
+				"height": 64,
+				"hollow": false,
+				"identifier": "Chest",
+				"keepAspectRatio": false,
+				"limitBehavior": "MoveLastOne",
+				"limitScope": "PerLevel",
+				"lineOpacity": 0,
+				"maxCount": 0,
+				"maxHeight": null,
+				"maxWidth": null,
+				"minHeight": null,
+				"minWidth": null,
+				"nineSliceBorders": [],
+				"pivotX": 0,
+				"pivotY": 0,
+				"renderMode": "Tile",
+				"resizableX": false,
+				"resizableY": false,
+				"showName": true,
+				"tags": [],
+				"tileOpacity": 1,
+				"tileRect": {
+					"h": 64,
+					"tilesetUid": 116,
+					"w": 64,
+					"x": 128,
+					"y": 0
+				},
+				"tileRenderMode": "FitInside",
+				"tilesetId": 116,
+				"uiTileRect": {
+					"h": 64,
+					"tilesetUid": 116,
+					"w": 64,
+					"x": 128,
+					"y": 0
+				},
+				"uid": 193,
 				"width": 64
 			}
 		],
@@ -846,12 +893,16 @@
 				},
 				"customData": [
 					{
+						"data": "{\n  \"hitboxes\": [\n    {\n      \"h\": 28,\n      \"w\": 40,\n      \"x\": 12,\n      \"y\": 30\n    }\n  ]\n}",
+						"tileId": 0
+					},
+					{
 						"data": "{\n  \"hitboxes\": [\n    {\n      \"h\": 48,\n      \"trigger\": true,\n      \"w\": 13,\n      \"x\": 15,\n      \"y\": 10\n    },\n    {\n      \"h\": 22,\n      \"trigger\": true,\n      \"w\": 32,\n      \"x\": 28,\n      \"y\": 36\n    }\n  ]\n}",
 						"tileId": 1
 					},
 					{
-						"data": "{\n  \"hitboxes\": [\n    {\n      \"h\": 28,\n      \"w\": 40,\n      \"x\": 12,\n      \"y\": 30\n    }\n  ]\n}",
-						"tileId": 0
+						"data": "{\n  \"hitboxes\": [\n    {\n      \"h\": 41,\n      \"trigger\": true,\n      \"w\": 59,\n      \"x\": 3,\n      \"y\": 12\n    }\n  ]\n}",
+						"tileId": 2
 					}
 				],
 				"embedAtlas": null,
@@ -1014,6 +1065,64 @@
 							"px": [
 								160,
 								160
+							],
+							"width": 64
+						},
+						{
+							"__grid": [
+								0,
+								1
+							],
+							"__identifier": "Chest",
+							"__pivot": [
+								0,
+								0
+							],
+							"__smartColor": "#EAD4AA",
+							"__tags": [],
+							"__tile": {
+								"h": 64,
+								"tilesetUid": 116,
+								"w": 64,
+								"x": 128,
+								"y": 0
+							},
+							"defUid": 193,
+							"fieldInstances": [],
+							"height": 64,
+							"iid": "4ed6aa70-bde0-11f1-96fd-475cd38f6e58",
+							"px": [
+								0,
+								64
+							],
+							"width": 64
+						},
+						{
+							"__grid": [
+								1,
+								1
+							],
+							"__identifier": "Chest",
+							"__pivot": [
+								0,
+								0
+							],
+							"__smartColor": "#EAD4AA",
+							"__tags": [],
+							"__tile": {
+								"h": 64,
+								"tilesetUid": 116,
+								"w": 64,
+								"x": 128,
+								"y": 0
+							},
+							"defUid": 193,
+							"fieldInstances": [],
+							"height": 64,
+							"iid": "b1557a10-bde0-11f1-96fd-b53d3bea498a",
+							"px": [
+								64,
+								64
 							],
 							"width": 64
 						}
@@ -4812,7 +4921,7 @@
 		}
 	],
 	"minifyJson": false,
-	"nextUid": 193,
+	"nextUid": 194,
 	"pngFilePattern": null,
 	"simplifiedExport": false,
 	"toc": [],

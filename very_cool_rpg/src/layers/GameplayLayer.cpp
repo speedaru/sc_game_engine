@@ -104,13 +104,16 @@ namespace game {
 		int32_t levelUid = m_currentLevel->GetUid();
 
 		// handle player keybinds
-		systems::UpdatePlayerInput(m_registry, levelUid);
+		player_input::UpdatePlayerInput(m_registry, levelUid);
 
 		// calculate every entity movement
-		systems::UpdateCharacterMovement(m_registry, levelUid, timeStep);
+		character_movement::UpdateCharacterMovement(m_registry, levelUid, timeStep);
 
 		// move entities in engine
 		ecs::physics_system::UpdateKinematics(m_registry, *m_currentLevel, timeStep, m_physicsScratch);
+
+		// handle collisions and overlaps
+		collision_system::DispatchContacts(m_registry, m_physicsScratch.contacts, m_rateLimits, timeStep);
 
 		// flush destroyed entities
 		ecs::lifecycle_system::FlushDestroyed(m_registry, *m_world);

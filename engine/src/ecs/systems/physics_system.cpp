@@ -155,13 +155,14 @@ namespace {
 			}
 		}
 
-		// collect trigger contacts
+		// collect trigger contacts. only a solid box detects, and only someone else's trigger
 		for (const math::Hitbox& dynBox : col.hitboxes) {
+			if (dynBox.trigger) continue;
+
 			const sf::FloatRect rect{ trans.pos + dynBox.offset, dynBox.size };
 
 			for (const physics::ColliderRef& other : ctx.scratch.candidates) {
-				// trigger vs trigger is ignored
-				if (dynBox.trigger == other.trigger) continue;
+				if (!other.trigger) continue;
 
 				if (rect.findIntersection(other.box)) {
 					ctx.scratch.contacts.push_back(physics::Contact{ mover.self, other, {}, physics::ContactKind::Overlap });

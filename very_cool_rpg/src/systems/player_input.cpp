@@ -11,7 +11,7 @@
 namespace ecs = sc::ecs;
 namespace input = sc::input;
 
-namespace game::systems  {
+namespace game::player_input  {
 	void UpdatePlayerInput(sc::ecs::Registry& registry, int32_t levelUid) {
 		auto view = registry.ViewLevel<components::PlayerTag, components::CharacterController>(levelUid);
 

@@ -160,6 +160,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\blueprints\BlueprintRegistry.cpp" />
+    <ClCompile Include="src\blueprints\ChestBlueprint.cpp" />
     <ClCompile Include="src\blueprints\DragonBlueprint.cpp" />
     <ClCompile Include="src\blueprints\PlayerBlueprint.cpp" />
     <ClCompile Include="src\debug\ContactOverlay.cpp" />
@@ -183,10 +184,12 @@
     <ClCompile Include="src\layers\GameplayLayer.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\systems\character_movement.cpp" />
+    <ClCompile Include="src\systems\collision_system.cpp" />
     <ClCompile Include="src\systems\player_input.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\blueprints\BlueprintRegistry.h" />
+    <ClInclude Include="src\blueprints\ChestBlueprint.h" />
     <ClInclude Include="src\blueprints\DragonBlueprint.h" />
     <ClInclude Include="src\blueprints\IEntityBlueprint.h" />
     <ClInclude Include="src\blueprints\includes.h" />
@@ -216,6 +219,7 @@
     <ClInclude Include="src\constants.h" />
     <ClInclude Include="src\layers\GameplayLayer.h" />
     <ClInclude Include="src\systems\character_movement.h" />
+    <ClInclude Include="src\systems\collision_system.h" />
     <ClInclude Include="src\systems\player_input.h" />
     <ClInclude Include="src\enums\hash.hpp" />
   </ItemGroup>

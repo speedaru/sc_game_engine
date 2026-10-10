@@ -9,6 +9,7 @@
 
 #include <factories/EntityFactory.h>
 #include <loaders/world_loader.h>
+#include <systems/collision_system.h>
 #include <constants.h>
 
 namespace game {
@@ -33,6 +34,7 @@ namespace game {
 		sc::graphics::Camera2D m_camera{ NATIVE_WIDTH, NATIVE_HEIGHT };
 		sc::graphics::TileSetManager m_tileSetManager;
 		sc::physics::PhysicsScratch m_physicsScratch;
+		std::vector<game::collision_system::PairCooldown> m_rateLimits;
 
 		// entities
 		sc::ecs::Entity m_player;
