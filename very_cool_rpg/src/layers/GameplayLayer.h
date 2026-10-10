@@ -20,7 +20,7 @@ namespace game {
 		void OnUpdate(float deltaTime) override;
 		void OnRender(sf::RenderWindow& window, float alpha) override;
 
-		void SwitchLevel(int32_t levelUid);
+		void SwitchLevel(int32_t levelUid, sf::Vector2f spawnPos);
 
 	private:
 		void RegisterDebugModules();
@@ -34,7 +34,7 @@ namespace game {
 		sc::graphics::Camera2D m_camera{ NATIVE_WIDTH, NATIVE_HEIGHT };
 		sc::graphics::TileSetManager m_tileSetManager;
 		sc::physics::PhysicsScratch m_physicsScratch;
-		std::vector<game::collision_system::PairCooldown> m_rateLimits;
+		collision_system::ContactState m_contactState;
 
 		// entities
 		sc::ecs::Entity m_player;

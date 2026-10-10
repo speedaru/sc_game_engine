@@ -14,7 +14,7 @@ namespace game::collision_system {
 		struct HandlerContext {
 			ecs::Registry& registry;
 			const phys::Contact& contact;
-			std::vector<PairCooldown>& rateLimits;
+			ContactState& state;
 		};
 
 		bool PairEqualsContact(const PairCooldown& pair, const phys::Contact& contact) {
@@ -37,9 +37,17 @@ namespace game::collision_system {
 				ecs::EntityHandle self = ctx.contact.self;
 				ecs::EntityHandle other = ctx.contact.other.GetEntity();
 
+				// pickup component
 				if (reg.HasComponent<components::PlayerTag>(self) && reg.HasComponent<components::PickupTag>(other)) {
 					reg.QueueDestroy(other);
-					ctx.rateLimits.push_back(PairCooldown{ .self = self, .other = other, .timeLeft = 0.f }); // dedup multiple hitboxes
+					ctx.state.rateLimits.push_back(PairCooldown{ .self = self, .other = other, .timeLeft = 0.f }); // dedup multiple hitboxes
+				}
+
+				// teleport component. only the player, since applying it switches the viewed level
+				if (reg.HasComponent<components::PlayerTag>(self)) {
+					if (const auto* teleport = reg.TryGetComponent<components::TeleportComponent>(other)) {
+						ctx.state.teleport = TeleportRequest{ teleport->levelUid, teleport->pos };
+					}
 				}
 			}
 		}
@@ -48,9 +56,11 @@ namespace game::collision_system {
 	void DispatchContacts(
 		sc::ecs::Registry& registry,
 		const std::vector<sc::physics::Contact>& contacts,
-		std::vector<PairCooldown>& rateLimits,
+		ContactState& state,
 		float timeStep
 	) {
+		std::vector<PairCooldown>& rateLimits = state.rateLimits;
+
 		// decrease rateLimits by timeStep and remove finished limits
 		for (auto& pair : rateLimits) { pair.timeLeft -= timeStep; }
 		auto newEnd = std::remove_if(rateLimits.begin(), rateLimits.end(), [](auto& pair) { return pair.timeLeft <= 0.f; });
@@ -63,7 +73,7 @@ namespace game::collision_system {
 				continue;
 			}
 
-			HandlerContext ctx{ registry, contact, rateLimits };
+			HandlerContext ctx{ registry, contact, state };
 
 			switch (contact.kind) {
 				case phys::ContactKind::Block:

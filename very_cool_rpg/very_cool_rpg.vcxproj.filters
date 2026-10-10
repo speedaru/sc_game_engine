@@ -87,6 +87,9 @@
     <ClCompile Include="src\blueprints\ChestBlueprint.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\blueprints\WellBlueprint.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\layers\GameplayLayer.h">
@@ -189,6 +192,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\blueprints\ChestBlueprint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\blueprints\WellBlueprint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\EntityField.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

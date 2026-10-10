@@ -163,6 +163,7 @@
     <ClCompile Include="src\blueprints\ChestBlueprint.cpp" />
     <ClCompile Include="src\blueprints\DragonBlueprint.cpp" />
     <ClCompile Include="src\blueprints\PlayerBlueprint.cpp" />
+    <ClCompile Include="src\blueprints\WellBlueprint.cpp" />
     <ClCompile Include="src\debug\ContactOverlay.cpp" />
     <ClCompile Include="src\debug\FeatureTest.cpp" />
     <ClCompile Include="src\debug\PlayerMovement.cpp" />
@@ -194,10 +195,12 @@
     <ClInclude Include="src\blueprints\IEntityBlueprint.h" />
     <ClInclude Include="src\blueprints\includes.h" />
     <ClInclude Include="src\blueprints\PlayerBlueprint.h" />
+    <ClInclude Include="src\blueprints\WellBlueprint.h" />
     <ClInclude Include="src\debug\ContactOverlay.h" />
     <ClInclude Include="src\debug\FeatureTest.h" />
     <ClInclude Include="src\debug\PlayerMovement.h" />
     <ClInclude Include="src\entities\EntityDefinition.h" />
+    <ClInclude Include="src\entities\EntityField.h" />
     <ClInclude Include="src\entities\EntityType.h" />
     <ClInclude Include="src\entities\SpawnParams.h" />
     <ClInclude Include="src\loaders\world\collision_baker.h" />

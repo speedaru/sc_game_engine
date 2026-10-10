@@ -50,7 +50,7 @@ namespace game::world_loader {
 			};
 
 			if (!ldtkDef.tileset) {
-				LOG_W("entity definition '%s' has no tileset, so it gets no sprite or hitboxes", name.c_str());
+				LOG_D("entity definition '%s' has no tileset, so it gets no sprite or hitboxes", name.c_str());
 				continue;
 			}
 

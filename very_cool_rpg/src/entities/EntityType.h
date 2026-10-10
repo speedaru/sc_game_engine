@@ -7,6 +7,7 @@ namespace game::entities {
 		Player = enums::hash("Player"),
 		Dragon = enums::hash("Dragon"),
 		Chest = enums::hash("Chest"),
+		TeleportationWell = enums::hash("TeleportationWell"),
 	};
 
 	constexpr EntityType FromLdtkIdentifier(std::string_view identifier) {

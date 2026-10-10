@@ -1,7 +1,5 @@
 #pragma once
-#include <cstdint>
-
-#include <SFML/System/Vector2.hpp>
+#include <entities/EntityField.h>
 
 namespace game::entities {
 	// per entity instance spawn data
@@ -13,5 +11,6 @@ namespace game::entities {
 		int32_t layerUid = -1;
 
 		// TODO: per instance collider overrides std::optional<std::vector<sc::math::Hitbox>>
+		FieldBag fields;
 	};
 }

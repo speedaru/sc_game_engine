@@ -113,7 +113,14 @@ namespace game {
 		ecs::physics_system::UpdateKinematics(m_registry, *m_currentLevel, timeStep, m_physicsScratch);
 
 		// handle collisions and overlaps
-		collision_system::DispatchContacts(m_registry, m_physicsScratch.contacts, m_rateLimits, timeStep);
+		collision_system::DispatchContacts(m_registry, m_physicsScratch.contacts, m_contactState, timeStep);
+
+		// apply the teleport a handler asked for, now that the contacts are done with
+		if (m_contactState.teleport) {
+			const collision_system::TeleportRequest request = *m_contactState.teleport;
+			m_contactState.teleport.reset();
+			SwitchLevel(request.levelUid, request.pos);
+		}
 
 		// flush destroyed entities
 		ecs::lifecycle_system::FlushDestroyed(m_registry, *m_world);
@@ -167,7 +174,7 @@ namespace game {
 		ecs::render_system::RenderWorld(m_registry, *m_currentLevel, window, m_camera, alpha);
     }
 
-	void GameplayLayer::SwitchLevel(int32_t levelUid) {
+	void GameplayLayer::SwitchLevel(int32_t levelUid, sf::Vector2f spawnPos) {
 		sc::world::Level* targetLevel = m_world->GetLevel(levelUid).get();
 		if (!targetLevel || !m_player) {
 			if (!targetLevel) LOG_W("trying to switch to an unknown level: %d", levelUid);
@@ -179,11 +186,11 @@ namespace game {
 		m_entityLayerUid = FindEntityLayerUid(*m_currentLevel);
 		m_entityFactory.SetCurrentLevel(m_currentLevel);
 		UpdateCameraBounds();
-		ecs::lifecycle_system::MoveToLevel(m_registry, *m_world, m_player.GetHandle(), levelUid, { 0.f, 0.f });
+		ecs::lifecycle_system::MoveToLevel(m_registry, *m_world, m_player.GetHandle(), levelUid, spawnPos);
 	}
 
 	void GameplayLayer::RegisterDebugModules() {
-		SC_DEBUG_ONLY(dbg::RegisterModule(std::make_unique<game::debug::FeatureTest>(*m_world, [this](int32_t uid) { SwitchLevel(uid); })));
+		SC_DEBUG_ONLY(dbg::RegisterModule(std::make_unique<game::debug::FeatureTest>(*m_world, [this](int32_t uid) { SwitchLevel(uid, { 0.f, 0.f }); })));
 		SC_DEBUG_ONLY(dbg::RegisterModule(std::make_unique<game::debug::ContactOverlay>(m_physicsScratch)));
 	}
 

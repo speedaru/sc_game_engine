@@ -7,6 +7,12 @@ namespace game::components {
 	struct PlayerTag {};
 	struct PickupTag {};
 
+	struct TeleportComponent {
+		// target level and position
+		int32_t levelUid;
+		sf::Vector2f pos;
+	};
+
 	struct CharacterController {
 		float maxSpeed = 200.f;
 		float acceleration = 2000.f;
