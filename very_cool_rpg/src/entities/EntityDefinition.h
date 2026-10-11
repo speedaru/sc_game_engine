@@ -6,8 +6,8 @@
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/System/Vector2.hpp>
 
-#include <engine/ecs/Components.h>
 #include <engine/graphics/Texture2D.h>
+#include <engine/math/Hitbox.h>
 
 #include <entities/EntityType.h>
 

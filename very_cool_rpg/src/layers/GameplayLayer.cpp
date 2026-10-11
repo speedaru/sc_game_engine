@@ -15,6 +15,7 @@
 #include <components/GameComponents.h>
 #include <enums/InputActions.h>
 #include <blueprints/BlueprintRegistry.h>
+#include <loaders/world_loader.h>
 #include <systems/player_input.h>
 #include <systems/character_movement.h>
 

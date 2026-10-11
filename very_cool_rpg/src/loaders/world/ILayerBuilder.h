@@ -3,13 +3,13 @@
 #include <string>
 #include <unordered_set>
 
-#include <LDtkLoader/Layer.hpp>
-
 #include <engine/world/ILevelLayer.h>
 
-#include <loaders/world/LoadContext.h>
+namespace ldtk { class Layer; }
 
 namespace game::world_loader {
+	struct LoadContext;
+
 	// a strategy for turning one LDtk layer into one engine ILevelLayer.
 	// register new layer kinds (new tags, new layer behaviors) by adding a new
 	// implementation and registering it - LevelLoader never needs to change.

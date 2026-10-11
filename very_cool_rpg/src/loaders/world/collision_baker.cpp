@@ -1,7 +1,11 @@
 #include <pch.h>
 #include <loaders/world/collision_baker.h>
 
+#include <LDtkLoader/Layer.hpp>
+#include <LDtkLoader/Level.hpp>
+
 #include <engine/utils/logging.h>
+#include <engine/world/CollisionLayerBuilder.h>
 
 #include <loaders/world/TileColliderCache.h>
 
@@ -34,43 +38,43 @@ namespace game::world_loader {
 
 			return cellSize;
 		}
-	}
 
-	void BakeTileLayer(const ldtk::Layer& ldtkLayer, TileColliderCache& tileColliders, world::CollisionLayerBuilder& out) {
-		const ldtk::Tileset& tileset = ldtkLayer.getTileset();
-		size_t skippedTriggers = 0;
+		void BakeTileLayer(const ldtk::Layer& ldtkLayer, TileColliderCache& tileColliders, world::CollisionLayerBuilder& out) {
+			const ldtk::Tileset& tileset = ldtkLayer.getTileset();
+			size_t skippedTriggers = 0;
 
-		for (const auto& tile : ldtkLayer.allTiles()) {
-			const std::vector<math::Hitbox>& hitboxes = tileColliders.Get(tileset, tile.tileId);
-			if (hitboxes.empty()) continue;
+			for (const auto& tile : ldtkLayer.allTiles()) {
+				const std::vector<math::Hitbox>& hitboxes = tileColliders.Get(tileset, tile.tileId);
+				if (hitboxes.empty()) continue;
 
-			const ldtk::IntPoint pos = tile.getPosition();
-			const sf::Vector2f tileOrigin{ static_cast<float>(pos.x), static_cast<float>(pos.y) };
+				const ldtk::IntPoint pos = tile.getPosition();
+				const sf::Vector2f tileOrigin{ static_cast<float>(pos.x), static_cast<float>(pos.y) };
 
-			for (const math::Hitbox& hitbox : hitboxes) {
-				// the collision layer only stores solid boxes, so a trigger would be baked as a wall
-				if (hitbox.trigger) {
-					skippedTriggers++;
-					continue;
+				for (const math::Hitbox& hitbox : hitboxes) {
+					// the collision layer only stores solid boxes, so a trigger would be baked as a wall
+					if (hitbox.trigger) {
+						skippedTriggers++;
+						continue;
+					}
+
+					out.AddBox(sf::FloatRect{ tileOrigin + hitbox.offset, hitbox.size });
 				}
+			}
 
-				out.AddBox(sf::FloatRect{ tileOrigin + hitbox.offset, hitbox.size });
+			if (skippedTriggers > 0) {
+				LOG_W("layer '%s' has %zu trigger hitboxes on tiles, ignored because tiles can only be solid", ldtkLayer.getName().c_str(), skippedTriggers);
 			}
 		}
 
-		if (skippedTriggers > 0) {
-			LOG_W("layer '%s' has %zu trigger hitboxes on tiles, ignored because tiles can only be solid", ldtkLayer.getName().c_str(), skippedTriggers);
-		}
-	}
+		void BakeIntGridLayer(const ldtk::Layer& ldtkLayer, TileColliderCache& tileColliders, world::CollisionLayerBuilder& out) {
+			if (!ldtkLayer.hasTileset()) {
+				LOG_W("skipping collision baking in intgrid layer %u bcs no tileset", ldtkLayer.getDefUid());
+				return;
+			}
 
-	void BakeIntGridLayer(const ldtk::Layer& ldtkLayer, TileColliderCache& tileColliders, world::CollisionLayerBuilder& out) {
-		if (!ldtkLayer.hasTileset()) {
-			LOG_W("skipping collision baking in intgrid layer %u bcs no tileset", ldtkLayer.getDefUid());
-			return;
+			// use the collisions of each painted tile object
+			BakeTileLayer(ldtkLayer, tileColliders, out);
 		}
-
-		// use the collisions of each painted tile object
-		BakeTileLayer(ldtkLayer, tileColliders, out);
 	}
 
 	world::CollisionLayer BakeLevelCollision(const ldtk::Level& ldtkLevel, TileColliderCache& tileColliders) {

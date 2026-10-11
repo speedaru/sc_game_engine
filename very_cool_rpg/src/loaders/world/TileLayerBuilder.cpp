@@ -1,11 +1,15 @@
 #include <pch.h>
 #include <loaders/world/TileLayerBuilder.h>
 
+#include <LDtkLoader/Layer.hpp>
+
+#include <engine/graphics/TileSetManager.h>
 #include <engine/world/TileLayer.h>
 #include <engine/world/YSortedTileLayer.h>
 #include <engine/utils/logging.h>
 
 #include <loaders/world/LayerTags.h>
+#include <loaders/world/LoadContext.h>
 
 namespace world = sc::world;
 namespace gfx = sc::graphics;

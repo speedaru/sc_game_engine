@@ -1,5 +1,5 @@
 #pragma once
-#include <factories/EntityFactory.h>
+namespace game::factories { class EntityFactory; }
 
 namespace game::blueprints {
 	// the single place every entity type is declared. explicit rather than self

@@ -1,5 +1,8 @@
 #include <pch.h>
 #include <engine/core/Application.h>
+
+#include <SFML/Window/Event.hpp>
+
 #include <engine/renderer/render2d.h>
 #include <engine/constants.h>
 #include <engine/input/InputState.h>

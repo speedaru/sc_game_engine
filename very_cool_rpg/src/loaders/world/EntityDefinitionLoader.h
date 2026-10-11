@@ -1,8 +1,7 @@
 #pragma once
 #include <filesystem>
 
-#include <LDtkLoader/Project.hpp>
-
+namespace ldtk { class Project; }
 namespace game::factories { class EntityFactory; }
 
 namespace game::world_loader {

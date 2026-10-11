@@ -1,9 +1,20 @@
 #pragma once
-#include <SFML/Graphics/RenderWindow.hpp>
 
-#include <engine/ecs/Registry.h>
-#include <engine/world/Level.h>
-#include <engine/graphics/Camera2D.h>
+namespace sf {
+	class RenderWindow;
+}
+
+namespace sc::ecs {
+	class Registry;
+}
+
+namespace sc::graphics {
+	class Camera2D;
+}
+
+namespace sc::world {
+	class Level;
+}
 
 namespace sc::ecs::render_system  {
     // handles entire rendering pipeline

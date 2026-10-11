@@ -1,6 +1,8 @@
 #include <pch.h>
 #include <loaders/world/LayerBuilderRegistry.h>
 
+#include <LDtkLoader/Layer.hpp>
+
 #include <engine/utils/logging.h>
 
 #include <loaders/world/LayerTags.h>

@@ -8,8 +8,11 @@
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/Graphics/VertexArray.hpp>
 
-#include <engine/graphics/TileSet.h>
 #include <engine/world/ILevelLayer.h>
+
+namespace sc::graphics {
+	class TileSet;
+}
 
 namespace sc::world {
 	struct TileInstance {

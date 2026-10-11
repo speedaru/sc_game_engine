@@ -1,6 +1,8 @@
 #include <pch.h>
 #include <loaders/world/EntityDefinitionLoader.h>
 
+#include <LDtkLoader/Project.hpp>
+
 #include <engine/graphics/Texture2D.h>
 #include <engine/utils/logging.h>
 

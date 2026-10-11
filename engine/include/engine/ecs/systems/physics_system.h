@@ -1,13 +1,24 @@
 #pragma once
-#include <engine/ecs/Registry.h>
-#include <engine/math/SpatialGrid.h>
-#include <engine/physics/Collisions.h>
-#include <engine/world/Level.h>
-#include <engine/math/physics.h>
+#include <SFML/Graphics/Rect.hpp>
+
+#include <engine/ecs/EntityHandle.h>
+
+namespace sc::math {
+	class SpatialGrid;
+}
+
+namespace sc::physics {
+	struct PhysicsScratch;
+}
+
+namespace sc::world {
+	class Level;
+}
 
 namespace sc::ecs {
 	struct TransformComponent;
 	struct BoxColliderComponent;
+	class Entity;
 	class Registry;
 }
 

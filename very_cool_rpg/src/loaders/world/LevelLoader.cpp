@@ -1,6 +1,12 @@
 #include <pch.h>
 #include <loaders/world/LevelLoader.h>
 
+#include <LDtkLoader/Level.hpp>
+
+#include <engine/world/Level.h>
+
+#include <factories/EntityFactory.h>
+#include <loaders/world/LoadContext.h>
 #include <loaders/world/collision_baker.h>
 
 namespace world = sc::world;

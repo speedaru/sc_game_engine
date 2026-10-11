@@ -87,7 +87,7 @@ Decisions this list assumes:
   About twenty headers use `std::` names or fixed-width integers they don't include. The engine ones
   matter most: they are compiled with the game's PCH, not the engine's.
 
-- [ ] **Forward declarations instead of includes.** (9.4)
+- [x] **Forward declarations instead of includes.** (9.4)
   Tables for both projects in the report. Do it after `EntityHandle.h`.
 
 - [x] **Remove unused includes.** (9.6)

@@ -1,10 +1,6 @@
 #pragma once
 #include <memory>
-#include <string>
-#include <string_view>
 #include <unordered_map>
-
-#include <engine/world/Level.h>
 
 #include <blueprints/IEntityBlueprint.h>
 #include <entities/EntityDefinition.h>
@@ -14,6 +10,10 @@
 namespace sc::ecs {
 	class Entity;
 	class Registry;
+}
+
+namespace sc::world {
+	class Level;
 }
 
 namespace game::factories {

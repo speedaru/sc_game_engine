@@ -1,13 +1,12 @@
 #pragma once
 #include <filesystem>
 
-#include <engine/graphics/TileSetManager.h>
-#include <engine/world/Level.h>
-
-#include <factories/EntityFactory.h>
-#include <loaders/world/TileColliderCache.h>
+namespace sc::graphics { class TileSetManager; }
+namespace game::factories { class EntityFactory; }
 
 namespace game::world_loader {
+	class TileColliderCache;
+
 	// bundles everything a layer builder needs to turn LDtk data into engine/ECS objects
 	struct LoadContext {
 		factories::EntityFactory& entityFactory;

@@ -4,6 +4,9 @@
 #if SC_ENABLE_DEBUG_TOOLS
 #include <imgui.h>
 
+#include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Window/Event.hpp>
+
 #include <engine/debug/debug_system.h>
 
 namespace sc::debug {

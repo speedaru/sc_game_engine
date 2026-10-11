@@ -2,6 +2,10 @@
 #include <engine/ecs/systems/physics_system.h>
 #include <engine/ecs/Components.h>
 #include <engine/ecs/Entity.h>
+#include <engine/math/SpatialGrid.h>
+#include <engine/math/physics.h>
+#include <engine/physics/Collisions.h>
+#include <engine/world/Level.h>
 
 using namespace sc::ecs;
 using namespace sc::ecs::physics_system;

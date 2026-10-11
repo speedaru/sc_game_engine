@@ -1,12 +1,17 @@
 #pragma once
 #include <memory>
 
+#include <SFML/Graphics/Rect.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
+#include <SFML/System/Vector2.hpp>
 
 #include <engine/graphics/Texture2D.h>
 #include <engine/graphics/Camera2D.h>
-#include <engine/world/TileLayer.h>
-#include <engine/world/YSortedTileLayer.h>
+
+namespace sc::world {
+	class TileLayer;
+	class YSortedTileLayer;
+}
 
 // render subsytem
 namespace sc::renderer {

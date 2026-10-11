@@ -6,6 +6,7 @@
 #include <engine/ecs/Registry.h>
 #include <engine/ecs/systems/physics_system.h>
 #include <engine/utils/logging.h>
+#include <engine/world/Level.h>
 
 namespace ecs = sc::ecs;
 

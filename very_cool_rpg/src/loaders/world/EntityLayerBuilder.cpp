@@ -1,6 +1,7 @@
 #include <pch.h>
 #include <loaders/world/EntityLayerBuilder.h>
 
+#include <LDtkLoader/Layer.hpp>
 #include <LDtkLoader/Level.hpp>
 
 #include <engine/ecs/Entity.h>
@@ -9,6 +10,8 @@
 
 #include <entities/EntityType.h>
 #include <entities/SpawnParams.h>
+#include <factories/EntityFactory.h>
+#include <loaders/world/LoadContext.h>
 
 namespace ecs = sc::ecs;
 namespace world = sc::world;

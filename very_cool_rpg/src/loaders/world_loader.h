@@ -2,11 +2,10 @@
 #include <memory>
 #include <filesystem>
 
-#include <engine/world/World.h>
-#include <engine/ecs/Registry.h>
-#include <engine/graphics/TileSetManager.h>
-
-#include <factories/EntityFactory.h>
+namespace sc::ecs { class Registry; }
+namespace sc::graphics { class TileSetManager; }
+namespace sc::world { class World; }
+namespace game::factories { class EntityFactory; }
 
 namespace game::world_loader {
 	// Parses the LDtk file and returns a fully constructed Engine World.

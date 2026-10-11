@@ -1,8 +1,16 @@
 #include <pch.h>
 #include <engine/ecs/systems/render_system.h>
+
+#include <SFML/Graphics/RenderWindow.hpp>
+
 #include <engine/ecs/Components.h>
+#include <engine/ecs/Registry.h>
+#include <engine/graphics/Camera2D.h>
 #include <engine/renderer/render2d.h>
 #include <engine/math/math.h>
+#include <engine/world/Level.h>
+#include <engine/world/TileLayer.h>
+#include <engine/world/YSortedTileLayer.h>
 
 using namespace sc::graphics;
 using namespace sc::renderer;

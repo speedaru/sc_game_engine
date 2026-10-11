@@ -5,7 +5,7 @@
 
 #include <LDtkLoader/Tileset.hpp>
 
-#include <engine/ecs/Components.h>
+#include <engine/math/Hitbox.h>
 
 namespace game::world_loader {
 	// hitboxes per tile, parsed once.

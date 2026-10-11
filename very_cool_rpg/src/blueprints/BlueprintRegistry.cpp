@@ -5,6 +5,7 @@
 #include <blueprints/DragonBlueprint.h>
 #include <blueprints/ChestBlueprint.h>
 #include <blueprints/WellBlueprint.h>
+#include <factories/EntityFactory.h>
 
 namespace game::blueprints {
 	using entities::EntityType;

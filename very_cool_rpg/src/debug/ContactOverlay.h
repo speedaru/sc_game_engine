@@ -7,7 +7,10 @@ namespace game::debug {}
 #include <SFML/Graphics/Color.hpp>
 
 #include <engine/debug/IDebugModule.h>
-#include <engine/physics/Collisions.h>
+
+namespace sc::physics {
+	struct PhysicsScratch;
+}
 
 namespace game::debug {
 	using namespace sc::debug;

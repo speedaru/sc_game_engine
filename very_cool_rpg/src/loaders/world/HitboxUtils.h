@@ -5,7 +5,7 @@
 #include <SFML/System/Vector2.hpp>
 #include <LDtkLoader/Tileset.hpp>
 
-#include <engine/ecs/Components.h>
+#include <engine/math/Hitbox.h>
 
 namespace game::world_loader {
 	// extract hitboxes from root JSON custom data

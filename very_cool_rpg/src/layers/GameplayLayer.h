@@ -8,7 +8,6 @@
 #include <engine/world/World.h>
 
 #include <factories/EntityFactory.h>
-#include <loaders/world_loader.h>
 #include <systems/collision_system.h>
 #include <layers/LayerRequest.h>
 #include <constants.h>

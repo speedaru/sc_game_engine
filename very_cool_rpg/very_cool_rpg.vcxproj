@@ -193,7 +193,6 @@
     <ClInclude Include="src\blueprints\ChestBlueprint.h" />
     <ClInclude Include="src\blueprints\DragonBlueprint.h" />
     <ClInclude Include="src\blueprints\IEntityBlueprint.h" />
-    <ClInclude Include="src\blueprints\includes.h" />
     <ClInclude Include="src\blueprints\PlayerBlueprint.h" />
     <ClInclude Include="src\blueprints\WellBlueprint.h" />
     <ClInclude Include="src\debug\ContactOverlay.h" />

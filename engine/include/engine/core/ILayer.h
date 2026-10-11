@@ -1,6 +1,9 @@
 #pragma once
-#include <SFML/Graphics/RenderWindow.hpp>
-#include <SFML/Window/Event.hpp>
+
+namespace sf {
+	class Event;
+	class RenderWindow;
+}
 
 namespace sc::core {
 	class ILayer {

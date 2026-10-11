@@ -1,7 +1,14 @@
 #include <pch.h>
 #include <loaders/world_loader.h>
 
+#include <LDtkLoader/Project.hpp>
+
+#include <engine/ecs/Registry.h>
+#include <engine/graphics/TileSetManager.h>
 #include <engine/utils/logging.h>
+#include <engine/world/World.h>
+
+#include <factories/EntityFactory.h>
 
 #include <loaders/world/LoadContext.h>
 #include <loaders/world/EntityDefinitionLoader.h>

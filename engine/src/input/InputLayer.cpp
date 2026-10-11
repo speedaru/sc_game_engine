@@ -1,6 +1,8 @@
 #include <pch.h>
 #include <engine/input/InputLayer.h>
 
+#include <SFML/Window/Event.hpp>
+
 #include <engine/input/InputState.h>
 
 namespace sc::input {

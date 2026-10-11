@@ -1,6 +1,11 @@
 #include <pch.h>
 #include <blueprints/PlayerBlueprint.h>
 
+#include <engine/ecs/Components.h>
+#include <engine/ecs/Entity.h>
+
+#include <components/GameComponents.h>
+
 namespace ecs = sc::ecs;
 
 namespace game::blueprints {

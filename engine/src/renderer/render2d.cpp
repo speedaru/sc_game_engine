@@ -4,6 +4,9 @@
 #include <SFML/Graphics/Sprite.hpp>
 
 #include <engine/graphics/SFMLTexture2D.h>
+#include <engine/graphics/TileSet.h>
+#include <engine/world/TileLayer.h>
+#include <engine/world/YSortedTileLayer.h>
 #include <engine/utils/logging.h>
 #include <engine/constants.h>
 

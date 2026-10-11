@@ -1,5 +1,5 @@
 #pragma once
-#include "includes.h"
+#include <blueprints/IEntityBlueprint.h>
 
 namespace game::blueprints {
 	class ChestBlueprint : public IEntityBlueprint {
