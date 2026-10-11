@@ -2,8 +2,8 @@
 #include <engine/graphics/TileSetManager.h>
 
 namespace sc::graphics {
-	std::shared_ptr<TileSet> TileSetManager::GetOrLoad(const fs::path& file, uint32_t tileSize) {
-		const std::string key = fs::weakly_canonical(file).string();
+	std::shared_ptr<TileSet> TileSetManager::GetOrLoad(const std::filesystem::path& file, uint32_t tileSize) {
+		const std::string key = std::filesystem::weakly_canonical(file).string();
 
 		auto it = m_cache.find(key);
 		if (it != m_cache.end()) {

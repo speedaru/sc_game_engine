@@ -1,6 +1,5 @@
 #include <pch.h>
 #include <engine/world/TileLayer.h>
-#include <engine/utils/logging.h>
 
 namespace sc::world {
 	void TileLayer::LoadTiles(const std::vector<TileInstance>& tiles) {

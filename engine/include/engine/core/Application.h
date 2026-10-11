@@ -6,7 +6,6 @@
 #include <engine/core/ILayer.h>
 #include <engine/debug/debug_config.h>
 #include <engine/utils/logging.h>
-using logging::LogLevel;
 
 namespace sc::core {
 	class Application {

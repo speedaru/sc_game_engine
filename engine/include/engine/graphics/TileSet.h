@@ -1,4 +1,5 @@
 #pragma once
+#include <cstdint>
 #include <vector>
 #include <memory>
 #include <filesystem>
@@ -6,12 +7,11 @@
 #include <SFML/Graphics/Rect.hpp>
 
 #include <engine/graphics/Texture2D.h>
-namespace fs = std::filesystem;
 
 namespace sc::graphics {
 	class TileSet {
 	public:
-		TileSet(const fs::path& file, uint32_t tileSize);
+		TileSet(const std::filesystem::path& file, uint32_t tileSize);
 		TileSet(const std::vector<uint8_t>& data, uint32_t tileSize);
 
 		sf::IntRect GetTileRect(uint32_t row, uint32_t col) const;

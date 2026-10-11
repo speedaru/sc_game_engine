@@ -1,5 +1,8 @@
 #pragma once
+#include <cstddef>
 #include <memory>
+#include <utility>
+#include <vector>
 
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Graphics/Rect.hpp>

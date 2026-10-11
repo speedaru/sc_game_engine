@@ -4,17 +4,7 @@
 #if SC_ENABLE_DEBUG_TOOLS
 #include <imgui.h>
 
-#include <engine/debug/DebugDraw.h>
 #include <engine/world/World.h>
-#include <engine/ecs/Registry.h>
-#include <engine/ecs/Entity.h>
-//#include <engine/ecs/systems/physics_system.h>
-#include <engine/ecs/systems/lifecycle_system.h>
-#include <engine/graphics/Camera2D.h>
-
-#include <components/GameComponents.h>
-
-namespace ecs = sc::ecs;
 
 namespace game::debug {
 	FeatureTest::FeatureTest(const sc::world::World& world, std::function<void(int32_t)> onTeleport)

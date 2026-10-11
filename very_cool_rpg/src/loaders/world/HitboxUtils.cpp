@@ -1,4 +1,8 @@
 #include <pch.h>
+
+// before any ldtk header: ldtk ships an older json_fwd.hpp, and json.hpp refuses to follow it
+#include <nlohmann/json.hpp>
+
 #include <loaders/world/HitboxUtils.h>
 
 #include <engine/utils/logging.h>
@@ -6,27 +10,30 @@
 namespace math = sc::math;
 
 namespace game::world_loader {
-	std::vector<math::Hitbox> ParseHitboxes(const nlohmann::json& hitboxArray, sf::Vector2f origin) {
-		std::vector<math::Hitbox> hitboxes;
+	namespace {
+		// parses a JSON array of {x, y, w, h} rects into hitboxes
+		std::vector<math::Hitbox> ParseHitboxes(const nlohmann::json& hitboxArray, sf::Vector2f origin) {
+			std::vector<math::Hitbox> hitboxes;
 
-		if (!hitboxArray.is_array()) {
-			LOG_W("hitbox custom data was not a json array, ignoring it");
+			if (!hitboxArray.is_array()) {
+				LOG_W("hitbox custom data was not a json array, ignoring it");
+				return hitboxes;
+			}
+
+			hitboxes.reserve(hitboxArray.size());
+
+			for (const auto& box : hitboxArray) {
+				hitboxes.emplace_back(
+					box.value("x", 0.f) - origin.x,
+					box.value("y", 0.f) - origin.y,
+					box.value("w", 16.f),
+					box.value("h", 16.f),
+					box.value("trigger", false)
+				);
+			}
+
 			return hitboxes;
 		}
-
-		hitboxes.reserve(hitboxArray.size());
-
-		for (const auto& box : hitboxArray) {
-			hitboxes.emplace_back(
-				box.value("x", 0.f) - origin.x,
-				box.value("y", 0.f) - origin.y,
-				box.value("w", 16.f),
-				box.value("h", 16.f),
-				box.value("trigger", false)
-			);
-		}
-
-		return hitboxes;
 	}
 
 	std::vector<math::Hitbox> ParseHitboxesFromCustomData(const std::string& jsonStr, sf::Vector2f origin) {

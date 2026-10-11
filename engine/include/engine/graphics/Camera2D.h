@@ -1,4 +1,6 @@
 #pragma once
+#include <optional>
+
 #include <SFML/Graphics/View.hpp>
 
 namespace sc::graphics {

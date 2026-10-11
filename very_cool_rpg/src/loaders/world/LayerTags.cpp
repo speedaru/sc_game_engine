@@ -1,8 +1,6 @@
 #include <pch.h>
 #include <loaders/world/LayerTags.h>
 
-#include <engine/utils/logging.h>
-
 namespace game::world_loader {
 	std::unordered_set<std::string> ExtractLayerTags(const std::string& layerName) {
 		std::unordered_set<std::string> tags;

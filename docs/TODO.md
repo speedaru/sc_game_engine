@@ -65,34 +65,34 @@ Decisions this list assumes:
 
 ## 2. Header hygiene
 
-- [ ] **`EntityHandle.h`.** New file `engine/include/engine/ecs/EntityHandle.h` (9.1 A)
+- [x] **`EntityHandle.h`.** New file `engine/include/engine/ecs/EntityHandle.h` (9.1 A)
   `Level.h` reaches all of entt and all of SFML Graphics through `Collisions.h` including
   `Registry.h` for one alias. `Collisions.h`, `SpatialGrid.h`, `lifecycle_system.h` and the game's
   `collision_system.h` include the new header instead.
 
-- [ ] **Make `Components.h` light.** `engine/include/engine/ecs/Components.h:6,39-40` (9.1 B)
+- [x] **Make `Components.h` light.** `engine/include/engine/ecs/Components.h:6,39-40` (9.1 B)
   Delete the unused second `SpriteComponent` constructor, forward-declare `Texture2D`, include
   `<SFML/Graphics/Rect.hpp>` only.
 
-- [ ] **Narrow the entt and SFML includes.** (9.1 C, 9.2)
+- [x] **Narrow the entt and SFML includes.** (9.1 C, 9.2)
   `Registry.h:9` needs `<entt/entity/registry.hpp>`. `Window.h`, `SFMLTexture2D.h` and `TileLayer.h`
   include the SFML umbrella header.
 
-- [ ] **No global names from public headers.** (9.3)
+- [x] **No global names from public headers.** (9.3)
   `namespace fs = std::filesystem;` in four engine headers and four game headers, and
   `using logging::LogLevel;` in `Application.h:9`. `ASSETS_DIR` in the game's `constants.h:18`
   should be `inline const`.
 
-- [ ] **Headers must compile on their own.** (9.5)
+- [x] **Headers must compile on their own.** (9.5)
   About twenty headers use `std::` names or fixed-width integers they don't include. The engine ones
   matter most: they are compiled with the game's PCH, not the engine's.
 
 - [ ] **Forward declarations instead of includes.** (9.4)
   Tables for both projects in the report. Do it after `EntityHandle.h`.
 
-- [ ] **Remove unused includes.** (9.6)
+- [x] **Remove unused includes.** (9.6)
 
-- [ ] **Precompiled headers.** `engine/src/pch.h:27`, `very_cool_rpg/src/pch.h:26` (4.9, 9.7)
+- [x] **Precompiled headers.** `engine/src/pch.h:27`, `very_cool_rpg/src/pch.h:26` (4.9, 9.7)
   The engine PCH includes nlohmann json and never uses it. The game PCH includes LDtk, so every
   game file can see LDtk types. The game PCH lacks `<algorithm>` and `<cmath>`.
 

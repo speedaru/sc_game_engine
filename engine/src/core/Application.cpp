@@ -2,7 +2,6 @@
 #include <engine/core/Application.h>
 #include <engine/renderer/render2d.h>
 #include <engine/constants.h>
-#include <engine/input/Input.h>
 #include <engine/input/InputState.h>
 #include <engine/input/InputLayer.h>
 
@@ -14,6 +13,7 @@
 #endif
 
 using namespace sc::renderer;
+using logging::LogLevel;
 
 namespace sc::core {
 	Application::Application(WindowData&& windowData) {

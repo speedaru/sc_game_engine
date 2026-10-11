@@ -1,7 +1,9 @@
 #pragma once
+#include <cstdint>
 #include <string>
 #include <vector>
 #include <memory>
+#include <utility>
 
 #include <SFML/System/Vector2.hpp>
 

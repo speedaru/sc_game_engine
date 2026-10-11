@@ -3,7 +3,6 @@
 #include <iostream>
 #include <fstream>
 #include <filesystem>
-namespace fs = std::filesystem;
 
 // utils
 #include <format>
@@ -13,7 +12,8 @@ namespace fs = std::filesystem;
 #include <cassert>
 #include <memory>
 #include <functional>
-namespace chrono = std::chrono;
+#include <algorithm>
+#include <cmath>
 
 // containers
 #include <vector>
@@ -22,5 +22,3 @@ namespace chrono = std::chrono;
 
 // thirdpart libraries
 #include <entt/entt.hpp>
-#include <nlohmann/json.hpp>
-#include <LDtkLoader/Project.hpp>

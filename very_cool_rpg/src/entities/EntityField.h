@@ -6,8 +6,6 @@
 
 #include <SFML/System/Vector2.hpp>
 
-#include <entities/EntityType.h>
-
 namespace game::entities {
     struct EntityRefValue {
         int32_t levelUid;

@@ -4,7 +4,10 @@
 namespace game::debug {}
 
 #if SC_ENABLE_DEBUG_TOOLS
-#include <SFML/Graphics/Color.hpp>
+#include <cstdint>
+#include <functional>
+#include <string_view>
+#include <vector>
 
 #include <engine/debug/IDebugModule.h>
 

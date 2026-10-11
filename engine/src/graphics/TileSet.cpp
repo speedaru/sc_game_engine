@@ -3,7 +3,7 @@
 #include <engine/utils/logging.h>
 
 namespace sc::graphics {
-	TileSet::TileSet(const fs::path& file, uint32_t tileSize)
+	TileSet::TileSet(const std::filesystem::path& file, uint32_t tileSize)
 		: m_tileSize(tileSize)
 	{
 		m_texture = CreateTexture2D(file);

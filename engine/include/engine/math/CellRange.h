@@ -1,6 +1,5 @@
 #pragma once
 #include <cstdint>
-#include <vector>
 #include <functional>
 
 #include <SFML/Graphics/Rect.hpp>

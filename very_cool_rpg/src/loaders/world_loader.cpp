@@ -12,6 +12,7 @@
 namespace ecs = sc::ecs;
 namespace world = sc::world;
 namespace gfx = sc::graphics;
+namespace fs = std::filesystem;
 
 namespace game::world_loader {
 	std::shared_ptr<world::World> Load(

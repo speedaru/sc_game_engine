@@ -5,7 +5,6 @@
 #include <imgui.h>
 
 #include <engine/debug/debug_system.h>
-#include <engine/graphics/Camera2D.h>
 
 namespace sc::debug {
 	void DebugLayer::OnDetach() {

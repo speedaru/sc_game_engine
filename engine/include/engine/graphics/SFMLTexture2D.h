@@ -1,11 +1,13 @@
 #pragma once
+#include <cstdint>
+#include <exception>
 #include <filesystem>
-namespace fs = std::filesystem;
+#include <vector>
+
+#include <SFML/Graphics/Texture.hpp>
 
 #include <engine/graphics/Texture2D.h>
 #include <engine/utils/logging.h>
-
-#include <SFML/Graphics/Texture.hpp>
 
 namespace sc::graphics {
 	class SFMLTexture2D : public Texture2D {
@@ -19,8 +21,8 @@ namespace sc::graphics {
 			}
 		}
 
-		SFMLTexture2D(const fs::path& file) {
-			if (!fs::exists(file)) {
+		SFMLTexture2D(const std::filesystem::path& file) {
+			if (!std::filesystem::exists(file)) {
 				LOG_E("2d texture file doesn't exist: %s", file.string().c_str());
 				return;
 			}

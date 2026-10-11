@@ -1,5 +1,5 @@
 #pragma once
-#include <memory> // for va_list
+#include <cstdarg> // for va_list
 
 #define __RELATIVE_FILE__ (__FILE__ + sizeof(PROJECT_DIR "src\\") - 1)
 

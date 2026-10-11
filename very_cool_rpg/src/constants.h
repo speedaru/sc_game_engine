@@ -1,10 +1,6 @@
 #pragma once
+#include <cstdint>
 #include <filesystem>
-
-#include <SFML/System/Vector2.hpp>
-
-namespace fs = std::filesystem;
-
 
 namespace game {
 	// window and display
@@ -15,5 +11,5 @@ namespace game {
 	constexpr uint32_t WINDOW_HEIGHT = static_cast<uint32_t>(NATIVE_HEIGHT * RENDER_SCALE);
 
 	// paths
-	const fs::path ASSETS_DIR = fs::path("..") / ".." / "assets";
+	inline const std::filesystem::path ASSETS_DIR = std::filesystem::path("..") / ".." / "assets";
 }

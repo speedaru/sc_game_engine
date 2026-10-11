@@ -1,8 +1,8 @@
 #pragma once
 #include <cassert>
+#include <utility>
 
 #include <engine/ecs/Registry.h>
-#include <engine/utils/logging.h>
 
 namespace sc::ecs {
 	class Entity {

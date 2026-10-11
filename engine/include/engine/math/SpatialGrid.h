@@ -1,6 +1,6 @@
 #pragma once
 #include <cstdint>
-#include <functional>
+#include <optional>
 #include <vector>
 #include <unordered_map>
 

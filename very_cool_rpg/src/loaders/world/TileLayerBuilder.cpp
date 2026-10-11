@@ -9,6 +9,7 @@
 
 namespace world = sc::world;
 namespace gfx = sc::graphics;
+namespace fs = std::filesystem;
 
 namespace game::world_loader {
 	namespace {

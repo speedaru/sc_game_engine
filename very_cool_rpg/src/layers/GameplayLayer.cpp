@@ -1,15 +1,11 @@
 #include <pch.h>
 #include <layers/GameplayLayer.h>
 
-#include <LDtkLoader/Project.hpp>
-
 #include <engine/input/Input.h>
 #include <engine/ecs/Components.h>
 #include <engine/ecs/systems/physics_system.h>
 #include <engine/ecs/systems/render_system.h>
 #include <engine/ecs/systems/lifecycle_system.h>
-#include <engine/graphics/Texture2D.h>
-#include <engine/renderer/render2d.h>
 #include <engine/math/math.h>
 #include <engine/debug/debug_system.h>
 
@@ -23,11 +19,10 @@
 #include <systems/character_movement.h>
 
 using Key = sf::Keyboard::Key;
-namespace core = sc::core;
 namespace dbg = sc::debug;
 namespace input = sc::input;
 namespace ecs = sc::ecs;
-namespace gfx = sc::graphics;
+namespace fs = std::filesystem;
 
 namespace game {
 	namespace {

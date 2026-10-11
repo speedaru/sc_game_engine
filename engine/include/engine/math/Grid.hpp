@@ -3,8 +3,6 @@
 #include <vector>
 #include <stdexcept>
 
-#include <SFML/System/Vector2.hpp>
-
 namespace sc::math {
 	struct GridSize {
 		uint32_t rows;

@@ -1,4 +1,5 @@
 #pragma once
+#include <cstddef>
 #include <cstdint>
 
 #define CREATE_CONST(type, name, val) constexpr const type name = val;

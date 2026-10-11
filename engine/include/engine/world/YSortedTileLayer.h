@@ -1,4 +1,8 @@
 #pragma once
+#include <memory>
+#include <utility>
+#include <vector>
+
 #include <engine/world/TileLayer.h>
 
 namespace sc::world {

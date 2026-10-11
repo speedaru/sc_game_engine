@@ -1,4 +1,6 @@
 #pragma once
+#include <cstdint>
+
 #include <SFML/System/Vector2.hpp>
 
 namespace game::components {

@@ -16,7 +16,7 @@ namespace sc::graphics {
 		return NullIfEmpty(std::make_shared<SFMLTexture2D>(data));
 	}
 
-	std::shared_ptr<Texture2D> CreateTexture2D(const fs::path& file) {
+	std::shared_ptr<Texture2D> CreateTexture2D(const std::filesystem::path& file) {
 		return NullIfEmpty(std::make_shared<SFMLTexture2D>(file));
 	}
 }

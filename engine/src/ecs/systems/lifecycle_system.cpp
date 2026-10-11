@@ -2,7 +2,6 @@
 #include <engine/ecs/systems/lifecycle_system.h>
 #include <engine/ecs/systems/physics_system.h>
 #include <engine/ecs/Components.h>
-#include <engine/ecs/Entity.h>
 #include <engine/world/World.h>
 
 namespace sc::ecs::lifecycle_system {
