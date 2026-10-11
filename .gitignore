@@ -36,3 +36,6 @@ CLAUDE.local.md
 
 # photoshop sources
 *.psd
+
+# ldtk projects
+*.ldtk
