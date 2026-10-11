@@ -41,7 +41,6 @@ namespace game::world_loader {
 			entities::EntityType type = static_cast<entities::EntityType>(enums::hash(name));
 
 			entities::EntityDefinition definition;
-			definition.type = type; // hash name to get EntityType
 			definition.debugName = name; // so we can view the entity name in text while debuging
 			definition.pivot = { ldtkDef.pivot.x, ldtkDef.pivot.y };
 			definition.textureRect = sf::IntRect{

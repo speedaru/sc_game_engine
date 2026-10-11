@@ -98,7 +98,7 @@ Decisions this list assumes:
 
 ## 3. Dead code
 
-- [ ] **Delete the leftovers.** (10)
+- [x] **Delete the leftovers.** (10)
   Engine: `physics_system::Teleport` (duplicates `MoveToLevel`, 4.5), the `SpatialGrid::Query`
   overload that returns a vector, `Grid::TryGetCell` and `GridCell`, `LayerRenderType`,
   `LayerType::Collision`, `class TileMap;` in `render2d.h:22`, `debug::Register<T>`, the

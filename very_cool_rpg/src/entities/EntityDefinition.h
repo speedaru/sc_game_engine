@@ -16,7 +16,6 @@ namespace game::entities {
 	// no ldtk types, EntityDefinitionLoader is the only thing that knows how to fill this
 	// everything else can spawn entities without ldtk data
 	struct EntityDefinition {
-		EntityType type{};
 		std::string debugName;
 
 		std::shared_ptr<sc::graphics::Texture2D> texture;

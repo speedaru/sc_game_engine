@@ -20,6 +20,5 @@ namespace sc::core {
 
 	private:
 		sf::RenderWindow m_window;
-		WindowData m_data;
 	};
 }

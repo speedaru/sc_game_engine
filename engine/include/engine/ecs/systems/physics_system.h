@@ -29,7 +29,4 @@ namespace sc::ecs::physics_system  {
 	// the level's spatial grid (entities) and its collision layer (static tile geometry)
 	// scratch is owned by the caller so its buffers are reused between steps
 	void UpdateKinematics(Registry& registry, world::Level& level, float timeStep, physics::PhysicsScratch& scratch);
-
-	// function to teleport an entity to a location instantly
-	void Teleport(math::SpatialGrid& grid, Registry& registry, EntityHandle ent, sf::Vector2f newPos);
 }

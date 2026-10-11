@@ -27,9 +27,6 @@ namespace game::collision_system {
 			LOG_W("unknown contact type on entity: %u", static_cast<uint32_t>(ctx.contact.self));
 		}
 
-		void HandleBlockContact(HandlerContext& ctx) {
-		}
-
 		void HandleOverlapContact(HandlerContext& ctx) {
 			auto& reg = ctx.registry;
 
@@ -83,7 +80,7 @@ namespace game::collision_system {
 
 			switch (contact.kind) {
 				case phys::ContactKind::Block:
-					HandleBlockContact(ctx);
+					// nothing reacts to being blocked yet
 					break;
 				case phys::ContactKind::Overlap:
 					HandleOverlapContact(ctx);

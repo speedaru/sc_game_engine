@@ -19,8 +19,6 @@ namespace sc::renderer {
 		sf::IntRect textureRect{};
 	};
 
-	class TileMap;
-
 	namespace render2d {
 		void Initialize();
 		void Shutdown();

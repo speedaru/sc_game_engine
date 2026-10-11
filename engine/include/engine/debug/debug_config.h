@@ -12,7 +12,7 @@
 #endif
 
 // wraps call sites that should only exist in debug builds:
-//     SC_DEBUG_ONLY(sc::debug::Register<MyModule>(m_registry));
+//     SC_DEBUG_ONLY(sc::debug::RegisterModule(std::make_unique<MyModule>(m_registry)));
 //
 // every debug/ header guards its own declarations, so calling into the subsystem
 // without this wrapper is a compile error in release rather than a silent no-op.

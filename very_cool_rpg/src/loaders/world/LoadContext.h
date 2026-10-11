@@ -13,7 +13,6 @@ namespace fs = std::filesystem;
 namespace game::world_loader {
 	// bundles everything a layer builder needs to turn LDtk data into engine/ECS objects
 	struct LoadContext {
-		sc::ecs::Registry& registry;
 		factories::EntityFactory& entityFactory;
 		sc::graphics::TileSetManager& tileSetManager;
 		TileColliderCache& tileColliders;

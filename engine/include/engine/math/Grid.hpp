@@ -6,13 +6,6 @@
 #include <SFML/System/Vector2.hpp>
 
 namespace sc::math {
-	struct GridCell {
-		uint32_t row;
-		uint32_t col;
-
-		bool operator==(GridCell other) const { return row == other.row && col == other.col; }
-	};
-
 	struct GridSize {
 		uint32_t rows;
 		uint32_t cols;
@@ -25,16 +18,6 @@ namespace sc::math {
 		Grid(GridSize size)
 			: m_size(size),
 			m_grid(size.rows * size.cols) {}
-
-		Cell* TryGetCell(GridCell cell) {
-			// bounds check
-			if (cell.row >= m_size.rows || cell.col >= m_size.cols) {
-				return nullptr;
-			}
-
-			uint32_t idx = cell.row * m_size.cols + cell.col;
-			return &m_grid[idx];
-		}
 
 		const Cell& GetCell(uint32_t row, uint32_t col) const {
 			// bounds check

@@ -26,9 +26,6 @@ namespace game::debug {
 		void OnDrawOverlay(const DebugContext& ctx, DebugDraw& draw) override {}
 
 	private:
-		void DrawMovementeVec(const DebugContext& ctx, DebugDraw& draw);
-
-	private:
 		struct LevelSelectable {
 			const std::string_view levelName;
 			const int32_t levelUid;

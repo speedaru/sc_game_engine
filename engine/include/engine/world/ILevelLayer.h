@@ -6,13 +6,7 @@ namespace sc::world {
 	enum class LayerType : uint32_t {
         Tile,
         YSortedTile,
-        Entity,
-        Collision
-    };
-
-    enum class LayerRenderType : uint32_t {
-        Vertex,
-        QuadQueue
+        Entity
     };
 
     struct LayerId {

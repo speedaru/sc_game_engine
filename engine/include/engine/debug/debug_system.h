@@ -22,11 +22,6 @@ namespace sc::debug {
 	// module that exists and to control their order
 	void RegisterModule(std::unique_ptr<IDebugModule> module);
 
-	template <typename T, typename... Args>
-	void Register(Args&&... args) {
-		RegisterModule(std::make_unique<T>(std::forward<Args>(args)...));
-	}
-
 	// drops every registered module. called by DebugLayer::OnDetach
 	void Shutdown();
 

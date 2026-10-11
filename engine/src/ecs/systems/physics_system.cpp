@@ -305,24 +305,4 @@ namespace sc::ecs::physics_system {
 			}
 		}
 	}
-
-	void Teleport(math::SpatialGrid& grid, Registry& registry, EntityHandle ent, sf::Vector2f newPos) {
-		auto& trans = registry.GetComponent<TransformComponent>(ent);
-
-		// update entity position
-		trans.prevPos = newPos;
-		trans.pos = newPos;
-
-		// update grid if collidable
-		if (!registry.HasComponent<BoxColliderComponent>(ent)) return;
-
-		auto& collider = registry.GetComponent<BoxColliderComponent>(ent);
-		if (ColliderIsCollidable(collider)) {
-			// get new entity bounds
-			sf::FloatRect newBounds = EntityGetBounds(trans, collider);
-
-			// update level spatial grid
-			grid.MoveEntity(ent, newBounds);
-		}
-	}
 }

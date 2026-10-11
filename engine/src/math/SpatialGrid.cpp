@@ -63,13 +63,6 @@ namespace sc::math {
 		m_entityCells[ent] = newRange;
 	}
 	
-	auto SpatialGrid::Query(const Rect& box) -> std::vector<entity> {
-		std::vector<entity> results;
-		results.reserve(32);
-		Query(box, results);
-		return results;
-	}
-
 	void SpatialGrid::Query(const Rect& box, std::vector<entity>& out) const {
 		const CellRange range = GetCellsFromBox(box);
 

@@ -41,8 +41,7 @@ namespace game::world_loader {
 			const ldtk::IntPoint& pos = target->getPosition();
 			bag.fields[name] = entities::EntityRefValue{
 				target->layer->level->uid,
-				{ static_cast<float>(pos.x), static_cast<float>(pos.y) },
-				entities::FromLdtkIdentifier(target->getName())
+				{ static_cast<float>(pos.x), static_cast<float>(pos.y) }
 			};
 		}
 

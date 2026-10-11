@@ -29,8 +29,7 @@ namespace sc::math {
 
 		void MoveEntity(entity ent, const Rect& newBox);
 
-		// request a list of entities inside this box
-		auto Query(const Rect& box) -> std::vector<entity>;
+		// appends the entities inside this box to out
 		void Query(const Rect& box, std::vector<entity>& out) const;
 
 		void Clear();

@@ -12,7 +12,6 @@ namespace game::entities {
     struct EntityRefValue {
         int32_t levelUid;
         sf::Vector2f pos;
-        EntityType entityType;
     };
 
     using FieldValue = std::variant<int, float, bool, sf::Vector2f, std::string, EntityRefValue>;

@@ -41,7 +41,7 @@ namespace game::world_loader {
 		LoadEntityDefinitions(ldtkProject, entityFactory, projectDir);
 
 		TileColliderCache tileColliders;
-		LoadContext ctx{ registry, entityFactory, tileSetManager, tileColliders, projectDir };
+		LoadContext ctx{ entityFactory, tileSetManager, tileColliders, projectDir };
 		LayerBuilderRegistry builders = MakeDefaultLayerBuilderRegistry();
 
 		// every ldtk world goes into the one engine world. level uids are unique across the
