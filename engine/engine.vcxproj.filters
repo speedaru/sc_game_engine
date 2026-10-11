@@ -155,6 +155,9 @@
     <ClInclude Include="include\engine\ecs\Entity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\engine\ecs\EntityHandle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="include\engine\renderer\render2d.h">
       <Filter>Header Files</Filter>
     </ClInclude>

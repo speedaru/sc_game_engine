@@ -2,7 +2,7 @@
 #include <string>
 #include <cstdint>
 
-#include <SFML/Graphics.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
 
 namespace sc::core {
 	struct WindowData {

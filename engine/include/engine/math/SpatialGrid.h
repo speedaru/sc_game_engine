@@ -6,7 +6,7 @@
 
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Graphics/Rect.hpp>
-#include <entt/entity/entity.hpp>
+#include <engine/ecs/EntityHandle.h>
 
 #include <engine/math/Grid.hpp>
 #include <engine/math/CellRange.h>
@@ -14,7 +14,7 @@
 namespace sc::math {
 	// contains a hashmap of grid cells and which entities exist in those cells
 	class SpatialGrid {
-		using entity = entt::entity; // unique entity handle
+		using entity = ecs::EntityHandle; // unique entity handle
 	public:
 		using Rect = sf::FloatRect; // rect type of the entity box
 
@@ -38,8 +38,8 @@ namespace sc::math {
 
 		uint32_t GetCellSize() const { return m_cellSize; }
 		math::GridSize GetSize() const { return m_size; }
-		const std::vector<entt::entity>& GetCellEntities(uint32_t row, uint32_t col) const;
-		std::optional<CellRange> FindEntityCells(entt::entity ent) const; // null if entity not in grid
+		const std::vector<entity>& GetCellEntities(uint32_t row, uint32_t col) const;
+		std::optional<CellRange> FindEntityCells(entity ent) const; // null if entity not in grid
 
 	private:
 		// InsertRange and EraseRange only touch m_grid, not m_entityCells

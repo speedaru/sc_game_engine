@@ -1,5 +1,8 @@
 #include <pch.h>
 #include <engine/renderer/render2d.h>
+
+#include <SFML/Graphics/Sprite.hpp>
+
 #include <engine/graphics/SFMLTexture2D.h>
 #include <engine/utils/logging.h>
 #include <engine/constants.h>

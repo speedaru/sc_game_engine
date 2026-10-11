@@ -6,16 +6,16 @@
 #include <ranges>
 #include <cstdint>
 
-#include <entt/entt.hpp>
+#include <entt/entity/registry.hpp>
 
 #include <engine/ecs/Components.h>
+#include <engine/ecs/EntityHandle.h>
 #include <engine/utils/logging.h>
 
 // TODO: remove all entt:: usage in solution outside of engine/ecs/Entity.h and Registry.h
 
 namespace sc::ecs {
 	class Entity;
-	using EntityHandle = entt::entity;
 
 	class Registry {
 		ADD_CLASS_TAG("Unnamed Registry");

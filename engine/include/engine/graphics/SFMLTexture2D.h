@@ -5,7 +5,7 @@ namespace fs = std::filesystem;
 #include <engine/graphics/Texture2D.h>
 #include <engine/utils/logging.h>
 
-#include <SFML/Graphics.hpp>
+#include <SFML/Graphics/Texture.hpp>
 
 namespace sc::graphics {
 	class SFMLTexture2D : public Texture2D {

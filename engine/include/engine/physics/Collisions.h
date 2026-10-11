@@ -1,10 +1,11 @@
 #pragma once
+#include <cassert>
 #include <cstdint>
 #include <vector>
 
 #include <SFML/Graphics/Rect.hpp>
 
-#include <engine/ecs/Registry.h>
+#include <engine/ecs/EntityHandle.h>
 
 namespace sc::physics {
 	enum class ColliderType : uint8_t {

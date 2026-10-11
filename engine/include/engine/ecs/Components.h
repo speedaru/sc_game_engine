@@ -1,12 +1,17 @@
 #pragma once
+#include <cstdint>
+#include <memory>
 #include <string>
 #include <vector>
 
 #include <SFML/System/Vector2.hpp>
-#include <SFML/Graphics.hpp>
+#include <SFML/Graphics/Rect.hpp>
 
-#include <engine/graphics/Texture2D.h>
 #include <engine/math/Hitbox.h>
+
+namespace sc::graphics {
+	class Texture2D;
+}
 
 namespace sc::ecs {
 	struct TagComponent {
@@ -31,13 +36,8 @@ namespace sc::ecs {
 		int32_t layerUid;
 		sf::IntRect rect;
 
-		// specify rect
 		SpriteComponent(const std::shared_ptr<sc::graphics::Texture2D>& texture, int32_t layerUid, const sf::IntRect& rect)
 			: texture(texture), layerUid(layerUid), rect(rect) {}
-
-		// use full texture rect
-		SpriteComponent(const std::shared_ptr<sc::graphics::Texture2D>& texture, int32_t layerUid)
-			: SpriteComponent(texture, layerUid, sf::IntRect({ 0, 0 }, { (int32_t)texture->GetWidth(), (int32_t)texture->GetHeight() })) {}
 	};
 
 	struct BoxColliderComponent {

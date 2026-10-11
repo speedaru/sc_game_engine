@@ -26,7 +26,7 @@ namespace {
 
 	// the entity being moved this step
 	struct Mover {
-		entt::entity self;
+		EntityHandle self;
 		TransformComponent& trans;
 		VelocityComponent& vel;
 		const BoxColliderComponent& col;

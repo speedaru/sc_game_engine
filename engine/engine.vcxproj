@@ -236,6 +236,7 @@
     <ClInclude Include="include\engine\core\Window.h" />
     <ClInclude Include="include\engine\ecs\Components.h" />
     <ClInclude Include="include\engine\ecs\Entity.h" />
+    <ClInclude Include="include\engine\ecs\EntityHandle.h" />
     <ClInclude Include="include\engine\ecs\Registry.h" />
     <ClInclude Include="include\engine\graphics\Camera2D.h" />
     <ClInclude Include="include\engine\math\CellRange.h" />

@@ -2,9 +2,13 @@
 #include <vector>
 
 #include <engine/physics/Collisions.h>
-#include <engine/ecs/Registry.h>
+#include <engine/ecs/EntityHandle.h>
 
 #include <layers/LayerRequest.h>
+
+namespace sc::ecs {
+	class Registry;
+}
 
 namespace game::collision_system {
 	struct PairCooldown {

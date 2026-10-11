@@ -1,8 +1,6 @@
 #pragma once
 #include <cassert>
 
-#include <entt/entt.hpp>
-
 #include <engine/ecs/Registry.h>
 #include <engine/utils/logging.h>
 

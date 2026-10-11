@@ -1,8 +1,16 @@
 #pragma once
-#include <engine/ecs/Registry.h>
+#include <cstdint>
+
+#include <SFML/System/Vector2.hpp>
+
+#include <engine/ecs/EntityHandle.h>
 
 namespace sc::world {
 	class World;
+}
+
+namespace sc::ecs {
+	class Registry;
 }
 
 namespace sc::ecs::lifecycle_system {
