@@ -12,4 +12,6 @@ namespace sc::math {
 	};
 
 	SweepResult SweptAABB(const sf::FloatRect& movingBox, const sf::Vector2f& velocity, const sf::FloatRect& staticBox);
+
+	sf::Vector2f Penetration(const sf::FloatRect& moving, const sf::FloatRect& fixed);
 }

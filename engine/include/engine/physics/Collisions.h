@@ -7,9 +7,6 @@
 #include <engine/ecs/Registry.h>
 
 namespace sc::physics {
-	// no cell index. tiles carry one, entities do not
-	inline constexpr uint32_t INVALID_TILE = ~0u;
-
 	enum class ColliderType : uint8_t {
 		Unknown,
 		Entity,
@@ -23,9 +20,9 @@ namespace sc::physics {
 	};
 
 	// level space collision box
-	// uses world coordinates instead of cell coordinates, because different layers can have different cell sizes
+	// uses level coordinates instead of cell coordinates, because different layers can have different cell sizes
 	struct ColliderRef {
-		// world space coordinates
+		// level space coordinates
 		sf::FloatRect box;
 
 		ColliderType type = ColliderType::Unknown;

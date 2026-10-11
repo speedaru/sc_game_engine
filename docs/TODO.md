@@ -63,43 +63,57 @@ The biggest structural gap. Blocks projectiles, pickups, deaths and level transi
 
 ## 3. Collision results
 
-- [ ] **Contacts out of the physics step.** `physics_system.cpp:90-116`
-  `MoveAndResolve` finds what was hit and throws it away. `ColliderRef` already carries the entity
-  and tile index. Foundation for doors, pickups, damage and level transitions.
+- [x] **Contacts out of the physics step.** `engine/src/ecs/systems/physics_system.cpp`
+  `MoveAndResolve` records a `Block` contact per slide hit and an `Overlap` contact per trigger
+  box touched, into `PhysicsScratch::contacts`. The game drains them in
+  `very_cool_rpg/src/systems/collision_system.cpp` after the step.
 
-- [ ] **Tile flags are never set.** `very_cool_rpg/src/loaders/world/collision_baker.cpp:50`
-  `TileShape::flags` and `AddBox(box, flags)` exist but the baker always passes the default 0.
-  Needed for triggers and one-way or non-solid tiles.
+- [x] **Solid vs trigger hitboxes.** `engine/include/engine/math/Hitbox.h`
+  A trigger box never blocks. Only a mover's solid box detects, and only another's trigger box.
 
-- [ ] **Collision filtering** (layers/masks, solid vs trigger). Nothing exists yet.
+- [x] **Repeat rate and dedup for overlap contacts.** `very_cool_rpg/src/systems/collision_system.cpp`
+  One table of `(self, other)` pairs with a cooldown counted in fixed steps. A cooldown of zero
+  is the per-step dedup.
+
+- [ ] **Depenetration.** `engine/src/math/physics.cpp:59-69`
+  An entity that starts overlapping gets `time = 0` and loses velocity on that axis every step, so
+  it's stuck in every direction, including outwards. Reachable in play: a `WarpTarget` placed
+  slightly inside something solid, the debug teleport to (0, 0), and the F2 spawn at +50,+50.
+
+- [ ] **Enter and exit for overlaps.** `very_cool_rpg/src/systems/collision_system.cpp`
+  A handler only knows "overlapping this step". The cooldown table covers "every X seconds" but
+  not "once on entering" or "on leaving" (door sound, pressure plate, arriving inside a trigger).
+  Needs last step's pairs to compare against. Wait for the first feature that needs it.
+
+- [ ] **Collision filtering with layers and masks.** `engine/include/engine/math/Hitbox.h`
+  Limits of the current rule: only entities with a `VelocityComponent` detect anything, so a
+  moving trigger can't detect a static prop (sword and pot), and blocking is all or nothing, so
+  a projectile can't pass through an ally.
 
 - [ ] **Several hitboxes on one entity.** `engine/include/engine/physics/Collisions.h`, `engine/include/engine/math/Hitbox.h`
   A `Contact` names the other entity but not which of its boxes was touched, or which of the
   mover's boxes touched it. A coin made of two boxes should count once; a boss whose boxes are
-  different attacks needs each handled on its own. `s_handledEntities` in
-  `very_cool_rpg/src/systems/collision_system.cpp` dedupes by entity, which only fits the coin.
+  different attacks needs each handled on its own. The cooldown table is keyed by entity pair,
+  which only fits the coin, and the check sits in the dispatcher so every handler shares it.
   Likely shape: a hitbox index on both sides of the contact, an id or tag on `math::Hitbox` set
-  in the editor, and the dedup decided by each handler instead of the dispatcher. Touches the
-  same struct as collision filtering above, so design them together.
+  in the editor, and the key decided by each handler. Touches the same struct as collision
+  filtering above, so design them together.
 
-- [ ] **Repeat rate for overlap contacts.** `very_cool_rpg/src/systems/collision_system.cpp`
-  An overlap contact is reported every step while the boxes overlap, so a damage handler would
-  fire 60 times a second. Each handler should choose its own rate (spikes twice a second, fire
-  ten times). The timer has to be per pair (who is touched, by what), not per handler, or one
-  entity standing on spikes blocks the damage for every other entity. Count it in fixed steps,
-  not wall clock time. A cooldown of zero is the same thing as the per-step dedup, so build both
-  as one table of pairs.
-
-- [ ] **Depenetration.** `engine/src/math/physics.cpp:59-69`
-  An entity that starts overlapping gets `time = 0` and loses velocity on that axis every step, so
-  it's stuck. The F2 dragon spawn at +50,+50 (`GameplayLayer.cpp:114-120`) can land inside a rock.
+- [ ] **Trigger and flagged tiles (decide, probably don't build).** `engine/src/world/CollisionLayerBuilder.cpp`
+  `AddBox` rebuilds each box from four floats and drops `Hitbox::trigger`, and
+  `collision_baker.cpp` never passes tile flags. Anything with behaviour is an entity today, and
+  ground effects (mud, poison) fit a separate surface layer better. If that stays the rule,
+  remove the unused flag path instead of finishing it.
 
 ## 4. Missing subsystems, in order
 
 - [ ] **Sprite animation.** Self-contained; everything after it looks broken without it.
 - [ ] **One asset/texture cache.** `EntityDefinitionLoader.cpp:17-28` and `TileSetManager` cache
   separately, so a PNG used by both a tile layer and an entity is loaded twice.
-- [ ] **Level transitions.** Needs sections 2 and 3.
+- [x] **Level transitions.** A trigger entity with a `TeleportComponent`, filled from an LDtk
+  entity reference field, queues a `TeleportRequest` that `GameplayLayer` applies after the
+  contacts are dispatched. Still open: the starting level is hardcoded (`"World_Level_0"`), and
+  only the player can use a well.
 - [ ] **Text/UI rendering.**
 - [ ] **Audio.**
 
@@ -115,6 +129,11 @@ The biggest structural gap. Blocks projectiles, pickups, deaths and level transi
   Either drop the interface or commit to it.
 - [ ] **Physics lives in three places:** `sc::ecs::physics_system`, `sc::physics` (only `ColliderRef`)
   and `sc::math` (`SweptAABB`, `SpatialGrid`, which depends on entt). Consolidate when touching it next.
+
+- [ ] **`Collisions.h` includes all of `Registry.h`** for the entity handle type, and the comment
+  on `ColliderRef`'s tile index says "tile type" where it holds a cell index.
+- [ ] **Request types live under `layers/`** but are produced by `collision_system`. Fine with one
+  producer; revisit where they belong when a second system queues requests.
 
 ## Later, only when it shows up
 

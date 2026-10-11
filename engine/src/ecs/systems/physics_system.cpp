@@ -98,6 +98,57 @@ namespace {
 		}
 	}
 
+	// both halves of the broad phase: static tiles from the collision layer, then entities from the spatial grid
+	void CollectCandidates(StepContext& ctx, const Mover& mover, const sf::FloatRect& area) {
+		ctx.scratch.candidates.clear(); ctx.scratch.gridHits.clear();
+		ctx.level.GetCollisionLayer().QueryArea(area, ctx.scratch.candidates);
+		EntityCollectCandidates(ctx, mover, area);
+	}
+
+	// pushes a mover that starts the step inside something solid back out
+	// returns true if the mover was moved
+	bool DepenetrationPass(StepContext& ctx, Mover& mover) {
+		constexpr float SKIN = 0.01f; // margin so it doesn't touch the blocks
+		constexpr int MAX_PUSHES = 4;
+
+		bool moved = false;
+
+		for (int i = 0; i < MAX_PUSHES; i++) {
+			// deepest first
+			sf::Vector2f deepestPush{};
+			float deepestDepth = 0.f;
+
+			for (const math::Hitbox& dynBox : mover.col.hitboxes) {
+				if (dynBox.trigger) continue;
+
+				const sf::FloatRect movingRect{ mover.trans.pos + dynBox.offset, dynBox.size };
+
+				for (const physics::ColliderRef& other : ctx.scratch.candidates) {
+					if (other.trigger) continue;
+
+					const sf::Vector2f push = math::Penetration(movingRect, other.box);
+					const float depth = std::abs(push.x) + std::abs(push.y);
+
+					if (depth > deepestDepth) {
+						deepestPush = push;
+						deepestDepth = depth;
+					}
+				}
+			}
+
+			if (deepestDepth == 0.f) break;
+
+			if (deepestPush.x != 0.f) deepestPush.x += (deepestPush.x > 0.f) ? SKIN : -SKIN;
+			if (deepestPush.y != 0.f) deepestPush.y += (deepestPush.y > 0.f) ? SKIN : -SKIN;
+
+			// prevPos is left alone so the render blends the correction over one step
+			mover.trans.pos += deepestPush;
+			moved = true;
+		}
+
+		return moved;
+	}
+
 	// runs both broad phases, calls the narrow phase, and handles the slide resolution
 	void MoveAndResolve(StepContext& ctx, Mover& mover) {
 		TransformComponent& trans = mover.trans;
@@ -114,13 +165,14 @@ namespace {
 		}
 
 		// broad phase
-		const sf::FloatRect queryBounds = SweptBounds(EntityGetBounds(trans, col), delta);
+		CollectCandidates(ctx, mover, SweptBounds(EntityGetBounds(trans, col), delta));
 
-		// query candidates in collision layer (static tiles), and spatial grid (dynamic entities)
-		ctx.scratch.candidates.clear(); ctx.scratch.gridHits.clear();
-		ctx.level.GetCollisionLayer().QueryArea(queryBounds, ctx.scratch.candidates);
-		EntityCollectCandidates(ctx, mover, queryBounds);
+		// depenetration pass recollect candidates if entities pushed
+		if (DepenetrationPass(ctx, mover)) {
+			CollectCandidates(ctx, mover, SweptBounds(EntityGetBounds(trans, col), delta));
+		}
 
+		// slide loop
 		for (int i = 0; i < MAX_SLIDES; i++) {
 			if (delta.x == 0.0f && delta.y == 0.0f) break;
 
@@ -254,23 +306,23 @@ namespace sc::ecs::physics_system {
 		}
 	}
 
-	void Teleport(math::SpatialGrid& grid, Entity& entity, sf::Vector2f newPos) {
-		auto& trans = entity.GetComponent<TransformComponent>();
+	void Teleport(math::SpatialGrid& grid, Registry& registry, EntityHandle ent, sf::Vector2f newPos) {
+		auto& trans = registry.GetComponent<TransformComponent>(ent);
 
 		// update entity position
 		trans.prevPos = newPos;
 		trans.pos = newPos;
 
 		// update grid if collidable
-		if (!entity.HasComponent<BoxColliderComponent>()) return;
+		if (!registry.HasComponent<BoxColliderComponent>(ent)) return;
 
-		auto& collider = entity.GetComponent<BoxColliderComponent>();
+		auto& collider = registry.GetComponent<BoxColliderComponent>(ent);
 		if (ColliderIsCollidable(collider)) {
 			// get new entity bounds
 			sf::FloatRect newBounds = EntityGetBounds(trans, collider);
 
 			// update level spatial grid
-			grid.MoveEntity(entity.GetHandle(), newBounds);
+			grid.MoveEntity(ent, newBounds);
 		}
 	}
 }

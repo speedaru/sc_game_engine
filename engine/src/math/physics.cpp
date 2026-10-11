@@ -7,13 +7,11 @@ namespace sc::math {
 
 		if (velocity.x == 0.0f && velocity.y == 0.0f) return result;
 
-		// SFML 3 Compliant FloatRect Expansion
 		sf::FloatRect expandedTarget(
 			{ staticBox.position.x - movingBox.size.x, staticBox.position.y - movingBox.size.y },
 			{ staticBox.size.x + movingBox.size.x, staticBox.size.y + movingBox.size.y }
 		);
 
-		// SFML 3 Ray Origin
 		sf::Vector2f rayOrigin = movingBox.position;
 
 		float tNearX, tFarX, tNearY, tFarY;
@@ -55,7 +53,7 @@ namespace sc::math {
 
 		if (tHitFar < 0.0f || tHitNear >= 1.0f) return result;
 
-		// Handle Floating Point overlap at start of frame
+		// handle floating point overlap at start of frame
 		if (tHitNear < 0.0f) {
 			result.time = 0.0f;
 			if (tNearX > tNearY) {
@@ -81,5 +79,19 @@ namespace sc::math {
 		}
 
 		return result;
+	}
+
+	sf::Vector2f Penetration(const sf::FloatRect& moving, const sf::FloatRect& fixed) {
+		const float left = (fixed.position.x + fixed.size.x) - moving.position.x; // push right by this
+		const float right = (moving.position.x + moving.size.x) - fixed.position.x; // push left by this
+		const float down = (fixed.position.y + fixed.size.y) - moving.position.y;
+		const float up = (moving.position.y + moving.size.y) - fixed.position.y;
+
+		if (left <= 0.f || right <= 0.f || down <= 0.f || up <= 0.f) return {};
+
+		const float pushX = (left < right) ? left : -right;
+		const float pushY = (down < up) ? down : -up;
+
+		return (std::abs(pushX) < std::abs(pushY)) ? sf::Vector2f{ pushX, 0.f } : sf::Vector2f{ 0.f, pushY };
 	}
 }

@@ -31,5 +31,5 @@ namespace sc::ecs::physics_system  {
 	void UpdateKinematics(Registry& registry, world::Level& level, float timeStep, physics::PhysicsScratch& scratch);
 
 	// function to teleport an entity to a location instantly
-	void Teleport(math::SpatialGrid& grid, Entity& entity, sf::Vector2f newPos);
+	void Teleport(math::SpatialGrid& grid, Registry& registry, EntityHandle ent, sf::Vector2f newPos);
 }
