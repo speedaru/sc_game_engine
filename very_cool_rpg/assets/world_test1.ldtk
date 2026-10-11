@@ -1003,7 +1003,7 @@
 						0,
 						0,
 						0,
-						0,
+						2,
 						0,
 						0,
 						0,
@@ -1054,7 +1054,7 @@
 						0,
 						0
 					],
-					"autoLayerTiles": [],
+					"autoLayerTiles": [{ "px": [192,32], "src": [0,0], "f": 0, "t": 0, "d": [209,14], "a": 1 }],
 					"seed": 5004245,
 					"overrideTilesetUid": null,
 					"gridTiles": [],

@@ -2,7 +2,7 @@
 #include <cstdint>
 #include <string_view>
 
-namespace game::enums {
+namespace game::utils {
 	// FNV-1a constexpr so it can produce enum values
 	constexpr uint64_t hash(std::string_view str) {
 		uint64_t hash = 14695981039346656037ull;

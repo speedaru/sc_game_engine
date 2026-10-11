@@ -8,6 +8,8 @@
 #include <engine/utils/logging.h>
 #include <engine/world/Level.h>
 
+#include <components/GameComponents.h>
+
 namespace ecs = sc::ecs;
 
 namespace game::factories {
@@ -55,6 +57,11 @@ namespace game::factories {
 
 		// add level component
 		entity.AddComponent<ecs::LevelComponent>(m_currentLevel->GetUid());
+
+		// add persistent id if the entity was placed in the editor
+		if (!params.persistentId.empty()) {
+			entity.AddComponent<components::PersistentIdComponent>(params.persistentId);
+		}
 
 		// add texture component if present
 		if (definition.texture) {

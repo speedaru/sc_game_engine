@@ -17,16 +17,17 @@ namespace game::collision_system {
 		float timeLeft;
 	};
 
-	// everything the contact handlers keep between steps or hand back to the caller
+	// everything the contact handlers keep between steps
 	struct ContactState {
 		std::vector<PairCooldown> rateLimits;
-		std::vector<LayerRequest> requests;
 	};
 
+	// handlers append to requests, the caller owns the queue and applies it afterwards
 	void DispatchContacts(
 		sc::ecs::Registry& registry,
 		const std::vector<sc::physics::Contact>& contacts,
 		ContactState& state,
+		std::vector<LayerRequest>& requests,
 		float timeStep
 	);
 }

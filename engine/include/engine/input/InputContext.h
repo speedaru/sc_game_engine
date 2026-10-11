@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdint>
+#include <type_traits>
 #include <unordered_map>
 
 #include <SFML/Window/Keyboard.hpp>
@@ -18,6 +19,14 @@ namespace sc::input {
         // bind a mouse/key to an action id, multiple keys can bind to same action
         void Bind(Key key, ActionId action);
         void Bind(MouseButton button, ActionId action);
+
+        // same as above for a game's own action enum, so call sites don't cast
+
+        template <typename Action> requires std::is_enum_v<Action>
+        void Bind(Key key, Action action) { Bind(key, static_cast<ActionId>(action)); }
+
+        template <typename Action> requires std::is_enum_v<Action>
+        void Bind(MouseButton button, Action action) { Bind(button, static_cast<ActionId>(action)); }
 
         // true if any mouse/key is bound to this action
         bool IsBound(ActionId action) const;

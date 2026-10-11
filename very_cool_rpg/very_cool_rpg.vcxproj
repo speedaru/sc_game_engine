@@ -217,14 +217,15 @@
     <ClInclude Include="src\loaders\world\TileLayerBuilder.h" />
     <ClInclude Include="src\components\GameComponents.h" />
     <ClInclude Include="src\factories\EntityFactory.h" />
-    <ClInclude Include="src\enums\InputActions.h" />
+    <ClInclude Include="src\types\InputActions.h" />
     <ClInclude Include="src\pch.h" />
     <ClInclude Include="src\constants.h" />
+    <ClInclude Include="src\types\LevelLocation.h" />
     <ClInclude Include="src\layers\GameplayLayer.h" />
     <ClInclude Include="src\systems\character_movement.h" />
     <ClInclude Include="src\systems\collision_system.h" />
     <ClInclude Include="src\systems\player_input.h" />
-    <ClInclude Include="src\enums\hash.hpp" />
+    <ClInclude Include="src\utils\hash.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />

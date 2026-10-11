@@ -13,7 +13,7 @@
 #include <debug/FeatureTest.h>
 #include <debug/ContactOverlay.h>
 #include <components/GameComponents.h>
-#include <enums/InputActions.h>
+#include <types/InputActions.h>
 #include <blueprints/BlueprintRegistry.h>
 #include <loaders/world_loader.h>
 #include <systems/player_input.h>
@@ -42,12 +42,12 @@ namespace game {
     void GameplayLayer::OnAttach() {
 		// load keybinds
 		auto gameplayInput = std::make_shared<input::InputContext>();
-		gameplayInput->Bind(Key::W, static_cast<int32_t>(InputAction::MoveUp));
-		gameplayInput->Bind(Key::A, static_cast<int32_t>(InputAction::MoveLeft));
-		gameplayInput->Bind(Key::S, static_cast<int32_t>(InputAction::MoveDown));
-		gameplayInput->Bind(Key::D, static_cast<int32_t>(InputAction::MoveRight));
-		gameplayInput->Bind(Key::F2, static_cast<int32_t>(InputAction::SpawnEnt));
-		gameplayInput->Bind(Key::F3, static_cast<int32_t>(InputAction::DestroyEnt));
+		gameplayInput->Bind(Key::W, InputAction::MoveUp);
+		gameplayInput->Bind(Key::A, InputAction::MoveLeft);
+		gameplayInput->Bind(Key::S, InputAction::MoveDown);
+		gameplayInput->Bind(Key::D, InputAction::MoveRight);
+		gameplayInput->Bind(Key::F2, InputAction::SpawnEnt);
+		gameplayInput->Bind(Key::F3, InputAction::DestroyEnt);
 		input::PushContext(gameplayInput);
 
 		fs::path projectDir = fs::absolute(ASSETS_DIR);
@@ -79,19 +79,13 @@ namespace game {
 
 		// get level
 		const ecs::LevelComponent& level = m_player.GetComponent<ecs::LevelComponent>();
-		m_currentLevel = m_world->GetLevel(level.uid).get();
-		if (!m_currentLevel) {
+		sc::world::Level* startLevel = m_world->GetLevel(level.uid).get();
+		if (!startLevel) {
 			LOG_W("failed to get level uid: %d", level.uid);
 			return;
 		}
 
-		m_entityFactory.SetCurrentLevel(m_currentLevel);
-
-		// find which layer spawned entities should be in
-		m_entityLayerUid = FindEntityLayerUid(*m_currentLevel);
-
-		// apply bounds to camera
-		UpdateCameraBounds();
+		EnterLevel(*startLevel);
     }
 
     void GameplayLayer::OnFixedUpdate(float timeStep) {
@@ -111,7 +105,7 @@ namespace game {
 		ecs::physics_system::UpdateKinematics(m_registry, *m_currentLevel, timeStep, m_physicsScratch);
 
 		// handle collisions and overlaps
-		collision_system::DispatchContacts(m_registry, m_physicsScratch.contacts, m_contactState, timeStep);
+		collision_system::DispatchContacts(m_registry, m_physicsScratch.contacts, m_contactState, m_requests, timeStep);
 
 		HandleLayerRequests();
 
@@ -131,7 +125,7 @@ namespace game {
 			return;
 		}
 
-		if (input::IsActionJustPressed(static_cast<uint32_t>(InputAction::SpawnEnt))) {
+		if (input::IsActionJustPressed(InputAction::SpawnEnt)) {
 			const auto& trans = m_player.GetComponent<ecs::TransformComponent>();
 			m_entityFactory.Spawn(entities::EntityType::Dragon, entities::SpawnParams{
 				.position = { trans.pos + sf::Vector2f{ 50.f, 50.f } },
@@ -140,7 +134,7 @@ namespace game {
 		}
 
 		// temporary test for entity destruction: F3 destroys the first dragon found
-		if (input::IsActionJustPressed(static_cast<uint32_t>(InputAction::DestroyEnt))) {
+		if (input::IsActionJustPressed(InputAction::DestroyEnt)) {
 			for (auto [handle, tag] : m_registry.ViewAll<const ecs::TagComponent>()) {
 				if (tag.tag == "Dragon") {
 					LOG_I("destroying dragon %u", static_cast<uint32_t>(handle));
@@ -175,10 +169,7 @@ namespace game {
 			return;
 		}
 
-		m_currentLevel = targetLevel;
-		m_entityLayerUid = FindEntityLayerUid(*m_currentLevel);
-		m_entityFactory.SetCurrentLevel(m_currentLevel);
-		UpdateCameraBounds();
+		EnterLevel(*targetLevel);
 		ecs::lifecycle_system::MoveToLevel(m_registry, *m_world, m_player.GetHandle(), levelUid, spawnPos);
 	}
 
@@ -187,22 +178,29 @@ namespace game {
 		SC_DEBUG_ONLY(dbg::RegisterModule(std::make_unique<game::debug::ContactOverlay>(m_physicsScratch)));
 	}
 
-	void GameplayLayer::UpdateCameraBounds() {
-		m_camera.SetBounds({ 0.f, 0.f }, static_cast<sf::Vector2f>(m_currentLevel->GetSize()));
+	void GameplayLayer::EnterLevel(sc::world::Level& level) {
+		m_currentLevel = &level;
+		m_entityFactory.SetCurrentLevel(&level);
+
+		// which layer runtime spawns render into
+		m_entityLayerUid = FindEntityLayerUid(level);
+
+		// camera bounds follow the level size
+		m_camera.SetBounds({ 0.f, 0.f }, static_cast<sf::Vector2f>(level.GetSize()));
 	}
 
 #pragma region layer_requests
 	void GameplayLayer::Apply(const TeleportRequest& request) {
-		SwitchLevel(request.levelUid, request.pos);
+		SwitchLevel(request.target.levelUid, request.target.pos);
 	}
 
 	void GameplayLayer::HandleLayerRequests() {
-		// NOTE: make a copy of requests before iterating if Apply modifies m_contactState.requests
-		for (const auto& request : m_contactState.requests) {
+		// NOTE: make a copy of requests before iterating if Apply modifies m_requests
+		for (const auto& request : m_requests) {
 			std::visit([this](const auto& r) { Apply(r); }, request);
 		}
 
-		m_contactState.requests.clear();
+		m_requests.clear();
 	}
 #pragma endregion layer_requests
 }

@@ -15,6 +15,7 @@ namespace game::collision_system {
 			ecs::Registry& registry;
 			const phys::Contact& contact;
 			ContactState& state;
+			std::vector<LayerRequest>& requests;
 		};
 
 		bool PairEqualsContact(const PairCooldown& pair, const phys::Contact& contact) {
@@ -48,7 +49,7 @@ namespace game::collision_system {
 				// teleport component. only the player, since applying it switches the viewed level
 				if (reg.HasComponent<components::PlayerTag>(self)) {
 					if (const auto* teleport = reg.TryGetComponent<components::TeleportComponent>(other)) {
-						ctx.state.requests.push_back(TeleportRequest{ teleport->levelUid, teleport->pos });
+						ctx.requests.push_back(TeleportRequest{ teleport->target });
 						rateLimit(0.f);
 					}
 				}
@@ -60,6 +61,7 @@ namespace game::collision_system {
 		sc::ecs::Registry& registry,
 		const std::vector<sc::physics::Contact>& contacts,
 		ContactState& state,
+		std::vector<LayerRequest>& requests,
 		float timeStep
 	) {
 		std::vector<PairCooldown>& rateLimits = state.rateLimits;
@@ -76,7 +78,7 @@ namespace game::collision_system {
 				continue;
 			}
 
-			HandlerContext ctx{ registry, contact, state };
+			HandlerContext ctx{ registry, contact, state, requests };
 
 			switch (contact.kind) {
 				case phys::ContactKind::Block:

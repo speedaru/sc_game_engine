@@ -12,6 +12,8 @@
 #include <layers/LayerRequest.h>
 #include <constants.h>
 
+#include <vector>
+
 namespace game {
 	class GameplayLayer : public sc::core::ILayer {
 	public:
@@ -25,15 +27,15 @@ namespace game {
 	private:
 		void RegisterDebugModules();
 
-		// update camera bounds based on level size
-		void UpdateCameraBounds();
+		// everything that has to change together when the current level changes
+		void EnterLevel(sc::world::Level& level);
 
 		bool HasPlayer() const { return m_registry.IsEntityValid(m_player.GetHandle()); }
 
 #pragma region layer_requests
 		void Apply(const TeleportRequest& request);
 
-		// handles list of LayerRequest requests inside m_contactState
+		// applies and clears m_requests
 		void HandleLayerRequests();
 #pragma endregion layer_requests
 
@@ -44,6 +46,9 @@ namespace game {
 		sc::graphics::TileSetManager m_tileSetManager;
 		sc::physics::PhysicsScratch m_physicsScratch;
 		collision_system::ContactState m_contactState;
+
+		// filled by the systems during a step and applied at the end of it
+		std::vector<LayerRequest> m_requests;
 
 		// entities
 		sc::ecs::Entity m_player;

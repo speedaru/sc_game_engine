@@ -98,6 +98,9 @@
     <ClInclude Include="src\constants.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\types\LevelLocation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="src\pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -113,7 +116,7 @@
     <ClInclude Include="src\components\GameComponents.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\enums\InputActions.h">
+    <ClInclude Include="src\types\InputActions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\systems\player_input.h">
@@ -182,7 +185,7 @@
     <ClInclude Include="src\debug\ContactOverlay.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\enums\hash.hpp">
+    <ClInclude Include="src\utils\hash.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\systems\collision_system.h">

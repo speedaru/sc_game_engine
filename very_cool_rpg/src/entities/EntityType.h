@@ -1,16 +1,16 @@
 #pragma once
-#include <enums/hash.hpp>
+#include <utils/hash.hpp>
 
 namespace game::entities {
 	// every value must be the same as its LDTK identifier hash("<LDTK entity identifier>")
 	enum class EntityType : uint64_t {
-		Player = enums::hash("Player"),
-		Dragon = enums::hash("Dragon"),
-		Chest = enums::hash("Chest"),
-		TeleportationWell = enums::hash("TeleportationWell"),
+		Player = utils::hash("Player"),
+		Dragon = utils::hash("Dragon"),
+		Chest = utils::hash("Chest"),
+		TeleportationWell = utils::hash("TeleportationWell"),
 	};
 
 	constexpr EntityType FromLdtkIdentifier(std::string_view identifier) {
-		return static_cast<EntityType>(enums::hash(identifier));
+		return static_cast<EntityType>(utils::hash(identifier));
 	}
 }

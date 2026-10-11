@@ -41,7 +41,7 @@ namespace game::world_loader {
 
 		for (const auto& ldtkDef : project.getEntityDefs()) {
 			const std::string& name = ldtkDef.name;
-			entities::EntityType type = static_cast<entities::EntityType>(enums::hash(name));
+			entities::EntityType type = static_cast<entities::EntityType>(utils::hash(name));
 
 			entities::EntityDefinition definition;
 			definition.debugName = name; // so we can view the entity name in text while debuging

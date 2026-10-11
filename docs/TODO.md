@@ -114,15 +114,15 @@ Decisions this list assumes:
 
 In this order, each one makes the next smaller.
 
-- [ ] **Request queue out of `ContactState`.** `very_cool_rpg/src/systems/collision_system.h:17-20` (5.3)
-  `GameplayLayer` owns the queue and passes it to every system that may queue. `ContactState`
-  keeps only the cooldown table. The type becomes `GameRequest` and leaves `layers/`.
+- [ ] **Rename `LayerRequest` and move it out of `layers/`.** `very_cool_rpg/src/layers/LayerRequest.h` (5.3)
+  The queue itself is done: `GameplayLayer` owns it and passes it to `DispatchContacts`. What is left
+  is the name (`GameRequest`) and the folder, since a system includes a header from `layers/`.
 
 - [ ] **`Spawn(type, level, params)`.** `very_cool_rpg/src/factories/EntityFactory.h:36` (5.4)
   Replaces the ambient `SetCurrentLevel`, set from four places. The factory finds the entity layer
   itself, so `m_entityLayerUid` and `FindEntityLayerUid` go.
 
-- [ ] **One `EnterLevel`, and the start level from the player.** `very_cool_rpg/src/layers/GameplayLayer.cpp:73-96,180-183` (5.5, 2.6)
+- [x] **One `EnterLevel`, and the start level from the player.** `very_cool_rpg/src/layers/GameplayLayer.cpp:73-96,180-183` (5.5, 2.6)
   The level-change sequence is written twice. The start level is the hardcoded `"World_Level_0"`
   while the player is found in any level. Take the level from the player's `LevelComponent`.
   Longer term: a `PlayerStart` marker, and the player spawned by code.
@@ -136,14 +136,14 @@ In this order, each one makes the next smaller.
   Input bindings to a free function. The F2 and F3 test hooks to buttons in the `FeatureTest`
   module, which removes two input actions.
 
-- [ ] **One `LevelLocation` struct.** (8.4)
+- [x] **One `LevelLocation` struct.** (8.4)
   `TeleportComponent`, `TeleportRequest` and `EntityRefValue` are the same two fields.
 
-- [ ] **Store the LDtk `iid` of placed entities.** `very_cool_rpg/src/loaders/world/EntityLayerBuilder.cpp:94-103` (11.6)
+- [x] **Store the LDtk `iid` of placed entities.** `very_cool_rpg/src/loaders/world/EntityLayerBuilder.cpp:94-103` (11.6)
   Into `SpawnParams` and a small component. Saving needs an identity that survives a restart, and
   it is cheap now and expensive after inventory and quests exist.
 
-- [ ] **Input action overloads that take the enum.** `engine/include/engine/input/Input.h`, `InputContext.h` (5.7)
+- [x] **Input action overloads that take the enum.** `engine/include/engine/input/Input.h`, `InputContext.h` (5.7)
   Removes twelve casts, two of which cast to the wrong type.
 
 - [ ] **Tear down on detach.** `very_cool_rpg/src/layers/GameplayLayer.cpp:55,188-189` (2.7)

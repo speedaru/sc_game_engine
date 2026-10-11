@@ -42,7 +42,7 @@ namespace game::world_loader {
 			}
 
 			const ldtk::IntPoint& pos = target->getPosition();
-			bag.fields[name] = entities::EntityRefValue{
+			bag.fields[name] = LevelLocation{
 				target->layer->level->uid,
 				{ static_cast<float>(pos.x), static_cast<float>(pos.y) }
 			};
@@ -100,6 +100,7 @@ namespace game::world_loader {
 				entities::SpawnParams{
 					.position = { static_cast<float>(pos.x), static_cast<float>(pos.y) },
 					.layerUid = ldtkLayer.getDefUid(),
+					.persistentId = ldtkEntity.iid.str(),
 					.fields = ReadFields(ldtkEntity)
 				}
 			);

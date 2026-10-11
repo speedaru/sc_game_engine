@@ -1,7 +1,10 @@
 #pragma once
 #include <cstdint>
+#include <string>
 
 #include <SFML/System/Vector2.hpp>
+
+#include <types/LevelLocation.h>
 
 namespace game::components {
 	// tags are empty and just used to identify entities
@@ -10,9 +13,13 @@ namespace game::components {
 	struct PickupTag {};
 
 	struct TeleportComponent {
-		// target level and position
-		int32_t levelUid;
-		sf::Vector2f pos;
+		LevelLocation target;
+	};
+
+	// identity of a placed entity that is the same on every run, unlike its handle.
+	// only entities placed in the editor have one
+	struct PersistentIdComponent {
+		std::string id;
 	};
 
 	struct CharacterController {
