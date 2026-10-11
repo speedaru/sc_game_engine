@@ -2,17 +2,22 @@
 #include <engine/graphics/Camera2D.h>
 
 namespace sc::graphics {
-	Camera2D::Camera2D(const sf::Vector2f size) {
+	Camera2D::Camera2D(const sf::Vector2f size)
+		: m_baseSize(size)
+	{
 		m_view.setSize(size);
 		m_view.setCenter(size / 2.f);
 	}
-	
+
 	void Camera2D::SetPosition(const sf::Vector2f& position) {
 		m_view.setCenter(ApplyBounds(position));
 	}
 
-	void Camera2D::SetZoom(float zoomFactor) {
-		m_view.zoom(zoomFactor);
+	void Camera2D::SetZoom(float zoom) {
+		if (zoom <= 0.f) return;
+
+		// always from the base size, so calling this twice with the same value changes nothing
+		m_view.setSize(m_baseSize / zoom);
 	}
 
 	void Camera2D::SetBounds(const sf::Vector2f& min, const sf::Vector2f& max) {
@@ -31,10 +36,10 @@ namespace sc::graphics {
 		bool centerY = camSize.y > bounds.max.y - bounds.min.y;
 		if (centerX || centerY) {
 			if (centerX) {
-				position.x = (bounds.max.x - bounds.min.x) / 2;
+				position.x = (bounds.min.x + bounds.max.x) / 2;
 			}
 			if (centerY) {
-				position.y = (bounds.max.y - bounds.min.y) / 2;
+				position.y = (bounds.min.y + bounds.max.y) / 2;
 			}
 			return position;
 		}

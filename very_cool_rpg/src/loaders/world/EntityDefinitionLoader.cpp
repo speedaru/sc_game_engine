@@ -49,8 +49,10 @@ namespace game::world_loader {
 				{ ldtkDef.texture_rect.width, ldtkDef.texture_rect.height }
 			};
 
+			// still a valid definition: invisible entities (zones, spawners) are spawned from it
 			if (!ldtkDef.tileset) {
 				LOG_D("entity definition '%s' has no tileset, so it gets no sprite or hitboxes", name.c_str());
+				factory.SetDefinition(type, std::move(definition));
 				continue;
 			}
 

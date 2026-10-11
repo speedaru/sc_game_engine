@@ -15,7 +15,9 @@ namespace sc::ecs {
 		Entity(const EntityHandle handle, Registry* registry)
 			: m_handle(handle), m_registry(registry) {}
 
-		operator bool() const { return m_handle != entt::null; }
+		// only tells null from non-null. a handle to a destroyed entity is still "true",
+		// use Registry::IsEntityValid for a handle that is kept across frames
+		explicit operator bool() const { return m_handle != entt::null; }
 
 		template <typename T, typename... Args>
 		decltype(auto) AddComponent(Args&&... args) const {

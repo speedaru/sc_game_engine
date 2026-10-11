@@ -38,6 +38,7 @@ namespace game::world_loader {
 
 	void BakeTileLayer(const ldtk::Layer& ldtkLayer, TileColliderCache& tileColliders, world::CollisionLayerBuilder& out) {
 		const ldtk::Tileset& tileset = ldtkLayer.getTileset();
+		size_t skippedTriggers = 0;
 
 		for (const auto& tile : ldtkLayer.allTiles()) {
 			const std::vector<math::Hitbox>& hitboxes = tileColliders.Get(tileset, tile.tileId);
@@ -47,8 +48,18 @@ namespace game::world_loader {
 			const sf::Vector2f tileOrigin{ static_cast<float>(pos.x), static_cast<float>(pos.y) };
 
 			for (const math::Hitbox& hitbox : hitboxes) {
+				// the collision layer only stores solid boxes, so a trigger would be baked as a wall
+				if (hitbox.trigger) {
+					skippedTriggers++;
+					continue;
+				}
+
 				out.AddBox(sf::FloatRect{ tileOrigin + hitbox.offset, hitbox.size });
 			}
+		}
+
+		if (skippedTriggers > 0) {
+			LOG_W("layer '%s' has %zu trigger hitboxes on tiles, ignored because tiles can only be solid", ldtkLayer.getName().c_str(), skippedTriggers);
 		}
 	}
 

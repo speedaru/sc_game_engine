@@ -13,7 +13,9 @@ namespace sc::graphics {
 		Camera2D(const sf::Vector2f size);
 		
 		void SetPosition(const sf::Vector2f& position);
-		void SetZoom(float zoomFactor);
+
+		// 1 shows the size given to the constructor, 2 shows everything twice as big
+		void SetZoom(float zoom);
 
 		// min and max refer to visible borders positions not camera position delimiters
 		void SetBounds(const sf::Vector2f& min, const sf::Vector2f& max);
@@ -29,5 +31,6 @@ namespace sc::graphics {
 	private:
 		std::optional<CameraBounds> m_bounds;
 		sf::View m_view;
+		sf::Vector2f m_baseSize; // view size at zoom 1
 	};
 }

@@ -44,9 +44,20 @@ namespace game::world_loader {
 		LoadContext ctx{ registry, entityFactory, tileSetManager, tileColliders, projectDir };
 		LayerBuilderRegistry builders = MakeDefaultLayerBuilderRegistry();
 
+		// every ldtk world goes into the one engine world. level uids are unique across the
+		// whole project, so a teleport between ldtk worlds is a normal level switch
 		auto world = std::make_shared<world::World>();
-		for (const auto& ldtkLevel : ldtkProject.getWorld("").allLevels()) {
-			world->AddLevel(LoadLevel(ldtkLevel, builders, ctx));
+		try {
+			for (const auto& ldtkWorld : ldtkProject.allWorlds()) {
+				for (const auto& ldtkLevel : ldtkWorld.allLevels()) {
+					world->AddLevel(LoadLevel(ldtkLevel, builders, ctx));
+				}
+			}
+		}
+		catch (const std::exception& e) {
+			LOG_E("failed to build levels from ldtk project '%s': %s", projectFilePath.string().c_str(), e.what());
+			entityFactory.SetCurrentLevel(nullptr);
+			return nullptr;
 		}
 
 		// unset current level

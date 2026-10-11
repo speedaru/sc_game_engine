@@ -69,10 +69,23 @@ namespace game {
 		// add feature test module (requires world)
 		RegisterDebugModules();
 
+		// get player reference
+		const auto view = m_registry.ViewAll<game::components::PlayerTag>();
+		for (auto [entityHandle] : view) {
+			m_player = sc::ecs::Entity(entityHandle, &m_registry);
+			break; // only 1 player
+		}
+
+		if (!HasPlayer()) {
+			LOG_W("no player found !");
+			return;
+		}
+
 		// get level
-		m_currentLevel = m_world->GetLevel("World_Level_0").get();
+		const ecs::LevelComponent& level = m_player.GetComponent<ecs::LevelComponent>();
+		m_currentLevel = m_world->GetLevel(level.uid).get();
 		if (!m_currentLevel) {
-			LOG_W("failed to get level 0");
+			LOG_W("failed to get level uid: %d", level.uid);
 			return;
 		}
 
@@ -83,17 +96,6 @@ namespace game {
 
 		// apply bounds to camera
 		UpdateCameraBounds();
-
-		// get player reference
-		const auto view = m_registry.ViewAll<game::components::PlayerTag>();
-		for (auto [entityHandle] : view) {
-			m_player = sc::ecs::Entity(entityHandle, &m_registry);
-			break; // only 1 player
-		}
-
-		if (!m_player) {
-			LOG_W("no player found !");
-		}
     }
 
     void GameplayLayer::OnFixedUpdate(float timeStep) {
@@ -129,7 +131,7 @@ namespace game {
 			.deltaTime = deltaTime
 		}));
 
-		if (!m_player) {
+		if (!HasPlayer()) {
 			return;
 		}
 
@@ -154,13 +156,13 @@ namespace game {
     }
 
     void GameplayLayer::OnRender(sf::RenderWindow& window, float alpha) {
+		// OnAttach already logged why there is no level
 		if (!m_currentLevel) {
-			LOG_W("level was null");
 			return;
 		}
 
 		// center camera on player
-		if (m_player && m_player.HasComponent<ecs::TransformComponent>()) {
+		if (HasPlayer() && m_player.HasComponent<ecs::TransformComponent>()) {
 			// interpolate camera pos
 			const auto& trans = m_player.GetComponent<ecs::TransformComponent>();
 			m_camera.SetPosition(sc::math::Lerp(trans.prevPos, trans.pos, alpha));
@@ -171,9 +173,9 @@ namespace game {
 
 	void GameplayLayer::SwitchLevel(int32_t levelUid, sf::Vector2f spawnPos) {
 		sc::world::Level* targetLevel = m_world->GetLevel(levelUid).get();
-		if (!targetLevel || !m_player) {
+		if (!targetLevel || !HasPlayer()) {
 			if (!targetLevel) LOG_W("trying to switch to an unknown level: %d", levelUid);
-			else if (!m_player) LOG_W("trying to switch to a level but there is no player");
+			else LOG_W("trying to switch to a level but there is no player");
 			return;
 		}
 

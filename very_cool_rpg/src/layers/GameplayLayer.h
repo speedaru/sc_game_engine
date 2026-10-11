@@ -29,6 +29,8 @@ namespace game {
 		// update camera bounds based on level size
 		void UpdateCameraBounds();
 
+		bool HasPlayer() const { return m_registry.IsEntityValid(m_player.GetHandle()); }
+
 #pragma region layer_requests
 		void Apply(const TeleportRequest& request);
 

@@ -46,8 +46,8 @@ void logging::LogOutputRawV(const char* fmt, va_list args) {
     int size = vsnprintf(nullptr, 0, fmt, args_copy);
     va_end(args_copy); // Always end the copy
 
+    // args belongs to the caller, who ends it
     if (size < 0) {
-        va_end(args);
         return;
     }
 

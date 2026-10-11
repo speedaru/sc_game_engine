@@ -7,6 +7,8 @@ namespace sc::graphics {
 		: m_tileSize(tileSize)
 	{
 		m_texture = CreateTexture2D(file);
+		if (!m_texture) return; // already logged, the tileset stays empty and draws nothing
+
 		m_cols = m_texture->GetWidth() / m_tileSize;
 		m_rows = m_texture->GetHeight() / m_tileSize;
 	}
@@ -15,6 +17,8 @@ namespace sc::graphics {
 		: m_tileSize(tileSize)
 	{
 		m_texture = CreateTexture2D(data);
+		if (!m_texture) return; // already logged, the tileset stays empty and draws nothing
+
 		m_cols = m_texture->GetWidth() / m_tileSize;
 		m_rows = m_texture->GetHeight() / m_tileSize;
 	}

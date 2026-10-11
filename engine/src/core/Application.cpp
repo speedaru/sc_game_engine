@@ -17,14 +17,14 @@ using namespace sc::renderer;
 
 namespace sc::core {
 	Application::Application(WindowData&& windowData) {
-#if _DEBUG == 1
+#ifdef _DEBUG
 		LogLevel logLevel = LogLevel::None
 			| LogLevel::Debug
 			| LogLevel::Info
 			| LogLevel::Error
 			| LogLevel::Warn
 			| LogLevel::Trace;
-#elif _DEBUG == 0
+#else
 		LogLevel logLevel = LogLevel::None
 			| LogLevel::Error;
 #endif

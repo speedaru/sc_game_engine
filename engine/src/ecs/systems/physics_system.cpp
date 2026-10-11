@@ -158,12 +158,6 @@ namespace {
 		sf::Vector2f delta = vel.velocity * ctx.timeStep;
 		constexpr int MAX_SLIDES = 3;
 
-		// if entity has no hitboxes, just move it and return
-		if (!ColliderIsCollidable(col)) {
-			trans.pos += delta;
-			return;
-		}
-
 		// broad phase
 		CollectCandidates(ctx, mover, SweptBounds(EntityGetBounds(trans, col), delta));
 
@@ -251,8 +245,8 @@ namespace sc::ecs::physics_system {
 	}
 
 	void EntityRegisterCollisions(math::SpatialGrid& grid, const Entity& entity) {
+		// an entity without a collider is normal (markers, zones), so there is nothing to register
 		if (!entity.HasComponent<TransformComponent>() || !entity.HasComponent<BoxColliderComponent>()) {
-			LOG_W("trying to register entity %u but it doesnt have transform and box collider component", static_cast<uint32_t>(entity.GetHandle()));
 			return;
 		}
 
@@ -281,27 +275,33 @@ namespace sc::ecs::physics_system {
 	void UpdateKinematics(Registry& registry, world::Level& level, float timeStep, physics::PhysicsScratch& scratch) {
 		StepContext ctx{ registry, level, scratch, timeStep };
 
-		// grab all entities that can move and collide
+		// grab all entities that can move. the collider is optional, so it isn't part of the view
 		auto dynamicEntitiesView = registry.ViewLevel<
 			TransformComponent,
-			VelocityComponent,
-			const BoxColliderComponent
+			VelocityComponent
 		>(level.GetUid());
 
 		// clear previous contacts
 		ctx.scratch.contacts.clear();
 
-		for (auto [entity, trans, vel, col] : dynamicEntitiesView) {
+		for (auto [entity, trans, vel] : dynamicEntitiesView) {
 			const sf::Vector2f oldPos = trans.pos;
 			trans.prevPos = oldPos;
 
+			// nothing to collide with and not in the spatial grid, so just move it
+			const auto* col = registry.TryGetComponent<BoxColliderComponent>(entity);
+			if (!col || !ColliderIsCollidable(*col)) {
+				trans.pos += vel.velocity * timeStep;
+				continue;
+			}
+
 			// move entities and handle collisions
-			Mover mover{ entity, trans, vel, col };
+			Mover mover{ entity, trans, vel, *col };
 			MoveAndResolve(ctx, mover);
 
 			// move entities in spatial grid
-			if (trans.pos != oldPos && ColliderIsCollidable(col)) {
-				level.GetSpatialGrid().MoveEntity(entity, EntityGetBounds(trans, col));
+			if (trans.pos != oldPos) {
+				level.GetSpatialGrid().MoveEntity(entity, EntityGetBounds(trans, *col));
 			}
 		}
 	}

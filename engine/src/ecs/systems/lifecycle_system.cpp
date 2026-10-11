@@ -33,7 +33,7 @@ namespace sc::ecs::lifecycle_system {
 		sc::world::Level* newLevel = world.GetLevel(newLevelUid).get();
 
 		if (!oldLevel || !newLevel) {
-			if (!oldLevel) LOG_W("entity's %u current level component uid is invalid: %d", ent, levelComponent.uid);
+			if (!oldLevel) LOG_W("entity's %u current level component uid is invalid: %d", static_cast<uint32_t>(ent), levelComponent.uid);
 			else if (!newLevel) LOG_W("new level uid doesn't exist: %d", newLevelUid);
 			return;
 		}

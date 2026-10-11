@@ -25,7 +25,7 @@ namespace game::debug {
 	private:
 		static constexpr sf::Color VEL_VEC_ARROW{ 0, 255, 255, 205 };
 
-		bool m_showMovementVec;
+		bool m_showMovementVec = false;
 	};
 }
 

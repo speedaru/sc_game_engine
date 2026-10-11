@@ -44,10 +44,9 @@ namespace sc::core {
 		std::vector<std::shared_ptr<ILayer>> m_layers; // bottom to top
 		std::vector<LayerCommand> m_pendingLayerCommands;
 
-#if SC_ENABLE_DEBUG_TOOLS
 		// imgui-sfml init can fail. every imgui call is gated on this, because calling
-		// into imgui after a failed init crashes rather than no-ops
+		// into imgui after a failed init crashes rather than no-ops.
+		// declared in every build so the class layout never depends on SC_ENABLE_DEBUG_TOOLS
 		bool m_debugToolsReady = false;
-#endif
 	};
 }
