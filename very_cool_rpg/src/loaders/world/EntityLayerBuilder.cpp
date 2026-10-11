@@ -91,11 +91,6 @@ namespace game::world_loader {
 		for (const auto& ldtkEntity : ldtkLayer.allEntities()) {
 			if (ldtkEntity.hasTag("marker")) continue;
 
-			//if (ldtkEntity.getName() == "WarpTarget") {
-			//	std::string tags = std::accumulate(ldtkEntity.getTags().begin(), ldtkEntity.getTags().end(), std::string(", "));
-			//	LOG_D("warp target has no marker tag", tags.c_str());
-			//}
-
 			const ldtk::IntPoint pos = ldtkEntity.getPosition();
 
 			ctx.entityFactory.Spawn(

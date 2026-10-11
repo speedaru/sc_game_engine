@@ -115,12 +115,7 @@ namespace game {
 		// handle collisions and overlaps
 		collision_system::DispatchContacts(m_registry, m_physicsScratch.contacts, m_contactState, timeStep);
 
-		// apply the teleport a handler asked for, now that the contacts are done with
-		if (m_contactState.teleport) {
-			const collision_system::TeleportRequest request = *m_contactState.teleport;
-			m_contactState.teleport.reset();
-			SwitchLevel(request.levelUid, request.pos);
-		}
+		HandleLayerRequests();
 
 		// flush destroyed entities
 		ecs::lifecycle_system::FlushDestroyed(m_registry, *m_world);
@@ -197,4 +192,19 @@ namespace game {
 	void GameplayLayer::UpdateCameraBounds() {
 		m_camera.SetBounds({ 0.f, 0.f }, static_cast<sf::Vector2f>(m_currentLevel->GetSize()));
 	}
+
+#pragma region layer_requests
+	void GameplayLayer::Apply(const TeleportRequest& request) {
+		SwitchLevel(request.levelUid, request.pos);
+	}
+
+	void GameplayLayer::HandleLayerRequests() {
+		// NOTE: make a copy of requests before iterating if Apply modifies m_contactState.requests
+		for (const auto& request : m_contactState.requests) {
+			std::visit([this](const auto& r) { Apply(r); }, request);
+		}
+
+		m_contactState.requests.clear();
+	}
+#pragma endregion layer_requests
 }

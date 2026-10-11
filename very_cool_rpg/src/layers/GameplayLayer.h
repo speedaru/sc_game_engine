@@ -10,6 +10,7 @@
 #include <factories/EntityFactory.h>
 #include <loaders/world_loader.h>
 #include <systems/collision_system.h>
+#include <layers/LayerRequest.h>
 #include <constants.h>
 
 namespace game {
@@ -27,6 +28,13 @@ namespace game {
 
 		// update camera bounds based on level size
 		void UpdateCameraBounds();
+
+#pragma region layer_requests
+		void Apply(const TeleportRequest& request);
+
+		// handles list of LayerRequest requests inside m_contactState
+		void HandleLayerRequests();
+#pragma endregion layer_requests
 
 	private:
 		// core engine stuff

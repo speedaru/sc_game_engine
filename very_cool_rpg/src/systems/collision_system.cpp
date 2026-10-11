@@ -37,16 +37,22 @@ namespace game::collision_system {
 				ecs::EntityHandle self = ctx.contact.self;
 				ecs::EntityHandle other = ctx.contact.other.GetEntity();
 
+				auto rateLimit = [&ctx, &self, &other](float cooldown) {
+					// dedup multiple hitboxes per entity
+					ctx.state.rateLimits.push_back(PairCooldown{ .self = self, .other = other, .timeLeft = cooldown });
+				};
+
 				// pickup component
 				if (reg.HasComponent<components::PlayerTag>(self) && reg.HasComponent<components::PickupTag>(other)) {
 					reg.QueueDestroy(other);
-					ctx.state.rateLimits.push_back(PairCooldown{ .self = self, .other = other, .timeLeft = 0.f }); // dedup multiple hitboxes
+					rateLimit(0.f);
 				}
 
 				// teleport component. only the player, since applying it switches the viewed level
 				if (reg.HasComponent<components::PlayerTag>(self)) {
 					if (const auto* teleport = reg.TryGetComponent<components::TeleportComponent>(other)) {
-						ctx.state.teleport = TeleportRequest{ teleport->levelUid, teleport->pos };
+						ctx.state.requests.push_back(TeleportRequest{ teleport->levelUid, teleport->pos });
+						rateLimit(0.f);
 					}
 				}
 			}
